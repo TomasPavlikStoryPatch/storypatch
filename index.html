@@ -1358,7 +1358,7 @@ footer {
     <li><a href="#benefits">For Publishers</a></li>
     <li><a href="#usecases">Use Cases</a></li>
     <li><a href="#markets">Markets</a></li>
-    <li><a href="#patent">Patent</a></li>
+    <li><a href="#patent">Protection</a></li>
     <li><a href="#contact" class="nav-cta">Request Partnership</a></li>
   </ul>
 </nav>
@@ -1374,7 +1374,7 @@ footer {
     <div class="hero-left">
       <div class="hero-eyebrow">
         <span class="hero-eyebrow-dot"></span>
-        Patented Publishing Innovation · CZ 39118 U1
+        Registered Utility Model · CZ 39118 U1 &nbsp;·&nbsp; Patent Pending
       </div>
       <div class="hero-logo-tagline">
         <div class="hero-logo-inline">
@@ -1534,7 +1534,7 @@ footer {
         <div class="panel-tag solution-tag">StoryPatch Solution · CZ 39118</div>
         <div class="panel-title">Interchangeable text layers: one print run, every language market</div>
         <div class="panel-body">
-          A patented method that allows the original printed board book to carry removable text overlays — stickers, magnetic strips, or transparent Braille film — in any language. The same physical book serves German, Spanish, Turkish, or Japanese readers simply by changing the text layer.
+          A registered utility model method that allows the original printed board book to carry removable text overlays — stickers, magnetic strips, or transparent Braille film — in any language. The same physical book serves German, Spanish, Turkish, or Japanese readers simply by changing the text layer.
           <br><br>
           Unsold stock in one market? Redirect it to another. No reprints. No write-offs. No risk.
         </div>
@@ -1640,7 +1640,7 @@ footer {
       <div class="benefit-card reveal reveal-delay-3">
         <span class="benefit-icon">🏆</span>
         <div class="benefit-title">First-Mover Advantage</div>
-        <div class="benefit-body">StoryPatch is a registered utility model (CZ 39118 U1) with international patent pending. License it before your competitors discover it exists.</div>
+        <div class="benefit-body">StoryPatch is a registered utility model (CZ 39118 U1) — patent application in progress. License it before your competitors discover it exists.</div>
         <div class="benefit-tag">Protected Innovation</div>
       </div>
     </div>
@@ -1656,7 +1656,7 @@ footer {
     <div class="usecases-header">
       <div class="section-eyebrow reveal">Use Cases</div>
       <div class="section-title reveal reveal-delay-1">Four markets.<br><em>One revolutionary solution.</em></div>
-      <p class="section-body reveal reveal-delay-2">StoryPatch addresses fundamentally different distribution challenges with a single patented method — from immigrant communities in Europe to blind parents reading to their children.</p>
+      <p class="section-body reveal reveal-delay-2">StoryPatch addresses fundamentally different distribution challenges with a single protected method — from immigrant communities in Europe to blind parents reading to their children.</p>
     </div>
     <div class="usecases-grid">
       <div class="usecase-card uc-markets reveal">
@@ -1865,7 +1865,7 @@ footer {
             <div class="pf-value">06 January 2026</div>
           </div>
           <div class="patent-fact">
-            <div class="pf-label">Patent Status</div>
+            <div class="pf-label">Patent Application</div>
             <div class="pf-value">Application in Progress</div>
           </div>
           <div class="patent-fact">
@@ -1892,10 +1892,8 @@ footer {
       We're currently offering licensing partnerships to leading children's publishers in key markets. Early partners gain exclusive market access and strategic co-development opportunities. Availability is limited.
     </p>
     <div class="contact-actions reveal reveal-delay-3">
-      <a href="/cdn-cgi/l/email-protection#08606d646467487b7c677a7178697c6b6026677a6f" class="btn-cta-light">
-        Request Partnership →
-      </a>
-      <a href="/cdn-cgi/l/email-protection#432b262f2f2c0330372c313a332237202b6d2c3124" class="btn-email-link"><span class="__cf_email__" data-cfemail="127a777e7e7d5261667d606b627366717a3c7d6075">[email&#160;protected]</span></a>
+      <a id="btn-partnership" class="btn-cta-light" href="#">Request Partnership →</a>
+      <a id="btn-email-link" class="btn-email-link" href="#"> </a>
     </div>
     <hr class="contact-divider reveal reveal-delay-4">
     <div class="contact-tagline reveal reveal-delay-4">One Book &nbsp;·&nbsp; Every Language &nbsp;·&nbsp; StoryPatch</div>
@@ -1941,7 +1939,7 @@ footer {
       Úřad průmyslového vlastnictví ČR · Holder: Tomáš Pavlík
     </div>
     <div class="footer-email">
-      <a href="/cdn-cgi/l/email-protection#fa929f969695ba898e9588838a9b8e9992d495889d"><span class="__cf_email__" data-cfemail="f8909d949497b88b8c978a8188998c9b90d6978a9f">[email&#160;protected]</span></a>
+      <a id="footer-email-link" href="#"> </a>
     </div>
   </div>
 </footer>
@@ -1950,7 +1948,24 @@ footer {
 <!-- ═══════════════════════════════
      JAVASCRIPT
 ═══════════════════════════════ -->
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
+// ── Email builder (anti-Cloudflare obfuscation) ──────────────
+// Email is assembled at runtime so it never appears as plain text in HTML source
+(function() {
+  var u = 'hello';
+  var d = 'storypatch' + '.' + 'org';
+  var e = u + '@' + d;
+  var h = 'mailto:' + e;
+  // Contact section buttons
+  var btnP = document.getElementById('btn-partnership');
+  var btnE = document.getElementById('btn-email-link');
+  if (btnP) { btnP.href = h; }
+  if (btnE) { btnE.href = h; btnE.textContent = e; }
+  // Footer link
+  var ftE = document.getElementById('footer-email-link');
+  if (ftE) { ftE.href = h; ftE.textContent = e; }
+})();
+
 // Nav scroll effect
 const nav = document.getElementById('mainNav');
 window.addEventListener('scroll', () => {
