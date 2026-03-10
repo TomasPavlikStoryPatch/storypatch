@@ -4,1714 +4,1987 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>StoryPatch — One Book. Every Language.</title>
-<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@200;300;400;500;600;700;800;900&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
 <style>
-/* ════════════════════════════════════════
-   RESET & TOKENS
-════════════════════════════════════════ */
+/* ═══════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════ */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
 
 :root {
-  --ink:       #1B2D40;
-  --copper:    #D4782F;
-  --copper-dk: #B8621F;
-  --slate:     #5C7A96;
-  --slate-lt:  #8AABBF;
-  --parchment: #F5EDE4;
-  --parch-dk:  #EDE0D2;
-  --cream:     #FDFAF7;
-  --white:     #FFFFFF;
-  --soft:      #7A8898;
-  --border:    #E2D8CC;
-
-  --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 24px;
-
-  --shadow-sm: 0 2px 12px rgba(27,45,64,0.08);
-  --shadow-md: 0 6px 32px rgba(27,45,64,0.12);
-  --shadow-lg: 0 16px 56px rgba(27,45,64,0.15);
+  --ink:      #1B2D40;
+  --copper:   #D4782F;
+  --slate:    #5C7A96;
+  --parchment:#F5EDE4;
+  --cream:    #ECEAE6;
+  --white:    #FFFFFF;
+  --soft:     #8A9BAD;
+  --border:   #DDD5CA;
+  --ink-light:#2E4560;
+  --copper-dark: #B8621F;
+  --copper-light: #F0C49A;
+  --font-main: 'Raleway', sans-serif;
+  --font-serif: 'Lora', serif;
 }
-
-html { scroll-behavior: smooth; }
 
 body {
-  font-family: 'Raleway', 'Trebuchet MS', sans-serif;
-  background: var(--cream);
+  font-family: var(--font-main);
   color: var(--ink);
-  line-height: 1.65;
-  -webkit-font-smoothing: antialiased;
+  background: var(--white);
+  line-height: 1.6;
+  overflow-x: hidden;
 }
 
-/* ── UTILITY ── */
-.container { max-width: 1100px; margin: 0 auto; padding: 0 28px; }
-.label {
-  font-size: 10px; font-weight: 700; letter-spacing: 4px;
-  text-transform: uppercase; color: var(--copper);
-  margin-bottom: 12px; display: block;
+/* ═══════════════════════════════════
+   NOISE TEXTURE OVERLAY
+═══════════════════════════════════ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.4;
 }
-.label-slate { color: var(--slate-lt); }
-.label-white { color: rgba(255,255,255,0.5); }
-.badge {
-  display: inline-block;
-  font-size: 11px; font-weight: 600; letter-spacing: 1.5px;
-  text-transform: uppercase; padding: 5px 14px;
-  border-radius: 40px; border: 1.5px solid currentColor;
-}
-.badge-copper { color: var(--copper); border-color: rgba(212,120,47,0.35); background: rgba(212,120,47,0.06); }
-.badge-white  { color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.25); }
-hr.divider { border: none; border-top: 1px solid var(--border); margin: 0; }
 
-/* ── BUTTONS ── */
-.btn {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-family: 'Raleway', sans-serif;
-  font-size: 13px; font-weight: 700; letter-spacing: 1px;
-  text-transform: uppercase; text-decoration: none;
-  padding: 15px 30px; border-radius: var(--radius-sm);
-  cursor: pointer; border: none; transition: all .2s ease;
-}
-.btn-primary {
-  background: var(--copper); color: var(--white);
-  box-shadow: 0 4px 20px rgba(212,120,47,0.35);
-}
-.btn-primary:hover { background: var(--copper-dk); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(212,120,47,0.4); }
-.btn-ghost {
-  background: transparent; color: var(--white);
-  border: 1.5px solid rgba(255,255,255,0.35);
-}
-.btn-ghost:hover { border-color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.08); }
-.btn-outline-dark {
-  background: transparent; color: var(--ink);
-  border: 1.5px solid rgba(27,45,64,0.25);
-}
-.btn-outline-dark:hover { border-color: var(--ink); background: rgba(27,45,64,0.04); }
-.btn-arrow::after { content: '→'; font-weight: 300; font-size: 16px; }
-
-/* ════════════════════════════════════════
+/* ═══════════════════════════════════
    NAVIGATION
-════════════════════════════════════════ */
+═══════════════════════════════════ */
 nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  background: rgba(253,250,247,0.92);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(226,216,204,0.7);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 0 48px;
   height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background 0.4s ease, box-shadow 0.4s ease;
 }
-.nav-inner {
-  display: flex; align-items: center; justify-content: space-between;
-  height: 68px;
+nav.scrolled {
+  background: rgba(245, 237, 228, 0.96);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 1px 0 var(--border);
 }
+
 .nav-logo {
-  display: flex; align-items: center; gap: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   text-decoration: none;
 }
-.nav-wordmark {
-  font-size: 22px; font-weight: 300; letter-spacing: -0.3px;
-  color: var(--ink); line-height: 1;
+.nav-logo-icon {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
 }
-.nav-wordmark strong { font-weight: 800; color: var(--copper); }
+.nav-wordmark {
+  font-size: 20px;
+  font-weight: 300;
+  letter-spacing: -0.3px;
+  line-height: 1;
+}
+.nav-wordmark .w-story { color: var(--ink); font-weight: 300; }
+.nav-wordmark .w-patch { color: var(--copper); font-weight: 800; }
+/* Hero logo tagline */
+.hero-logo-inline {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.hero-logo-icon {
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+}
+.hero-wordmark {
+  font-size: 32px;
+  font-weight: 300;
+  letter-spacing: -0.5px;
+  line-height: 1;
+  font-family: var(--font-main);
+}
+.hero-wordmark .w-story { color: var(--ink); font-weight: 300; }
+.hero-wordmark .w-patch { color: var(--copper); font-weight: 800; }
+.hero-tagline-text {
+  font-size: 10px;
+  font-weight: 300;
+  letter-spacing: 3.5px;
+  text-transform: uppercase;
+  color: var(--soft);
+  margin-top: 5px;
+}
+/* Footer logo */
+.footer-logo-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.footer-wordmark {
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1;
+  font-family: var(--font-main);
+}
+.footer-wordmark .w-story { color: rgba(255,255,255,0.5); font-weight: 300; }
+.footer-wordmark .w-patch { color: var(--copper); font-weight: 800; }
+
 .nav-links {
-  display: flex; align-items: center; gap: 32px; list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  list-style: none;
 }
 .nav-links a {
-  font-size: 12px; font-weight: 500; letter-spacing: 0.5px;
-  text-transform: uppercase; color: var(--soft);
-  text-decoration: none; transition: color .2s;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.6;
+  transition: opacity 0.2s;
 }
-.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover { opacity: 1; }
+
 .nav-cta {
-  font-size: 12px; font-weight: 700; letter-spacing: 1px;
-  text-transform: uppercase; color: var(--copper);
-  text-decoration: none; padding: 10px 20px;
-  border: 1.5px solid rgba(212,120,47,0.4);
-  border-radius: var(--radius-sm);
-  transition: all .2s;
+  background: var(--copper) !important;
+  color: var(--white) !important;
+  opacity: 1 !important;
+  padding: 9px 20px !important;
+  border-radius: 4px !important;
+  letter-spacing: 1.5px !important;
+  font-weight: 600 !important;
+  transition: background 0.2s !important;
 }
-.nav-cta:hover { background: var(--copper); color: var(--white); }
+.nav-cta:hover { background: var(--copper-dark) !important; }
 
-/* ════════════════════════════════════════
+/* ═══════════════════════════════════
    HERO
-════════════════════════════════════════ */
+═══════════════════════════════════ */
 #hero {
-  background: var(--ink);
-  padding: 148px 0 100px;
-  position: relative; overflow: hidden;
-}
-.hero-bg-texture {
-  position: absolute; inset: 0;
-  background:
-    radial-gradient(ellipse 60% 50% at 80% 40%, rgba(92,122,150,0.18) 0%, transparent 70%),
-    radial-gradient(ellipse 40% 60% at 10% 80%, rgba(212,120,47,0.10) 0%, transparent 60%);
-  pointer-events: none;
-}
-.hero-grid-lines {
-  position: absolute; inset: 0; pointer-events: none; opacity: 0.04;
-  background-image:
-    linear-gradient(rgba(255,255,255,1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px);
-  background-size: 60px 60px;
-}
-.hero-inner {
-  display: grid; grid-template-columns: 1fr 1fr;
-  align-items: center; gap: 64px;
-  position: relative; z-index: 1;
-}
-.hero-eyebrow {
-  display: flex; align-items: center; gap: 12px; margin-bottom: 28px;
-}
-.hero-badge {
-  font-size: 10px; font-weight: 700; letter-spacing: 2px;
-  text-transform: uppercase; color: var(--copper);
-  background: rgba(212,120,47,0.12);
-  border: 1px solid rgba(212,120,47,0.3);
-  padding: 5px 12px; border-radius: 40px;
-}
-.hero-badge-ip {
-  font-size: 10px; font-weight: 500; letter-spacing: 1px;
-  color: rgba(255,255,255,0.4); padding: 5px 0;
-}
-.hero-h1 {
-  font-size: 58px; font-weight: 800; line-height: 1.05;
-  letter-spacing: -1.5px; color: var(--white);
-  margin-bottom: 10px;
-}
-.hero-h1 em {
-  font-style: normal; color: var(--copper);
-}
-.hero-h1-sub {
-  font-size: 58px; font-weight: 200; line-height: 1.05;
-  letter-spacing: -1.5px; color: rgba(255,255,255,0.55);
-  margin-bottom: 24px;
-}
-.hero-subhead {
-  font-size: 17px; font-weight: 300; color: rgba(255,255,255,0.65);
-  line-height: 1.7; max-width: 460px; margin-bottom: 40px;
-}
-.hero-subhead strong { color: rgba(255,255,255,0.9); font-weight: 600; }
-.hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 56px; }
-.hero-metrics {
-  display: flex; gap: 36px;
-  padding-top: 36px;
-  border-top: 1px solid rgba(255,255,255,0.1);
-}
-.metric-val {
-  font-size: 28px; font-weight: 800; color: var(--white);
-  letter-spacing: -0.5px; line-height: 1;
-}
-.metric-val span { color: var(--copper); }
-.metric-lbl {
-  font-size: 11px; font-weight: 300; color: rgba(255,255,255,0.4);
-  letter-spacing: 0.5px; margin-top: 4px;
+  min-height: 100vh;
+  background: var(--parchment);
+  display: flex;
+  align-items: center;
+  padding: 120px 48px 80px;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Hero visual — book + patch illustration */
-.hero-visual {
-  display: flex; justify-content: center; align-items: center;
+.hero-bg-pattern {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(ellipse 60% 50% at 85% 50%, rgba(212,120,47,0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 15% 80%, rgba(92,122,150,0.06) 0%, transparent 60%);
+}
+
+.hero-grid-lines {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(27,45,64,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(27,45,64,0.04) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+
+.hero-inner {
   position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
 }
-.book-mockup {
-  width: 340px; height: 340px;
+
+.hero-left { }
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--copper);
+  margin-bottom: 16px;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.2s forwards;
+}
+.hero-eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--copper);
+}
+.hero-logo-tagline {
+  margin-bottom: 24px;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.3s forwards;
+}
+.hero-tagline-img {
+  height: 56px;
+  width: auto;
+  display: block;
+}
+
+.hero-headline {
+  font-family: var(--font-serif);
+  font-size: clamp(40px, 5vw, 66px);
+  font-weight: 600;
+  line-height: 1.08;
+  color: var(--ink);
+  margin-bottom: 24px;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.35s forwards;
+}
+.hero-headline em {
+  font-style: italic;
+  color: var(--copper);
+}
+.hero-headline .hl-light {
+  font-weight: 400;
+}
+
+.hero-sub {
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.65;
+  color: var(--ink);
+  opacity: 0.68;
+  max-width: 480px;
+  margin-bottom: 44px;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.5s forwards;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.65s forwards;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--copper);
+  color: var(--white);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 16px 32px;
+  border-radius: 4px;
+  transition: background 0.25s, transform 0.2s;
+}
+.btn-primary:hover {
+  background: var(--copper-dark);
+  transform: translateY(-1px);
+}
+.btn-primary svg { transition: transform 0.2s; }
+.btn-primary:hover svg { transform: translateX(3px); }
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  padding: 16px 0;
+  border-bottom: 1.5px solid rgba(27,45,64,0.25);
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-secondary:hover {
+  color: var(--copper);
+  border-color: var(--copper);
+}
+
+.hero-stats {
+  display: flex;
+  gap: 40px;
+  margin-top: 56px;
+  padding-top: 40px;
+  border-top: 1px solid var(--border);
+  opacity: 0;
+  animation: fadeUp 0.8s 0.8s forwards;
+}
+.hero-stat-num {
+  font-family: var(--font-serif);
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.hero-stat-num span { color: var(--copper); }
+.hero-stat-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+
+/* Hero right — book visualization */
+.hero-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  animation: fadeIn 1.2s 0.6s forwards;
+}
+
+.book-visual {
+  position: relative;
+  width: 360px;
+  height: 400px;
+}
+
+.book-card {
+  position: absolute;
   background: var(--white);
-  border-radius: 18px;
-  box-shadow: 0 32px 80px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.08);
-  position: relative; overflow: hidden;
-  transform: rotate(-2deg);
+  border-radius: 12px;
+  box-shadow: 0 24px 80px rgba(27,45,64,0.15), 0 4px 16px rgba(27,45,64,0.08);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
-.book-mockup::before {
-  content: '';
-  position: absolute; left: 0; top: 0; bottom: 0;
-  width: 20px;
-  background: linear-gradient(90deg, var(--parch-dk), var(--parchment));
-  border-right: 1px solid var(--border);
+
+.book-main {
+  width: 240px;
+  height: 280px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-2deg);
+  z-index: 3;
 }
-.book-content {
-  padding: 32px 32px 28px 52px;
-  height: 100%; display: flex; flex-direction: column;
-}
-.book-title-bar {
-  height: 10px; border-radius: 5px;
-  background: linear-gradient(90deg, var(--copper), var(--copper-dk));
-  width: 70%; margin-bottom: 18px;
-}
-.book-illus {
-  flex: 1;
-  background: linear-gradient(135deg, #E8F0F8 0%, #D8E8F4 100%);
-  border-radius: 10px; margin-bottom: 16px;
-  position: relative; overflow: hidden;
-  display: flex; align-items: center; justify-content: center;
-}
-.book-illus-inner {
-  width: 100%; height: 100%;
-  display: flex; align-items: center; justify-content: center;
-}
-/* Simple cute bear SVG inline */
-.book-bear {
+.book-back1 {
+  width: 240px;
+  height: 280px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-44%, -46%) rotate(5deg);
+  z-index: 2;
   opacity: 0.7;
 }
-.book-text-lines { display: flex; flex-direction: column; gap: 6px; }
+.book-back2 {
+  width: 240px;
+  height: 280px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-55%, -53%) rotate(-8deg);
+  z-index: 1;
+  opacity: 0.45;
+}
+
+.book-cover {
+  height: 160px;
+  background: linear-gradient(135deg, #2A4A66 0%, #1B2D40 100%);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.book-cover::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  border-style: solid;
+  border-width: 0 50px 40px 0;
+  border-color: transparent var(--parchment) transparent transparent;
+  opacity: 0.15;
+}
+.book-cover-lines {
+  width: 80%;
+}
+.book-body {
+  padding: 18px 20px;
+  flex: 1;
+}
 .book-line {
-  height: 8px; border-radius: 4px;
-  background: var(--ink); opacity: 0.12;
+  height: 8px;
+  border-radius: 4px;
+  margin-bottom: 8px;
 }
-.book-line.short { width: 55%; }
-.book-line.medium { width: 80%; }
-.book-line.full { width: 100%; }
+.book-line-orange { background: var(--copper); }
+.book-line-blue { background: var(--slate); opacity: 0.6; }
+.book-line-short { width: 60%; }
 
-/* Floating sticker patch */
-.patch-float {
-  position: absolute;
-  top: -14px; right: -20px;
-  transform: rotate(6deg);
-  filter: drop-shadow(0 8px 24px rgba(0,0,0,0.35));
-}
-.patch-float-2 {
-  position: absolute;
-  bottom: 20px; right: -32px;
-  transform: rotate(-4deg);
-  filter: drop-shadow(0 6px 18px rgba(0,0,0,0.3));
-  opacity: 0.9;
-}
-.float-chip {
-  position: absolute; top: -30px; left: 50px;
-  background: rgba(92,122,150,0.15);
-  border: 1px solid rgba(92,122,150,0.3);
-  border-radius: 40px; padding: 6px 14px;
-  font-size: 11px; font-weight: 600; color: var(--slate-lt);
-  letter-spacing: 0.5px; white-space: nowrap;
-}
-.float-chip-2 {
-  position: absolute; bottom: -20px; right: 60px;
-  background: rgba(212,120,47,0.12);
-  border: 1px solid rgba(212,120,47,0.3);
-  border-radius: 40px; padding: 6px 14px;
-  font-size: 11px; font-weight: 600; color: var(--copper);
-  letter-spacing: 0.5px; white-space: nowrap;
-}
-
-/* ════════════════════════════════════════
-   CREDIBILITY BAR
-════════════════════════════════════════ */
-#credbar {
-  background: var(--parchment);
-  border-bottom: 1px solid var(--border);
-  padding: 20px 0;
-}
-.credbar-inner {
-  display: flex; align-items: center; justify-content: center;
-  gap: 48px; flex-wrap: wrap;
-}
-.cred-item {
-  display: flex; align-items: center; gap: 10px;
-  font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
-  color: var(--soft); text-transform: uppercase;
-}
-.cred-icon {
-  width: 32px; height: 32px; border-radius: 50%;
-  background: rgba(27,45,64,0.08);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px;
-}
-.cred-sep { color: var(--border); font-size: 20px; }
-
-/* ════════════════════════════════════════
-   PROBLEM SECTION
-════════════════════════════════════════ */
-#problem {
-  padding: 110px 0;
-  background: var(--cream);
-}
-.problem-grid {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 72px; align-items: start;
-}
-.section-h2 {
-  font-size: 42px; font-weight: 800; line-height: 1.12;
-  letter-spacing: -1px; color: var(--ink); margin-bottom: 20px;
-}
-.section-h2 em { font-style: normal; color: var(--copper); }
-.section-body {
-  font-size: 16px; font-weight: 300; color: var(--soft);
-  line-height: 1.8; margin-bottom: 20px;
-}
-.problem-cards { display: flex; flex-direction: column; gap: 16px; }
-.problem-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 24px 28px;
-  box-shadow: var(--shadow-sm);
-  display: flex; gap: 18px; align-items: flex-start;
-}
-.prob-icon {
-  width: 42px; height: 42px; flex-shrink: 0;
-  border-radius: var(--radius-sm);
-  background: rgba(212,120,47,0.08);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px;
-}
-.prob-title {
-  font-size: 14px; font-weight: 700; color: var(--ink);
-  margin-bottom: 4px; letter-spacing: 0.2px;
-}
-.prob-body {
-  font-size: 13px; font-weight: 300; color: var(--soft);
-  line-height: 1.6;
-}
-
-/* ════════════════════════════════════════
-   INNOVATION SECTION
-════════════════════════════════════════ */
-#innovation {
-  background: var(--ink);
-  padding: 110px 0;
-  position: relative; overflow: hidden;
-}
-.innovation-glow {
-  position: absolute;
-  width: 500px; height: 500px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(212,120,47,0.12) 0%, transparent 70%);
-  right: -100px; top: -100px; pointer-events: none;
-}
-.innovation-inner {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 80px; align-items: center;
-  position: relative; z-index: 1;
-}
-.innovation-visual {
-  display: flex; justify-content: center;
-}
-.big-book {
-  width: 280px; position: relative;
-}
-.big-book-body {
-  width: 280px; height: 340px;
-  background: linear-gradient(135deg, #2A4560 0%, #1B2D40 100%);
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.1);
-  box-shadow: 0 24px 60px rgba(0,0,0,0.5);
-  position: relative; overflow: hidden;
-  display: flex; flex-direction: column;
-  padding: 28px 24px;
-  gap: 10px;
-}
-.big-book-spine {
-  position: absolute; left: 0; top: 0; bottom: 0; width: 16px;
-  background: linear-gradient(90deg, rgba(0,0,0,0.3), transparent);
-}
-.big-book-stripe {
-  height: 8px; border-radius: 4px;
-  background: rgba(255,255,255,0.08);
-}
-.big-book-stripe.accent { background: linear-gradient(90deg, var(--copper), var(--copper-dk)); width: 60%; }
-.big-book-illus-area {
-  flex: 1; border-radius: 8px;
-  background: rgba(255,255,255,0.05);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 48px; opacity: 0.4;
-}
-
-/* Floating language patches */
+/* Language patch overlay */
 .lang-patch {
   position: absolute;
-  background: var(--white);
-  border-radius: 8px;
-  padding: 8px 14px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.35);
-  font-size: 12px; font-weight: 700;
-  color: var(--ink); letter-spacing: 0.3px;
-  display: flex; align-items: center; gap: 8px;
+  background: var(--parchment);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--ink);
+  box-shadow: 0 2px 12px rgba(27,45,64,0.15);
   white-space: nowrap;
 }
 .lang-patch::before {
   content: '';
-  width: 8px; height: 8px; border-radius: 50%;
-  background: var(--copper); flex-shrink: 0;
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  background: var(--copper);
+  border-radius: 50%;
 }
-.lp1 { top: 20px; right: -60px; transform: rotate(3deg); }
-.lp2 { top: 100px; right: -75px; transform: rotate(-2deg); }
-.lp3 { top: 185px; right: -55px; transform: rotate(4deg); }
-.lp4 { top: 265px; right: -70px; transform: rotate(-3deg); }
+.lp-de { top: 20px; right: -20px; animation: float1 4s ease-in-out infinite; }
+.lp-es { top: 60px; left: -30px; animation: float2 4.5s ease-in-out infinite; }
+.lp-jp { bottom: 40px; right: -25px; animation: float3 3.8s ease-in-out infinite; }
+.lp-tr { bottom: 80px; left: -20px; animation: float1 5s 0.5s ease-in-out infinite; }
 
-.innov-h2 {
-  font-size: 44px; font-weight: 800; line-height: 1.1;
-  letter-spacing: -1px; color: var(--white);
+@keyframes float1 {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes float2 {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(7px); }
+}
+@keyframes float3 {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
+}
+
+/* ═══════════════════════════════════
+   SECTION SHARED
+═══════════════════════════════════ */
+section { padding: 100px 48px; }
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-eyebrow {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 3.5px;
+  text-transform: uppercase;
+  color: var(--copper);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-eyebrow::after {
+  content: '';
+  flex: 0 0 32px;
+  height: 1.5px;
+  background: var(--copper);
+  opacity: 0.5;
+}
+
+.section-title {
+  font-family: var(--font-serif);
+  font-size: clamp(28px, 3.5vw, 46px);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--ink);
   margin-bottom: 20px;
 }
-.innov-h2 em { font-style: normal; color: var(--copper); }
-.innov-body {
-  font-size: 16px; font-weight: 300;
-  color: rgba(255,255,255,0.6); line-height: 1.8;
-  margin-bottom: 28px;
-}
-.innov-body strong { color: rgba(255,255,255,0.9); font-weight: 600; }
-.innov-quote {
-  background: rgba(212,120,47,0.10);
-  border: 1px solid rgba(212,120,47,0.25);
-  border-left: 4px solid var(--copper);
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  padding: 18px 22px;
-  font-size: 17px; font-weight: 600;
-  color: rgba(255,255,255,0.85); line-height: 1.5;
-  margin-bottom: 32px;
-  font-style: italic;
-}
-.ip-block {
-  display: flex; align-items: center; gap: 14px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: var(--radius-sm);
-  padding: 14px 18px;
-}
-.ip-icon { font-size: 22px; flex-shrink: 0; }
-.ip-text { font-size: 12px; font-weight: 300; color: rgba(255,255,255,0.5); line-height: 1.5; }
-.ip-text strong { color: rgba(255,255,255,0.85); font-weight: 600; display: block; margin-bottom: 2px; }
+.section-title em { font-style: italic; color: var(--copper); }
 
-/* ════════════════════════════════════════
+.section-body {
+  font-size: 17px;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--ink);
+  opacity: 0.7;
+  max-width: 560px;
+}
+
+/* ═══════════════════════════════════
+   STATEMENT BAND
+═══════════════════════════════════ */
+#statement {
+  background: var(--ink);
+  padding: 80px 48px;
+}
+.statement-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: center;
+}
+.statement-quote {
+  font-family: var(--font-serif);
+  font-size: clamp(22px, 3.5vw, 42px);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--white);
+  line-height: 1.4;
+  margin-bottom: 24px;
+  opacity: 0.9;
+}
+.statement-quote strong {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--copper-light);
+}
+.statement-sub {
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+}
+
+/* ═══════════════════════════════════
+   PROBLEM → SOLUTION
+═══════════════════════════════════ */
+#problem {
+  background: var(--white);
+}
+.problem-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+  margin-top: 60px;
+}
+.problem-panel {
+  padding: 52px 48px;
+  position: relative;
+}
+.problem-panel.left {
+  background: var(--parchment);
+  border-radius: 12px 0 0 12px;
+}
+.problem-panel.right {
+  background: var(--ink);
+  border-radius: 0 12px 12px 0;
+}
+.panel-tag {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+.panel-tag.problem-tag { background: rgba(180,60,40,0.1); color: #b43c28; }
+.panel-tag.solution-tag { background: rgba(212,120,47,0.18); color: var(--copper-light); }
+.panel-title {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: 16px;
+}
+.problem-panel.left .panel-title { color: var(--ink); }
+.problem-panel.right .panel-title { color: var(--white); }
+.panel-body {
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.7;
+}
+.problem-panel.left .panel-body { color: rgba(27,45,64,0.65); }
+.problem-panel.right .panel-body { color: rgba(255,255,255,0.52); }
+
+.arrow-divider {
+  position: absolute;
+  right: -20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  background: var(--copper);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 16px;
+  z-index: 5;
+  box-shadow: 0 4px 20px rgba(212,120,47,0.4);
+}
+
+/* ═══════════════════════════════════
    HOW IT WORKS
-════════════════════════════════════════ */
-#howitworks {
-  padding: 110px 0;
+═══════════════════════════════════ */
+#how {
   background: var(--parchment);
 }
-.section-header {
-  text-align: center; margin-bottom: 64px;
-  max-width: 600px; margin-left: auto; margin-right: auto;
+.how-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: end;
+  margin-bottom: 72px;
 }
 .steps-grid {
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  gap: 0; position: relative;
-}
-.steps-connector {
-  position: absolute; top: 36px; left: 12.5%; right: 12.5%;
-  height: 1px;
-  background: repeating-linear-gradient(90deg, var(--copper) 0, var(--copper) 8px, transparent 8px, transparent 18px);
-  z-index: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
 }
 .step-card {
-  text-align: center; padding: 0 20px;
-  position: relative; z-index: 1;
+  background: var(--white);
+  padding: 36px 28px;
+  position: relative;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.step-card:first-child { border-radius: 12px 0 0 12px; }
+.step-card:last-child { border-radius: 0 12px 12px 0; }
+.step-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(27,45,64,0.12);
+  z-index: 2;
 }
 .step-num {
-  width: 72px; height: 72px; margin: 0 auto 20px;
-  border-radius: 50%;
-  background: var(--white);
-  border: 2px solid var(--copper);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 11px; font-weight: 800; letter-spacing: 2px;
-  color: var(--copper); text-transform: uppercase;
-  box-shadow: var(--shadow-md);
+  font-family: var(--font-serif);
+  font-size: 52px;
+  font-weight: 600;
+  color: var(--parchment);
+  line-height: 1;
+  margin-bottom: 20px;
+  -webkit-text-stroke: 1.5px var(--border);
 }
-.step-icon { font-size: 26px; }
+.step-highlight .step-num {
+  color: rgba(212,120,47,0.08);
+  -webkit-text-stroke: 1.5px rgba(212,120,47,0.35);
+}
+.step-icon {
+  width: 44px;
+  height: 44px;
+  background: var(--parchment);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  font-size: 20px;
+}
+.step-highlight .step-icon {
+  background: rgba(212,120,47,0.1);
+}
 .step-title {
-  font-size: 15px; font-weight: 700; color: var(--ink);
-  margin-bottom: 10px; letter-spacing: 0.2px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 10px;
+  line-height: 1.3;
 }
 .step-body {
-  font-size: 13px; font-weight: 300; color: var(--soft);
-  line-height: 1.7;
+  font-size: 13.5px;
+  font-weight: 300;
+  line-height: 1.6;
+  color: rgba(27,45,64,0.6);
+}
+.step-accent {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--border);
+}
+.step-highlight .step-accent {
+  background: var(--copper);
 }
 
-/* ════════════════════════════════════════
+/* ═══════════════════════════════════
    BENEFITS
-════════════════════════════════════════ */
+═══════════════════════════════════ */
 #benefits {
-  padding: 110px 0;
-  background: var(--cream);
+  background: var(--white);
+}
+.benefits-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+  margin-bottom: 60px;
 }
 .benefits-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 20px; margin-top: 56px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
 }
 .benefit-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 32px 28px;
-  box-shadow: var(--shadow-sm);
-  transition: transform .25s, box-shadow .25s;
+  padding: 40px 36px;
+  background: var(--parchment);
+  transition: background 0.3s, transform 0.3s;
+  position: relative;
 }
-.benefit-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-md);
-}
-.benefit-card.featured {
-  background: var(--ink); border-color: var(--ink);
-  grid-column: span 1;
-}
-.ben-num {
-  font-size: 11px; font-weight: 800; letter-spacing: 3px;
-  color: var(--copper); margin-bottom: 14px; display: block;
-  text-transform: uppercase;
-}
-.ben-num-white { color: rgba(212,120,47,0.8); }
-.ben-title {
-  font-size: 17px; font-weight: 700; color: var(--ink);
-  line-height: 1.3; margin-bottom: 12px;
-}
-.ben-title-white { color: var(--white); }
-.ben-body {
-  font-size: 13px; font-weight: 300; color: var(--soft);
-  line-height: 1.7;
-}
-.ben-body-white { color: rgba(255,255,255,0.5); }
-.ben-icon {
-  font-size: 28px; margin-bottom: 16px; display: block;
-}
+.benefit-card:nth-child(1) { border-radius: 12px 0 0 0; }
+.benefit-card:nth-child(2) { }
+.benefit-card:nth-child(3) { border-radius: 0 12px 0 0; }
+.benefit-card:nth-child(4) { border-radius: 0 0 0 12px; }
+.benefit-card:nth-child(5) { }
+.benefit-card:nth-child(6) { border-radius: 0 0 12px 0; }
 
-/* ════════════════════════════════════════
+.benefit-card:hover {
+  background: var(--ink);
+  transform: translateY(-3px);
+  z-index: 2;
+  box-shadow: 0 20px 60px rgba(27,45,64,0.2);
+}
+.benefit-icon {
+  font-size: 28px;
+  margin-bottom: 18px;
+  display: block;
+}
+.benefit-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 10px;
+  line-height: 1.3;
+  transition: color 0.3s;
+}
+.benefit-card:hover .benefit-title { color: var(--white); }
+.benefit-body {
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.65;
+  color: rgba(27,45,64,0.62);
+  transition: color 0.3s;
+}
+.benefit-card:hover .benefit-body { color: rgba(255,255,255,0.52); }
+.benefit-tag {
+  display: inline-block;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--copper);
+  margin-top: 14px;
+  transition: color 0.3s;
+}
+.benefit-card:hover .benefit-tag { color: var(--copper-light); }
+
+/* ═══════════════════════════════════
    USE CASES
-════════════════════════════════════════ */
+═══════════════════════════════════ */
 #usecases {
-  padding: 110px 0;
   background: var(--parchment);
 }
-.usecases-intro {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 64px; align-items: center; margin-bottom: 64px;
+.usecases-header {
+  text-align: center;
+  margin-bottom: 64px;
 }
-.cases-tabs {
-  display: grid; grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+.usecases-header .section-eyebrow {
+  justify-content: center;
 }
-.case-card {
-  background: var(--white);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 28px 24px;
-  box-shadow: var(--shadow-sm);
-  transition: all .25s;
-  cursor: default;
+.usecases-header .section-eyebrow::after { display: none; }
+.usecases-header .section-eyebrow::before {
+  content: '';
+  flex: 0 0 32px;
+  height: 1.5px;
+  background: var(--copper);
+  opacity: 0.5;
 }
-.case-card:hover {
-  border-color: var(--copper);
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-md);
-}
-.case-card.wide { grid-column: span 2; }
-.case-header {
-  display: flex; align-items: flex-start;
-  justify-content: space-between; gap: 12px; margin-bottom: 12px;
-}
-.case-emoji { font-size: 26px; }
-.case-badge {
-  font-size: 9px; font-weight: 700; letter-spacing: 2px;
-  text-transform: uppercase; color: var(--copper);
-  background: rgba(212,120,47,0.08);
-  padding: 4px 10px; border-radius: 40px;
-  border: 1px solid rgba(212,120,47,0.2);
-  white-space: nowrap;
-}
-.case-title {
-  font-size: 15px; font-weight: 700; color: var(--ink);
-  margin-bottom: 8px; line-height: 1.3;
-}
-.case-body {
-  font-size: 13px; font-weight: 300; color: var(--soft);
-  line-height: 1.65;
-}
-.case-detail {
-  margin-top: 12px; padding-top: 12px;
-  border-top: 1px solid var(--border);
-  font-size: 12px; font-weight: 600; color: var(--slate);
-  letter-spacing: 0.3px;
+.usecases-header .section-body {
+  max-width: 560px;
+  margin: 0 auto;
+  text-align: center;
 }
 
-/* Markets grid */
-.markets-section { margin-top: 80px; }
+.usecases-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3px;
+}
+.usecase-card {
+  background: var(--white);
+  padding: 52px 48px;
+  position: relative;
+  overflow: hidden;
+}
+.usecase-card:nth-child(1) { border-radius: 12px 0 0 0; }
+.usecase-card:nth-child(2) { border-radius: 0 12px 0 0; }
+.usecase-card:nth-child(3) { border-radius: 0 0 0 12px; }
+.usecase-card:nth-child(4) { border-radius: 0 0 12px 0; }
+
+.usecase-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+}
+.uc-markets::before { background: linear-gradient(90deg, var(--copper), #E89B58); }
+.uc-families::before { background: linear-gradient(90deg, var(--slate), #7A9CB8); }
+.uc-education::before { background: linear-gradient(90deg, #5A8A5A, #7AB87A); }
+.uc-braille::before { background: linear-gradient(90deg, #7A5A9A, #9A7ABA); }
+
+.usecase-emoji {
+  font-size: 36px;
+  margin-bottom: 20px;
+  display: block;
+}
+.usecase-title {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 12px;
+  line-height: 1.25;
+}
+.usecase-body {
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.7;
+  color: rgba(27,45,64,0.65);
+  margin-bottom: 24px;
+}
+.usecase-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.uc-tag {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 20px;
+  background: var(--parchment);
+  color: var(--ink);
+  opacity: 0.8;
+}
+.uc-braille .uc-tag { background: rgba(122,90,154,0.08); color: #7A5A9A; }
+.uc-markets .uc-tag { background: rgba(212,120,47,0.08); color: var(--copper-dark); }
+.uc-families .uc-tag { background: rgba(92,122,150,0.1); color: var(--slate); }
+.uc-education .uc-tag { background: rgba(90,138,90,0.08); color: #3D6B3D; }
+
+/* ═══════════════════════════════════
+   MARKETS
+═══════════════════════════════════ */
+#markets {
+  background: var(--ink);
+  padding: 100px 48px;
+}
+.markets-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: end;
+  margin-bottom: 60px;
+}
+.markets-header .section-eyebrow { color: var(--copper-light); }
+.markets-header .section-eyebrow::after { background: var(--copper-light); }
+.markets-header .section-title { color: var(--white); }
+.markets-header .section-body { color: rgba(255,255,255,0.5); }
+
 .markets-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px; margin-top: 36px;
+  gap: 2px;
 }
-.market-chip {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 16px 14px;
-  text-align: center;
-  box-shadow: var(--shadow-sm);
-  transition: all .2s;
-}
-.market-chip:hover {
-  border-color: var(--slate); transform: translateY(-2px);
-}
-.market-flag { font-size: 26px; display: block; margin-bottom: 6px; }
-.market-name {
-  font-size: 12px; font-weight: 700; color: var(--ink);
-  margin-bottom: 3px; letter-spacing: 0.3px;
-}
-.market-stat {
-  font-size: 10px; font-weight: 300; color: var(--soft);
-}
-
-/* ════════════════════════════════════════
-   PUBLISHERS SECTION
-════════════════════════════════════════ */
-#publishers {
-  padding: 110px 0;
-  background: var(--ink);
-  position: relative; overflow: hidden;
-}
-.pub-bg {
-  position: absolute; inset: 0;
-  background: radial-gradient(ellipse 70% 80% at 100% 50%, rgba(92,122,150,0.12) 0%, transparent 60%);
-  pointer-events: none;
-}
-.pub-intro { max-width: 680px; margin-bottom: 56px; }
-.pub-h2 {
-  font-size: 44px; font-weight: 800; line-height: 1.1;
-  letter-spacing: -1px; color: var(--white); margin-bottom: 18px;
-}
-.pub-h2 em { font-style: normal; color: var(--copper); }
-.pub-subhead {
-  font-size: 16px; font-weight: 300;
-  color: rgba(255,255,255,0.55); line-height: 1.8;
-}
-.publishers-list {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 16px; position: relative; z-index: 1;
-}
-.pub-card {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: var(--radius-md);
+.market-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
   padding: 28px 24px;
-  transition: all .25s;
+  transition: background 0.3s, border-color 0.3s, transform 0.3s;
+  cursor: default;
 }
-.pub-card:hover {
-  background: rgba(255,255,255,0.07);
-  border-color: rgba(255,255,255,0.16);
+.market-card:hover {
+  background: rgba(255,255,255,0.09);
+  border-color: rgba(212,120,47,0.3);
   transform: translateY(-3px);
 }
-.pub-country {
-  font-size: 10px; font-weight: 700; letter-spacing: 3px;
-  text-transform: uppercase; color: var(--copper);
-  margin-bottom: 10px; display: block;
+.market-flag { font-size: 28px; margin-bottom: 12px; display: block; }
+.market-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 6px;
 }
-.pub-name {
-  font-size: 18px; font-weight: 700; color: var(--white);
-  margin-bottom: 8px; line-height: 1.2;
+.market-stat {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--copper-light);
+  line-height: 1;
+  margin-bottom: 4px;
 }
-.pub-desc {
-  font-size: 12px; font-weight: 300;
-  color: rgba(255,255,255,0.4); line-height: 1.6;
-  margin-bottom: 14px;
-}
-.pub-opportunity {
-  font-size: 12px; font-weight: 500;
-  color: var(--slate-lt); line-height: 1.5;
-  padding-top: 14px;
-  border-top: 1px solid rgba(255,255,255,0.08);
+.market-label {
+  font-size: 11px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.35);
+  line-height: 1.4;
 }
 
-/* ════════════════════════════════════════
-   BRAILLE / ACCESSIBILITY SECTION
-════════════════════════════════════════ */
-#braille {
-  padding: 100px 0;
-  background: linear-gradient(135deg, #1B2D40 0%, #243F5A 100%);
-  position: relative; overflow: hidden;
+/* ═══════════════════════════════════
+   BRAILLE / ACCESSIBILITY
+═══════════════════════════════════ */
+#accessibility {
+  background: var(--white);
 }
-.braille-glow {
-  position: absolute; right: -80px; bottom: -80px;
-  width: 400px; height: 400px;
-  background: radial-gradient(circle, rgba(92,122,150,0.2) 0%, transparent 70%);
-  pointer-events: none;
+.accessibility-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
 }
-.braille-inner {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 80px; align-items: center;
-  position: relative; z-index: 1;
+.accessibility-visual {
+  background: var(--parchment);
+  border-radius: 16px;
+  padding: 52px;
+  position: relative;
+  overflow: hidden;
 }
 .braille-dots {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 14px; max-width: 240px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
 }
 .bdot {
-  width: 60px; height: 60px; border-radius: 50%;
-  background: rgba(255,255,255,0.08);
-  border: 1.5px solid rgba(255,255,255,0.12);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 22px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--ink);
+  opacity: 0.15;
 }
-.bdot.lit {
-  background: rgba(92,122,150,0.25);
-  border-color: var(--slate);
-  box-shadow: 0 0 20px rgba(92,122,150,0.3);
+.bdot.active {
+  background: var(--ink);
+  opacity: 0.8;
+  box-shadow: 0 2px 8px rgba(27,45,64,0.3);
 }
-.braille-h2 {
-  font-size: 38px; font-weight: 800; line-height: 1.1;
-  letter-spacing: -0.8px; color: var(--white);
-  margin-bottom: 18px;
+.braille-caption {
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--soft);
 }
-.braille-h2 em { font-style: normal; color: var(--slate-lt); }
-.braille-body {
-  font-size: 15px; font-weight: 300;
-  color: rgba(255,255,255,0.55); line-height: 1.8;
-  margin-bottom: 28px;
-}
-.braille-body strong { color: rgba(255,255,255,0.85); font-weight: 600; }
-.braille-quote {
-  background: rgba(92,122,150,0.1);
-  border-left: 3px solid var(--slate);
-  padding: 16px 20px; border-radius: 0 8px 8px 0;
-  font-size: 14px; font-weight: 500;
-  color: rgba(255,255,255,0.7); line-height: 1.6;
-  font-style: italic;
-}
-
-/* ════════════════════════════════════════
-   IP / LEGAL SECTION
-════════════════════════════════════════ */
-#ip {
-  padding: 80px 0;
-  background: var(--cream);
-  border-top: 1px solid var(--border);
-}
-.ip-grid {
-  display: grid; grid-template-columns: 1fr 1fr 1fr;
-  gap: 20px; margin-top: 48px;
-}
-.ip-card {
+.braille-overlay-demo {
   background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 28px 26px;
-  box-shadow: var(--shadow-sm);
+  border-radius: 10px;
+  padding: 20px 24px;
+  box-shadow: 0 8px 32px rgba(27,45,64,0.1);
+  margin-top: 24px;
 }
-.ip-card-icon {
-  font-size: 28px; margin-bottom: 14px; display: block;
+.bod-line {
+  height: 10px;
+  background: var(--slate);
+  border-radius: 5px;
+  margin-bottom: 10px;
+  opacity: 0.2;
 }
-.ip-card-title {
-  font-size: 14px; font-weight: 700; color: var(--ink);
-  margin-bottom: 8px; letter-spacing: 0.2px;
+.bod-line.braille { 
+  background: var(--ink);
+  opacity: 0.6;
+  height: 4px;
+  letter-spacing: 3px;
 }
-.ip-card-body {
-  font-size: 13px; font-weight: 300; color: var(--soft);
+.accessibility-content .section-body {
+  margin-bottom: 32px;
+}
+.accessibility-feature {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
+}
+.accessibility-feature:last-child { border-bottom: none; }
+.af-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: var(--parchment);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.af-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 5px;
+}
+.af-body {
+  font-size: 13.5px;
+  font-weight: 300;
+  line-height: 1.6;
+  color: rgba(27,45,64,0.6);
+}
+
+/* ═══════════════════════════════════
+   PATENT CREDIBILITY
+═══════════════════════════════════ */
+#patent {
+  background: var(--parchment);
+  padding: 80px 48px;
+}
+.patent-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+.patent-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 24px 32px;
+  margin-bottom: 32px;
+}
+.patent-badge-icon {
+  width: 52px;
+  height: 52px;
+  background: rgba(212,120,47,0.1);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+.patent-num {
+  font-family: 'Courier New', monospace;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 1px;
+}
+.patent-date {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--soft);
+  margin-top: 2px;
+}
+
+.patent-facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.patent-fact {
+  background: var(--white);
+  border-radius: 10px;
+  padding: 20px 24px;
+  border-left: 3px solid var(--copper);
+}
+.pf-label {
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--soft);
+  margin-bottom: 6px;
+}
+.pf-value {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.3;
+}
+
+/* ═══════════════════════════════════
+   CTA / CONTACT
+═══════════════════════════════════ */
+#contact {
+  background: var(--ink);
+  padding: 120px 48px;
+}
+.contact-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+.contact-eyebrow {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 3.5px;
+  text-transform: uppercase;
+  color: var(--copper-light);
+  opacity: 0.7;
+  margin-bottom: 24px;
+}
+.contact-title {
+  font-family: var(--font-serif);
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 600;
+  color: var(--white);
+  line-height: 1.15;
+  margin-bottom: 20px;
+}
+.contact-title em {
+  font-style: italic;
+  color: var(--copper-light);
+}
+.contact-body {
+  font-size: 17px;
+  font-weight: 300;
   line-height: 1.7;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 48px;
 }
-.ip-card.highlight {
-  border-color: var(--copper);
-  background: linear-gradient(135deg, rgba(212,120,47,0.03) 0%, var(--white) 100%);
+.contact-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 56px;
 }
-.ip-card.highlight .ip-card-title { color: var(--copper); }
-
-/* ════════════════════════════════════════
-   CTA SECTION
-════════════════════════════════════════ */
-#cta {
-  padding: 120px 0;
-  background: linear-gradient(135deg, var(--copper) 0%, #B8621F 100%);
-  position: relative; overflow: hidden;
+.btn-cta-light {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--copper);
+  color: var(--white);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 18px 40px;
+  border-radius: 4px;
+  transition: background 0.25s, transform 0.2s;
 }
-.cta-texture {
-  position: absolute; inset: 0;
-  background-image:
-    linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
-  background-size: 40px 40px;
-  pointer-events: none;
+.btn-cta-light:hover {
+  background: var(--copper-dark);
+  transform: translateY(-2px);
 }
-.cta-inner {
-  text-align: center; position: relative; z-index: 1;
+.btn-email-link {
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  padding-bottom: 2px;
+  transition: color 0.2s, border-color 0.2s;
 }
-.cta-h2 {
-  font-size: 50px; font-weight: 800; line-height: 1.08;
-  letter-spacing: -1.5px; color: var(--white);
-  margin-bottom: 16px;
+.btn-email-link:hover {
+  color: var(--white);
+  border-color: rgba(255,255,255,0.5);
 }
-.cta-subhead {
-  font-size: 17px; font-weight: 300;
-  color: rgba(255,255,255,0.75); line-height: 1.7;
-  max-width: 520px; margin: 0 auto 40px;
-}
-.cta-buttons { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; }
-.btn-white {
-  background: var(--white); color: var(--copper);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-}
-.btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.25); }
-.cta-contact {
-  margin-top: 32px;
-  font-size: 14px; font-weight: 300; color: rgba(255,255,255,0.6);
-}
-.cta-contact a {
-  color: var(--white); font-weight: 600; text-decoration: none;
-  border-bottom: 1px solid rgba(255,255,255,0.4);
-}
-.cta-contact a:hover { border-bottom-color: var(--white); }
-
-/* ════════════════════════════════════════
-   FOOTER
-════════════════════════════════════════ */
-footer {
-  background: var(--ink); padding: 52px 0 28px;
-}
-.footer-top {
-  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 48px; margin-bottom: 40px;
-}
-.footer-brand p {
-  font-size: 13px; font-weight: 300; color: rgba(255,255,255,0.4);
-  line-height: 1.7; margin-top: 12px; max-width: 280px;
-}
-.footer-col-title {
-  font-size: 10px; font-weight: 700; letter-spacing: 3px;
-  text-transform: uppercase; color: rgba(255,255,255,0.35);
-  margin-bottom: 14px;
-}
-.footer-col ul { list-style: none; }
-.footer-col ul li { margin-bottom: 8px; }
-.footer-col ul li a {
-  font-size: 13px; font-weight: 300; color: rgba(255,255,255,0.5);
-  text-decoration: none; transition: color .2s;
-}
-.footer-col ul li a:hover { color: rgba(255,255,255,0.85); }
-.footer-bottom {
+.contact-divider {
+  border: none;
   border-top: 1px solid rgba(255,255,255,0.08);
-  padding-top: 24px;
-  display: flex; justify-content: space-between; align-items: center;
-  flex-wrap: wrap; gap: 12px;
+  margin-bottom: 36px;
 }
-.footer-bottom p {
-  font-size: 12px; font-weight: 300; color: rgba(255,255,255,0.25);
-}
-.footer-ip {
-  font-size: 11px; font-weight: 600; letter-spacing: 1px;
-  color: rgba(212,120,47,0.6); text-transform: uppercase;
+.contact-tagline {
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.18);
 }
 
-/* ════════════════════════════════════════
-   INLINE SVG LOGO (reused)
-════════════════════════════════════════ */
-.logo-svg-inline {
-  display: flex; align-items: center; gap: 12px;
+/* ═══════════════════════════════════
+   FOOTER
+═══════════════════════════════════ */
+footer {
+  background: #0F1D2B;
+  padding: 40px 48px;
+}
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer-logo .nav-wordmark {
+  font-size: 18px;
+}
+.footer-logo .nav-wordmark .w-story { color: rgba(255,255,255,0.5); }
+.footer-logo .nav-wordmark .w-patch { color: var(--copper); }
+.footer-logo-img {
+  height: 32px;
+  width: auto;
+  display: block;
+  opacity: 0.85;
+}
+.footer-tagline {
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.2);
+  margin-top: 4px;
+}
+.footer-patent {
+  font-size: 11px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.2);
+  text-align: center;
+}
+.footer-email a {
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 0.5px;
+  transition: color 0.2s;
+}
+.footer-email a:hover { color: var(--copper-light); }
+
+/* ═══════════════════════════════════
+   ANIMATIONS
+═══════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-/* ════════════════════════════════════════
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+.reveal-delay-5 { transition-delay: 0.5s; }
+
+/* ═══════════════════════════════════
    RESPONSIVE
-════════════════════════════════════════ */
-@media (max-width: 900px) {
-  .hero-inner, .problem-grid, .innovation-inner,
-  .braille-inner, .usecases-intro { grid-template-columns: 1fr; }
-  .hero-h1, .hero-h1-sub { font-size: 38px; }
-  .section-h2 { font-size: 32px; }
-  .steps-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
-  .steps-connector { display: none; }
-  .benefits-grid { grid-template-columns: 1fr 1fr; }
-  .markets-grid { grid-template-columns: repeat(2, 1fr); }
-  .publishers-list { grid-template-columns: 1fr 1fr; }
-  .ip-grid { grid-template-columns: 1fr 1fr; }
-  .footer-top { grid-template-columns: 1fr 1fr; }
-  .cases-tabs { grid-template-columns: 1fr; }
-  .case-card.wide { grid-column: span 1; }
-  .hero-visual { display: none; }
+═══════════════════════════════════ */
+@media (max-width: 1024px) {
+  nav { padding: 0 32px; }
   .nav-links { display: none; }
-  .braille-dots { margin: 0 auto 40px; }
+  section { padding: 80px 32px; }
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-right { display: none; }
+  .problem-grid { grid-template-columns: 1fr; }
+  .problem-panel.left { border-radius: 12px 12px 0 0; }
+  .problem-panel.right { border-radius: 0 0 12px 12px; }
+  .arrow-divider { display: none; }
+  .steps-grid { grid-template-columns: repeat(2, 1fr); }
+  .step-card:first-child { border-radius: 12px 0 0 0; }
+  .step-card:nth-child(2) { border-radius: 0 12px 0 0; }
+  .step-card:nth-child(3) { border-radius: 0 0 0 12px; }
+  .step-card:last-child { border-radius: 0 0 12px 0; }
+  .how-header { grid-template-columns: 1fr; gap: 24px; }
+  .benefits-header { grid-template-columns: 1fr; gap: 24px; }
+  .benefits-grid { grid-template-columns: repeat(2, 1fr); }
+  .usecases-grid { grid-template-columns: 1fr; }
+  .usecase-card { border-radius: 12px !important; }
+  .markets-grid { grid-template-columns: repeat(2, 1fr); }
+  .markets-header { grid-template-columns: 1fr; gap: 24px; }
+  .accessibility-grid { grid-template-columns: 1fr; }
+  .patent-inner { grid-template-columns: 1fr; gap: 40px; }
+  .hero-stats { flex-wrap: wrap; gap: 24px; }
 }
-@media (max-width: 600px) {
-  .benefits-grid, .markets-grid, .publishers-list, .ip-grid { grid-template-columns: 1fr; }
-  .footer-top { grid-template-columns: 1fr; }
-  .cta-h2 { font-size: 34px; }
-  .steps-grid { grid-template-columns: 1fr; }
+
+@media (max-width: 640px) {
+  section { padding: 60px 20px; }
+  #hero { padding: 100px 20px 60px; }
+  .benefits-grid { grid-template-columns: 1fr; }
+  .markets-grid { grid-template-columns: repeat(2, 1fr); }
+  .patent-facts { grid-template-columns: 1fr; }
+  .contact-actions { flex-direction: column; }
+  footer { padding: 32px 20px; }
+  .footer-inner { flex-direction: column; gap: 20px; text-align: center; }
 }
 </style>
 </head>
 <body>
 
-<!-- ════ NAVIGATION ════ -->
-<nav>
-  <div class="container nav-inner">
-    <a href="#" class="nav-logo">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 68" width="44" height="37">
-        <defs>
-          <filter id="ns" x="-25%" y="-25%" width="160%" height="160%">
-            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#1B2D40" flood-opacity="0.15"/>
-          </filter>
-          <linearGradient id="npg" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#E8C9A0"/>
-            <stop offset="100%" stop-color="#BF8B56"/>
-          </linearGradient>
-        </defs>
-        <g transform="rotate(-1.5 40 34)">
-          <polygon points="79,50 62.5,67.5 80,67.5" fill="rgba(27,45,64,0.09)"/>
-          <path d="M 11,2 H 69 Q 78,2 78,11 V 48 L 60,66 H 11 Q 2,66 2,57 V 11 Q 2,2 11,2 Z"
-                fill="#FFFFFF" filter="url(#ns)" stroke="#E0D5C6" stroke-width="0.8"/>
-          <polygon points="78,48 60,66 78,66" fill="url(#npg)"/>
-          <line x1="78" y1="48" x2="60" y2="66" stroke="#A07845" stroke-width="0.6" stroke-opacity="0.35"/>
-          <path d="M 12,19 C 16.5,17.5 24,20.5 28.5,19 C 33,17.5 40.5,20.5 45,19 C 48.5,17.5 52,19.2 54,19"
-                fill="none" stroke="#D4782F" stroke-width="2.8" stroke-linecap="round"/>
-          <path d="M 12,33 C 16.5,31.5 24,34.5 28.5,33 C 33,31.5 40.5,34.5 45,33 C 49.5,31.5 57,34.5 61.5,33 C 64,32 66,33.2 67,33"
-                fill="none" stroke="#5C7A96" stroke-width="2" stroke-linecap="round"/>
-          <path d="M 12,47 C 16.5,45.5 24,48.5 28.5,47 C 33,45.5 40.5,48.5 45,47 C 48,45.8 51,47.3 52,47"
-                fill="none" stroke="#5C7A96" stroke-width="2" stroke-linecap="round"/>
-        </g>
-      </svg>
-      <div class="nav-wordmark">Story<strong>Patch</strong></div>
-    </a>
-
-    <ul class="nav-links">
-      <li><a href="#innovation">The Innovation</a></li>
-      <li><a href="#howitworks">How It Works</a></li>
-      <li><a href="#benefits">Benefits</a></li>
-      <li><a href="#usecases">Use Cases</a></li>
-      <li><a href="#publishers">Publishers</a></li>
-    </ul>
-
-    <a href="mailto:hello@storypatch.com" class="nav-cta">Request Licence Info</a>
-  </div>
+<!-- ═══════════════════════════════
+     NAVIGATION
+═══════════════════════════════ -->
+<nav id="mainNav">
+  <a href="#hero" class="nav-logo">
+    <!-- StoryPatch icon: square card, beige border, white fill, gold fold, 3 pill bars -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="nav-logo-icon" aria-hidden="true">
+      <defs>
+        <filter id="navsh" x="-10%" y="-10%" width="120%" height="120%">
+          <feDropShadow dx="0" dy="1.5" stdDeviation="3" flood-color="#1B2D40" flood-opacity="0.13"/>
+        </filter>
+        <linearGradient id="navfold" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#E2C48A"/>
+          <stop offset="100%" stop-color="#BF9050"/>
+        </linearGradient>
+      </defs>
+      <!-- Beige border frame -->
+      <rect x="0" y="0" width="100" height="100" rx="20" fill="#DDD5CA"/>
+      <!-- White card with clipped bottom-right (fold cut) -->
+      <path d="M 6,20 Q 6,6 20,6 L 80,6 Q 94,6 94,20 L 94,70 L 70,94 L 20,94 Q 6,94 6,80 Z" fill="#FFFFFF" filter="url(#navsh)"/>
+      <!-- Gold fold triangle -->
+      <path d="M 94,70 L 70,94 L 94,94 Z" fill="url(#navfold)"/>
+      <!-- Orange pill bar (top, widest) -->
+      <rect x="18" y="27" width="54" height="11" rx="5.5" fill="#D4782F"/>
+      <!-- Blue pill bar (middle) -->
+      <rect x="18" y="45" width="43" height="11" rx="5.5" fill="#5C7A96"/>
+      <!-- Blue pill bar (bottom, shortest) -->
+      <rect x="18" y="63" width="33" height="11" rx="5.5" fill="#5C7A96"/>
+    </svg>
+    <div class="nav-wordmark"><span class="w-story">Story</span><span class="w-patch">Patch</span></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#benefits">For Publishers</a></li>
+    <li><a href="#usecases">Use Cases</a></li>
+    <li><a href="#markets">Markets</a></li>
+    <li><a href="#patent">Patent</a></li>
+    <li><a href="#contact" class="nav-cta">Request Partnership</a></li>
+  </ul>
 </nav>
 
-<!-- ════ HERO ════ -->
+
+<!-- ═══════════════════════════════
+     HERO
+═══════════════════════════════ -->
 <section id="hero">
-  <div class="hero-bg-texture"></div>
+  <div class="hero-bg-pattern"></div>
   <div class="hero-grid-lines"></div>
-  <div class="container">
-    <div class="hero-inner">
-      <div>
-        <div class="hero-eyebrow">
-          <span class="hero-badge">Publishing Innovation</span>
-          <span class="hero-badge-ip">Utility Model CZ&nbsp;39118&nbsp;·&nbsp;Registered 2026</span>
-        </div>
-
-        <div class="hero-h1">One book.</div>
-        <div class="hero-h1-sub">Every language.</div>
-
-        <p class="hero-subhead">
-          StoryPatch is a <strong>patented publishing technology</strong> for children's board books that replaces
-          fixed-language print runs with interchangeable text layers — enabling any publisher to
-          serve multiple language markets from a single production run.
-        </p>
-
-        <div class="hero-ctas">
-          <a href="mailto:hello@storypatch.com" class="btn btn-primary btn-arrow">Request Licensing Info</a>
-          <a href="#howitworks" class="btn btn-ghost">See How It Works</a>
-        </div>
-
-        <div class="hero-metrics">
-          <div>
-            <div class="metric-val">4<span>+</span></div>
-            <div class="metric-lbl">Continents targeted</div>
-          </div>
-          <div>
-            <div class="metric-val">0</div>
-            <div class="metric-lbl">Extra print runs needed</div>
-          </div>
-          <div>
-            <div class="metric-val">∞</div>
-            <div class="metric-lbl">Language combinations</div>
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-eyebrow">
+        <span class="hero-eyebrow-dot"></span>
+        Patented Publishing Innovation · CZ 39118 U1
+      </div>
+      <div class="hero-logo-tagline">
+        <div class="hero-logo-inline">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="hero-logo-icon" aria-hidden="true">
+            <defs>
+              <filter id="herosh" x="-10%" y="-10%" width="120%" height="120%">
+                <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#1B2D40" flood-opacity="0.14"/>
+              </filter>
+              <linearGradient id="herofold" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#E2C48A"/>
+                <stop offset="100%" stop-color="#BF9050"/>
+              </linearGradient>
+            </defs>
+            <!-- Beige border frame -->
+            <rect x="0" y="0" width="100" height="100" rx="20" fill="#DDD5CA"/>
+            <!-- White card with fold cut -->
+            <path d="M 6,20 Q 6,6 20,6 L 80,6 Q 94,6 94,20 L 94,70 L 70,94 L 20,94 Q 6,94 6,80 Z" fill="#FFFFFF" filter="url(#herosh)"/>
+            <!-- Gold fold triangle -->
+            <path d="M 94,70 L 70,94 L 94,94 Z" fill="url(#herofold)"/>
+            <!-- Orange pill bar -->
+            <rect x="18" y="27" width="54" height="11" rx="5.5" fill="#D4782F"/>
+            <!-- Blue pill bar (middle) -->
+            <rect x="18" y="45" width="43" height="11" rx="5.5" fill="#5C7A96"/>
+            <!-- Blue pill bar (bottom) -->
+            <rect x="18" y="63" width="33" height="11" rx="5.5" fill="#5C7A96"/>
+          </svg>
+          <div class="hero-logo-text">
+            <div class="hero-wordmark"><span class="w-story">Story</span><span class="w-patch">Patch</span></div>
+            <div class="hero-tagline-text">One Book &nbsp;·&nbsp; Every Language</div>
           </div>
         </div>
       </div>
-
-      <!-- Visual -->
-      <div class="hero-visual">
-        <div style="position:relative; padding: 30px 80px 30px 0;">
-          <div class="float-chip">🇩🇪 Deutsch overlay</div>
-
-          <div class="book-mockup">
-            <div class="book-content">
-              <div class="book-title-bar"></div>
-              <div class="book-illus">
-                <!-- cute bear illustration SVG -->
-                <svg width="100" height="90" viewBox="0 0 100 90" fill="none" xmlns="http://www.w3.org/2000/svg" class="book-bear">
-                  <circle cx="50" cy="55" r="28" fill="#D4A574" opacity="0.6"/>
-                  <circle cx="50" cy="52" r="22" fill="#E8C49A" opacity="0.7"/>
-                  <circle cx="34" cy="34" r="10" fill="#D4A574" opacity="0.6"/>
-                  <circle cx="66" cy="34" r="10" fill="#D4A574" opacity="0.6"/>
-                  <circle cx="50" cy="56" r="7" fill="#C4A08A" opacity="0.5"/>
-                  <circle cx="44" cy="50" r="3" fill="#7A5A40" opacity="0.6"/>
-                  <circle cx="56" cy="50" r="3" fill="#7A5A40" opacity="0.6"/>
-                  <path d="M 44 62 Q 50 68 56 62" stroke="#7A5A40" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6"/>
-                </svg>
-              </div>
-              <div class="book-text-lines">
-                <div class="book-line full"></div>
-                <div class="book-line medium"></div>
-                <div class="book-line short"></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Floating patches -->
-          <div class="patch-float">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 68" width="70" height="60">
-              <defs>
-                <filter id="hps" x="-30%" y="-30%" width="180%" height="180%">
-                  <feDropShadow dx="1" dy="3" stdDeviation="4" flood-color="#000" flood-opacity="0.3"/>
-                </filter>
-                <linearGradient id="hpg" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#E8C9A0"/>
-                  <stop offset="100%" stop-color="#BF8B56"/>
-                </linearGradient>
-              </defs>
-              <g transform="rotate(-1.5 40 34)">
-                <polygon points="79,50 62.5,67.5 80,67.5" fill="rgba(0,0,0,0.12)"/>
-                <path d="M 11,2 H 69 Q 78,2 78,11 V 48 L 60,66 H 11 Q 2,66 2,57 V 11 Q 2,2 11,2 Z"
-                      fill="#FFFAF5" filter="url(#hps)" stroke="#E0D5C6" stroke-width="0.8"/>
-                <polygon points="78,48 60,66 78,66" fill="url(#hpg)"/>
-                <path d="M 12,22 C 16,20.5 22,23 27,22 C 32,20.5 38,23 43,22 C 46,20.5 49,22 51,22"
-                      fill="none" stroke="#D4782F" stroke-width="2.5" stroke-linecap="round"/>
-                <path d="M 12,35 C 16,33.5 22,36 27,35 C 32,33.5 38,36 43,35 C 49,33.5 55,36 60,35 C 63,34 65,35 67,35"
-                      fill="none" stroke="#5C7A96" stroke-width="1.8" stroke-linecap="round"/>
-                <path d="M 12,48 C 16,46.5 22,49 27,48 C 32,46.5 38,49 43,48 C 46,47 49,48 50,48"
-                      fill="none" stroke="#5C7A96" stroke-width="1.8" stroke-linecap="round"/>
-                <text x="15" y="28" font-family="Raleway,sans-serif" font-size="8" font-weight="700" fill="#1B2D40" opacity="0.6">ES</text>
-              </g>
-            </svg>
-          </div>
-
-          <div class="patch-float-2">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 68" width="60" height="52">
-              <defs>
-                <filter id="hps2" x="-30%" y="-30%" width="180%" height="180%">
-                  <feDropShadow dx="1" dy="3" stdDeviation="4" flood-color="#000" flood-opacity="0.25"/>
-                </filter>
-                <linearGradient id="hpg2" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#E8C9A0"/>
-                  <stop offset="100%" stop-color="#BF8B56"/>
-                </linearGradient>
-              </defs>
-              <g transform="rotate(3 40 34)">
-                <polygon points="79,50 62.5,67.5 80,67.5" fill="rgba(0,0,0,0.1)"/>
-                <path d="M 11,2 H 69 Q 78,2 78,11 V 48 L 60,66 H 11 Q 2,66 2,57 V 11 Q 2,2 11,2 Z"
-                      fill="#FFFAF5" filter="url(#hps2)" stroke="#E0D5C6" stroke-width="0.8"/>
-                <polygon points="78,48 60,66 78,66" fill="url(#hpg2)"/>
-                <path d="M 12,22 C 16,20.5 22,23 27,22 C 32,20.5 36,23 40,22"
-                      fill="none" stroke="#D4782F" stroke-width="2.5" stroke-linecap="round"/>
-                <path d="M 12,35 C 16,33.5 22,36 27,35 C 32,33.5 38,36 43,35 C 46,34 50,35 52,35"
-                      fill="none" stroke="#5C7A96" stroke-width="1.8" stroke-linecap="round"/>
-                <text x="15" y="28" font-family="Raleway,sans-serif" font-size="8" font-weight="700" fill="#1B2D40" opacity="0.6">JP</text>
-              </g>
-            </svg>
-          </div>
-
-          <div class="float-chip-2">♿ Braille overlay</div>
+      <h1 class="hero-headline">
+        One book.<br>
+        <em>Every language.</em><br>
+        <span class="hl-light">Zero reprints.</span>
+      </h1>
+      <p class="hero-sub">
+        StoryPatch introduces interchangeable text layers for children's board books — enabling publishers to serve multilingual markets from a single print run, without inventory risk.
+      </p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn-primary">
+          Request Partnership
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <a href="#how" class="btn-secondary">See How It Works</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="hero-stat-num">8<span>+</span></div>
+          <div class="hero-stat-label">Target Markets</div>
         </div>
+        <div>
+          <div class="hero-stat-num">1</div>
+          <div class="hero-stat-label">Print Run</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">∞</div>
+          <div class="hero-stat-label">Language Editions</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="book-visual">
+        <!-- Back books -->
+        <div class="book-card book-back2">
+          <div class="book-cover">
+            <svg class="book-cover-lines" viewBox="0 0 160 40" fill="none" opacity="0.3">
+              <path d="M 10,10 C 20,8 35,12 50,10 C 65,8 80,12 95,10 C 110,8 130,11 145,10" stroke="white" stroke-width="3" stroke-linecap="round"/>
+              <path d="M 10,22 C 20,20 35,24 50,22 C 65,20 80,24 95,22 C 110,20 130,23 145,22" stroke="white" stroke-width="2" stroke-linecap="round"/>
+              <path d="M 10,34 C 20,32 35,36 50,34 C 65,32 80,36 95,34" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="book-body">
+            <div class="book-line book-line-orange"></div>
+            <div class="book-line book-line-blue"></div>
+            <div class="book-line book-line-blue book-line-short"></div>
+          </div>
+        </div>
+        <div class="book-card book-back1">
+          <div class="book-cover" style="background: linear-gradient(135deg, #3A5A30 0%, #2A4A22 100%);">
+            <svg class="book-cover-lines" viewBox="0 0 160 40" fill="none" opacity="0.3">
+              <path d="M 10,10 C 20,8 35,12 50,10 C 65,8 80,12 95,10 C 110,8 130,11 145,10" stroke="white" stroke-width="3" stroke-linecap="round"/>
+              <path d="M 10,22 C 20,20 35,24 50,22 C 65,20 80,24 95,22 C 110,20 130,23 145,22" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="book-body">
+            <div class="book-line book-line-blue"></div>
+            <div class="book-line book-line-blue book-line-short"></div>
+          </div>
+        </div>
+        <!-- Main book -->
+        <div class="book-card book-main">
+          <div class="book-cover">
+            <svg class="book-cover-lines" viewBox="0 0 160 50" fill="none">
+              <path d="M 10,12 C 20,10 35,14 50,12 C 65,10 80,14 95,12 C 110,10 130,13 145,12" stroke="#D4782F" stroke-width="3.5" stroke-linecap="round"/>
+              <path d="M 10,26 C 20,24 35,28 50,26 C 65,24 80,28 95,26 C 110,24 130,27 145,26 C 148,25 150,26.2 151,26" stroke="rgba(255,255,255,0.5)" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M 10,40 C 20,38 35,42 50,40 C 65,38 80,42 95,40 C 100,38.8 104,40.2 106,40" stroke="rgba(255,255,255,0.35)" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="book-body">
+            <div class="book-line book-line-orange"></div>
+            <div class="book-line book-line-blue"></div>
+            <div class="book-line book-line-blue"></div>
+            <div class="book-line book-line-blue book-line-short"></div>
+          </div>
+        </div>
+
+        <!-- Language patches floating -->
+        <div class="lang-patch lp-de">🇩🇪 Deutsch</div>
+        <div class="lang-patch lp-es">🇪🇸 Español</div>
+        <div class="lang-patch lp-jp">🇯🇵 日本語</div>
+        <div class="lang-patch lp-tr">🇹🇷 Türkçe</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ════ CREDIBILITY BAR ════ -->
-<div id="credbar">
-  <div class="container">
-    <div class="credbar-inner">
-      <div class="cred-item">
-        <div class="cred-icon">🛡️</div>
-        <span>Utility Model CZ 39118</span>
-      </div>
-      <div class="cred-sep">·</div>
-      <div class="cred-item">
-        <div class="cred-icon">📅</div>
-        <span>Registered 06 Jan 2026</span>
-      </div>
-      <div class="cred-sep">·</div>
-      <div class="cred-item">
-        <div class="cred-icon">🏛️</div>
-        <span>Czech Industrial Property Office</span>
-      </div>
-      <div class="cred-sep">·</div>
-      <div class="cred-item">
-        <div class="cred-icon">📄</div>
-        <span>Patent Application in Progress</span>
-      </div>
-      <div class="cred-sep">·</div>
-      <div class="cred-item">
-        <div class="cred-icon">📚</div>
-        <span>B42D 13/00 · B42D 1/00</span>
-      </div>
-    </div>
+
+<!-- ═══════════════════════════════
+     STATEMENT BAND
+═══════════════════════════════ -->
+<div id="statement">
+  <div class="statement-inner">
+    <p class="statement-quote reveal">
+      Every year, publishers lose millions in unsold inventory because a book in German can't be sold in Japan. <strong>StoryPatch eliminates that constraint entirely.</strong>
+    </p>
+    <div class="statement-sub reveal reveal-delay-2">Publishing Technology · Protected Innovation · CZ 39118 U1</div>
   </div>
 </div>
 
-<!-- ════ PROBLEM ════ -->
+
+<!-- ═══════════════════════════════
+     PROBLEM → SOLUTION
+═══════════════════════════════ -->
 <section id="problem">
   <div class="container">
-    <div class="problem-grid">
-      <div>
-        <span class="label">The Problem in Publishing</span>
-        <h2 class="section-h2">Children's publishing is <em>broken</em> at the border.</h2>
-        <p class="section-body">
-          Every year, millions of children's board books go unsold — not because stories fail,
-          but because language locks them to a single market. Publishers must commit to language-specific
-          print runs months before knowing demand. The economics are brutal.
-        </p>
-        <p class="section-body">
-          Immigrant families, bilingual households, and linguistic minorities in every country
-          are systematically underserved. The bookshelves are empty — not from lack of stories,
-          but from lack of a better system.
-        </p>
+    <div class="section-eyebrow reveal">The Publishing Problem</div>
+    <div class="section-title reveal reveal-delay-1">
+      Language barriers cost publishers<br><em>millions in stranded inventory</em>
+    </div>
+    <div class="problem-grid reveal reveal-delay-2">
+      <div class="problem-panel left">
+        <div class="panel-tag problem-tag">Today's Reality</div>
+        <div class="panel-title">Each language market requires a separate print run — with full financial risk</div>
+        <div class="panel-body">
+          Publishing a board book in Arabic, Japanese, or Turkish means a separate print run, separate budget, and uncertain demand. Unsold books in one language cannot be redirected to another market. Returns pile up. Inventory is written off. International expansion becomes financially prohibitive for all but the largest publishers.
+          <br><br>
+          The result: tens of thousands of children's books in one language sit in warehouses while children in a different language community have nothing to read.
+        </div>
+        <div class="arrow-divider">→</div>
       </div>
-
-      <div class="problem-cards">
-        <div class="problem-card">
-          <div class="prob-icon">📦</div>
-          <div>
-            <div class="prob-title">Inventory locked to one language</div>
-            <div class="prob-body">Unsold stock in Germany cannot be redistributed to Spain. Every market requires a separate print run — a separate financial bet.</div>
-          </div>
-        </div>
-        <div class="problem-card">
-          <div class="prob-icon">💸</div>
-          <div>
-            <div class="prob-title">Localization costs prohibit testing</div>
-            <div class="prob-body">Minimum print quantities make it financially unviable to test minority language markets — even when the audience clearly exists.</div>
-          </div>
-        </div>
-        <div class="problem-card">
-          <div class="prob-icon">🗺️</div>
-          <div>
-            <div class="prob-title">Multilingual families are invisible</div>
-            <div class="prob-body">Parents who read in one language, children in another — this is the reality of millions of families worldwide. Publishing has never solved it.</div>
-          </div>
-        </div>
-        <div class="problem-card">
-          <div class="prob-icon">⬛</div>
-          <div>
-            <div class="prob-title">Accessible reading is still an afterthought</div>
-            <div class="prob-body">A blind parent reading to their sighted child — or vice versa — has virtually no dedicated book format that serves both simultaneously.</div>
-          </div>
+      <div class="problem-panel right">
+        <div class="panel-tag solution-tag">StoryPatch Solution · CZ 39118</div>
+        <div class="panel-title">Interchangeable text layers: one print run, every language market</div>
+        <div class="panel-body">
+          A patented method that allows the original printed board book to carry removable text overlays — stickers, magnetic strips, or transparent Braille film — in any language. The same physical book serves German, Spanish, Turkish, or Japanese readers simply by changing the text layer.
+          <br><br>
+          Unsold stock in one market? Redirect it to another. No reprints. No write-offs. No risk.
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ════ INNOVATION ════ -->
-<section id="innovation">
-  <div class="innovation-glow"></div>
+
+<!-- ═══════════════════════════════
+     HOW IT WORKS
+═══════════════════════════════ -->
+<section id="how">
   <div class="container">
-    <div class="innovation-inner">
-      <div class="innovation-visual">
-        <div class="big-book">
-          <div class="big-book-body">
-            <div class="big-book-spine"></div>
-            <div class="big-book-stripe accent"></div>
-            <div class="big-book-stripe"></div>
-            <div class="big-book-illus-area">📖</div>
-            <div class="big-book-stripe"></div>
-            <div class="big-book-stripe"></div>
-          </div>
-
-          <div class="lang-patch lp1">🇩🇪 Deutsch</div>
-          <div class="lang-patch lp2">🇪🇸 Español</div>
-          <div class="lang-patch lp3">🇯🇵 日本語</div>
-          <div class="lang-patch lp4">♿ Braille</div>
-        </div>
-      </div>
-
+    <div class="how-header">
       <div>
-        <span class="label label-white">The Innovation · UZ CZ 39118</span>
-        <h2 class="innov-h2">One print run.<br><em>Every language market.</em></h2>
-        <p class="innov-body">
-          StoryPatch introduces a <strong>patented text-layer system</strong> for children's board books.
-          The book is printed once, in a base language. Removable, interchangeable text overlays —
-          stickers, magnetic labels, or transparent Braille film — carry the translation.
-        </p>
-        <p class="innov-body">
-          A publisher prints a single run. Their distribution partner attaches the correct language
-          carrier before shipping. Unsold stock gets redirected to a new market simply by swapping
-          the overlay. <strong>No reprint. No write-off. No risk.</strong>
-        </p>
-        <div class="innov-quote">
-          "One board book. Every child. Every language. At the cost of a sticker sheet."
-        </div>
-        <div class="ip-block">
-          <div class="ip-icon">🛡️</div>
-          <div class="ip-text">
-            <strong>Legally protected technology</strong>
-            Utility Model CZ 39118 · Czech Industrial Property Office · Registered 06 January 2026 · Patent application in progress · Inventor & owner: Tomáš Pavlík, Brno, Czech Republic
-          </div>
-        </div>
+        <div class="section-eyebrow reveal">How It Works</div>
+        <div class="section-title reveal reveal-delay-1">From one print run<br>to <em>every language market</em></div>
+      </div>
+      <div class="section-body reveal reveal-delay-2">
+        The StoryPatch system integrates seamlessly into existing publishing workflows. No new printing technology required. No changes to existing book designs. Simply a smarter distribution strategy.
       </div>
     </div>
-  </div>
-</section>
-
-<!-- ════ HOW IT WORKS ════ -->
-<section id="howitworks">
-  <div class="container">
-    <div class="section-header">
-      <span class="label">How It Works</span>
-      <h2 class="section-h2">From one print run to every market<br>in <em>four steps</em>.</h2>
-    </div>
-
     <div class="steps-grid">
-      <div class="steps-connector"></div>
-
-      <div class="step-card">
-        <div class="step-num"><span class="step-icon">🖨️</span></div>
-        <div class="step-title">One print run</div>
-        <div class="step-body">The board book is printed in the base language — one production run, one cost, full quality. The printed text remains permanently on the page.</div>
+      <div class="step-card reveal">
+        <div class="step-accent"></div>
+        <div class="step-num">01</div>
+        <div class="step-icon">📚</div>
+        <div class="step-title">Single Print Run</div>
+        <div class="step-body">The board book is printed once in its base language — creating a universal physical product for all markets.</div>
       </div>
-
-      <div class="step-card">
-        <div class="step-num"><span class="step-icon">🏷️</span></div>
-        <div class="step-title">Language carriers produced</div>
-        <div class="step-body">Low-cost text overlay sets are produced for each target language — stickers, magnetic labels, or transparent Braille film. Minimal additional production cost.</div>
+      <div class="step-card step-highlight reveal reveal-delay-1">
+        <div class="step-accent"></div>
+        <div class="step-num">02</div>
+        <div class="step-icon">🔤</div>
+        <div class="step-title">Language Sets Produced</div>
+        <div class="step-body">Low-cost text overlay sets are produced for each target language — stickers, magnetic strips, or transparent Braille film — as supplements to existing titles.</div>
       </div>
-
-      <div class="step-card">
-        <div class="step-num"><span class="step-icon">📦</span></div>
-        <div class="step-title">Market-specific fulfilment</div>
-        <div class="step-body">Each copy ships with the correct language carrier attached — at the warehouse or by the distributor. The same physical book reaches every market.</div>
+      <div class="step-card step-highlight reveal reveal-delay-2">
+        <div class="step-accent"></div>
+        <div class="step-num">03</div>
+        <div class="step-icon">🌍</div>
+        <div class="step-title">Market-Ready on Demand</div>
+        <div class="step-body">Each copy receives its language set — at the warehouse or distributor — before or after shipping. Any title becomes any language edition instantly.</div>
       </div>
-
-      <div class="step-card">
-        <div class="step-num"><span class="step-icon">🔄</span></div>
-        <div class="step-title">Zero write-offs</div>
-        <div class="step-body">Unsold stock is redirected to a different language market simply by swapping the carrier set. No overprint. No remainder tables. No loss.</div>
+      <div class="step-card reveal reveal-delay-3">
+        <div class="step-accent"></div>
+        <div class="step-num">04</div>
+        <div class="step-icon">🔄</div>
+        <div class="step-title">Flexible Redistribution</div>
+        <div class="step-body">Unsold inventory is redirected to a new market by simply changing the text overlay. Zero write-offs. Zero returns. Maximum inventory efficiency.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ════ BENEFITS ════ -->
+
+<!-- ═══════════════════════════════
+     BENEFITS FOR PUBLISHERS
+═══════════════════════════════ -->
 <section id="benefits">
   <div class="container">
-    <div class="section-header">
-      <span class="label">Publisher Benefits</span>
-      <h2 class="section-h2">The economic logic of<br><em>one book, many markets.</em></h2>
-      <p class="section-body" style="text-align:center;">StoryPatch is not a creative concept — it is a business infrastructure upgrade for children's publishers.</p>
+    <div class="benefits-header">
+      <div>
+        <div class="section-eyebrow reveal">For Publishers</div>
+        <div class="section-title reveal reveal-delay-1">A new economic model<br>for <em>international distribution</em></div>
+      </div>
+      <div class="section-body reveal reveal-delay-2">
+        StoryPatch is not just a format innovation — it's a fundamental restructuring of how publishing economics work across language markets. Every benefit connects directly to your bottom line.
+      </div>
     </div>
-
     <div class="benefits-grid">
-
-      <div class="benefit-card">
-        <span class="ben-icon">📦</span>
-        <span class="ben-num">01</span>
-        <div class="ben-title">Eliminate language-locked inventory risk</div>
-        <div class="ben-body">One unified stock serves all markets. Unsold copies are never stranded — they are simply rerouted with a new language carrier. Inventory risk collapses to near zero.</div>
+      <div class="benefit-card reveal">
+        <span class="benefit-icon">📦</span>
+        <div class="benefit-title">Eliminate Inventory Risk</div>
+        <div class="benefit-body">A single unified inventory serves multiple language markets. Overstocked books become assets, not liabilities — redirect them to a new market in hours, not months.</div>
+        <div class="benefit-tag">Inventory Efficiency</div>
       </div>
-
-      <div class="benefit-card">
-        <span class="ben-icon">💰</span>
-        <span class="ben-num">02</span>
-        <div class="ben-title">Reduce localization cost by up to 80%</div>
-        <div class="ben-body">Full translation reprints are replaced by low-cost overlay sets. A new language market costs a fraction of a new print run — making minority language markets viable for the first time.</div>
+      <div class="benefit-card reveal reveal-delay-1">
+        <span class="benefit-icon">💶</span>
+        <div class="benefit-title">Dramatically Lower Localization Costs</div>
+        <div class="benefit-body">Text overlay sets cost a fraction of a full reprint. Enter a new language market without committing to a full production budget — test first, scale when proven.</div>
+        <div class="benefit-tag">Cost Reduction</div>
       </div>
-
-      <div class="benefit-card featured">
-        <span class="ben-icon">🌍</span>
-        <span class="ben-num ben-num-white">03</span>
-        <div class="ben-title ben-title-white">First-mover advantage — a protected position</div>
-        <div class="ben-body ben-body-white">The licence grants exclusive access to a registered, protected technology. No other publisher in your market can operate this system. A legally protected, uncontested category lead.</div>
+      <div class="benefit-card reveal reveal-delay-2">
+        <span class="benefit-icon">🌐</span>
+        <div class="benefit-title">Enter Markets Without Risk</div>
+        <div class="benefit-body">Test Arabic, Romanian, or Chinese editions of existing titles without a new print run. If demand exists, scale. If not, redirect stock elsewhere. Low-risk international expansion.</div>
+        <div class="benefit-tag">Market Testing</div>
       </div>
-
-      <div class="benefit-card">
-        <span class="ben-icon">🧪</span>
-        <span class="ben-num">04</span>
-        <div class="ben-title">Test new markets at minimal cost</div>
-        <div class="ben-body">Launch in Kurdish, Catalan, Vietnamese or any language community without commissioning a separate print run. Validate demand before committing full production capital.</div>
+      <div class="benefit-card reveal reveal-delay-1">
+        <span class="benefit-icon">🔁</span>
+        <div class="benefit-title">Flexible Supply Chain</div>
+        <div class="benefit-body">Respond to demand shifts in real time. When a market outperforms expectations, supply more language sets — not new books. When it underperforms, pivot instantly.</div>
+        <div class="benefit-tag">Supply Agility</div>
       </div>
-
-      <div class="benefit-card">
-        <span class="ben-icon">📚</span>
-        <span class="ben-num">05</span>
-        <div class="ben-title">Your existing catalogue — instantly multilingual</div>
-        <div class="ben-body">No new creative development. No new titles. Your existing board book catalogue becomes multilingual from day one. New revenue from titles already in production.</div>
+      <div class="benefit-card reveal reveal-delay-2">
+        <span class="benefit-icon">♿</span>
+        <div class="benefit-title">Built-In Inclusivity</div>
+        <div class="benefit-body">Transparent Braille overlay layers make the same book accessible to visually impaired parents. A powerful CSR story — and a segment no competitor currently serves.</div>
+        <div class="benefit-tag">Accessibility</div>
       </div>
-
-      <div class="benefit-card">
-        <span class="ben-icon">🏛️</span>
-        <span class="ben-num">06</span>
-        <div class="ben-title">Unlock institutional & tender channels</div>
-        <div class="ben-body">Ministries of education, municipal libraries, UNICEF and UNHCR procurement offices actively seek multilingual early literacy material. Carrier-format books are a direct fit for recurring B2B tenders.</div>
+      <div class="benefit-card reveal reveal-delay-3">
+        <span class="benefit-icon">🏆</span>
+        <div class="benefit-title">First-Mover Advantage</div>
+        <div class="benefit-body">StoryPatch is a registered utility model (CZ 39118 U1) with international patent pending. License it before your competitors discover it exists.</div>
+        <div class="benefit-tag">Protected Innovation</div>
       </div>
-
     </div>
   </div>
 </section>
 
-<!-- ════ USE CASES ════ -->
+
+<!-- ═══════════════════════════════
+     USE CASES
+═══════════════════════════════ -->
 <section id="usecases">
   <div class="container">
-    <div class="usecases-intro">
-      <div>
-        <span class="label">Use Cases</span>
-        <h2 class="section-h2">Four markets.<br><em>One solution.</em></h2>
-      </div>
-      <div>
-        <p class="section-body">
-          StoryPatch addresses four distinct, underserved markets — each large enough to represent
-          a standalone business case, all served by a single publishing infrastructure investment.
-        </p>
-      </div>
+    <div class="usecases-header">
+      <div class="section-eyebrow reveal">Use Cases</div>
+      <div class="section-title reveal reveal-delay-1">Four markets.<br><em>One revolutionary solution.</em></div>
+      <p class="section-body reveal reveal-delay-2">StoryPatch addresses fundamentally different distribution challenges with a single patented method — from immigrant communities in Europe to blind parents reading to their children.</p>
     </div>
-
-    <div class="cases-tabs">
-
-      <div class="case-card">
-        <div class="case-header">
-          <span class="case-emoji">🌍</span>
-          <span class="case-badge">Market #1</span>
+    <div class="usecases-grid">
+      <div class="usecase-card uc-markets reveal">
+        <span class="usecase-emoji">🌍</span>
+        <div class="usecase-title">Multilingual Countries & Immigrant Communities</div>
+        <div class="usecase-body">Germany has 13 million people with immigrant backgrounds. Spain has 5 million immigrants and four official languages. The Netherlands, Switzerland, Turkey — every major market has large non-native language communities that are systematically underserved by children's publishing. StoryPatch allows the same cardboard book to reach all of them from a single warehouse inventory.</div>
+        <div class="usecase-tags">
+          <span class="uc-tag">🇩🇪 Germany</span>
+          <span class="uc-tag">🇪🇸 Spain</span>
+          <span class="uc-tag">🇨🇭 Switzerland</span>
+          <span class="uc-tag">🇳🇱 Netherlands</span>
+          <span class="uc-tag">🇵🇱 Poland</span>
+          <span class="uc-tag">🇮🇹 Italy</span>
         </div>
-        <div class="case-title">Multilingual countries & linguistic minorities</div>
-        <div class="case-body">
-          Countries like Germany, Spain, Turkey and Japan host millions of immigrant families
-          raising children in non-majority languages. The 0–3 board book segment offers virtually
-          nothing in their languages — not from lack of audience, but from lack of an economic model.
-          StoryPatch makes every existing title accessible to every linguistic community from one stock.
-        </div>
-        <div class="case-detail">🇩🇪 Germany · 🇪🇸 Spain · 🇹🇷 Turkey · 🇯🇵 Japan · 🇮🇹 Italy · 🇳🇱 Netherlands · 🇵🇱 Poland · 🇨🇭 Switzerland</div>
       </div>
 
-      <div class="case-card">
-        <div class="case-header">
-          <span class="case-emoji">👨‍👩‍👧</span>
-          <span class="case-badge">Market #2</span>
+      <div class="usecase-card uc-families reveal reveal-delay-1">
+        <span class="usecase-emoji">👨‍👩‍👧</span>
+        <div class="usecase-title">Multilingual Families</div>
+        <div class="usecase-body">In bilingual households, shared reading is complicated by language barriers. A parent can read the same book in their native language while the child follows in another. StoryPatch creates a shared reading experience across language differences — strengthening family bonds and supporting bilingual language development simultaneously. Scientific research consistently shows early bilingual reading accelerates cognitive development.</div>
+        <div class="usecase-tags">
+          <span class="uc-tag">Bilingual Reading</span>
+          <span class="uc-tag">Family Bonding</span>
+          <span class="uc-tag">Language Development</span>
         </div>
-        <div class="case-title">Bilingual & multilingual families</div>
-        <div class="case-body">
-          A parent who reads in English while their child follows in Spanish. A grandmother who
-          reads in Turkish while her grandchild hears German. The same physical book — two
-          language layers — one shared reading experience. StoryPatch is the first format built
-          for how multilingual families actually live and read.
-        </div>
-        <div class="case-detail">Parent reads in one language · child follows in another · same page, same moment</div>
       </div>
 
-      <div class="case-card">
-        <div class="case-header">
-          <span class="case-emoji">🏫</span>
-          <span class="case-badge">Market #3</span>
+      <div class="usecase-card uc-education reveal reveal-delay-2">
+        <span class="usecase-emoji">🎓</span>
+        <div class="usecase-title">Education & Language Learning</div>
+        <div class="usecase-body">The StoryPatch board book becomes a multilingual learning tool — children can compare languages directly in the same physical book, switching between text layers as they learn. This creates an entirely new product category: the educational multilingual board book. Positioned for international schools, language programs, bilingual kindergartens, and expat communities worldwide.</div>
+        <div class="usecase-tags">
+          <span class="uc-tag">International Schools</span>
+          <span class="uc-tag">Language Programs</span>
+          <span class="uc-tag">Expat Communities</span>
+          <span class="uc-tag">Bilingual Kindergartens</span>
         </div>
-        <div class="case-title">Language education & early literacy tools</div>
-        <div class="case-body">
-          The interchangeable text layer transforms a board book into a comparative language
-          learning tool. Children can see, touch and compare two languages on the same page —
-          creating a natural, contextual acquisition experience. A premium product for international
-          schools, bilingual kindergartens and language-learning families worldwide.
-        </div>
-        <div class="case-detail">International schools · bilingual kindergartens · early language programmes</div>
       </div>
 
-      <div class="case-card">
-        <div class="case-header">
-          <span class="case-emoji">⬛</span>
-          <span class="case-badge">Market #4 · First worldwide</span>
-        </div>
-        <div class="case-title">Braille overlay — accessible shared reading</div>
-        <div class="case-body">
-          A transparent Braille film placed over the original printed page — without damaging
-          or replacing it. A blind parent reads with their fingertips while their child sees
-          the same illustrations. A sighted child reads while their visually impaired sibling
-          follows in Braille. One book. Two readers. One experience. This is the world's
-          first systematised Braille overlay for a mass-market children's board book.
-        </div>
-        <div class="case-detail">Blind parents · visually impaired family members · shared reading experiences · CSR premium SKU</div>
-      </div>
-
-    </div>
-
-    <!-- Markets grid -->
-    <div class="markets-section">
-      <span class="label">Primary Target Markets</span>
-      <div class="markets-grid">
-        <div class="market-chip">
-          <span class="market-flag">🇩🇪</span>
-          <div class="market-name">Germany</div>
-          <div class="market-stat">~15M migrant population</div>
-        </div>
-        <div class="market-chip">
-          <span class="market-flag">🇪🇸</span>
-          <div class="market-name">Spain</div>
-          <div class="market-stat">5M+ immigrants + co-official languages</div>
-        </div>
-        <div class="market-chip">
-          <span class="market-flag">🇹🇷</span>
-          <div class="market-name">Turkey</div>
-          <div class="market-stat">20–25M minority language speakers</div>
-        </div>
-        <div class="market-chip">
-          <span class="market-flag">🇯🇵</span>
-          <div class="market-name">Japan</div>
-          <div class="market-stat">3.8M foreign residents (record 2024)</div>
-        </div>
-        <div class="market-chip">
-          <span class="market-flag">🇵🇱</span>
-          <div class="market-name">Poland</div>
-          <div class="market-stat">Growing immigrant families</div>
-        </div>
-        <div class="market-chip">
-          <span class="market-flag">🇮🇹</span>
-          <div class="market-name">Italy</div>
-          <div class="market-stat">5M+ foreign residents</div>
-        </div>
-        <div class="market-chip">
-          <span class="market-flag">🇳🇱</span>
-          <div class="market-name">Netherlands</div>
-          <div class="market-stat">Highly multilingual urban centres</div>
-        </div>
-        <div class="market-chip">
-          <span class="market-flag">🇨🇭</span>
-          <div class="market-name">Switzerland</div>
-          <div class="market-stat">4 national languages + expat communities</div>
+      <div class="usecase-card uc-braille reveal reveal-delay-3">
+        <span class="usecase-emoji">⬛</span>
+        <div class="usecase-title">Accessibility — Braille Inclusion</div>
+        <div class="usecase-body">A transparent Braille film overlay sits invisibly over the original printed text — a sighted child sees the illustrations and print text, while a visually impaired parent reads the same page in Braille. For the first time, a blind parent can share a standard board book reading experience with their child. This is a world first in children's publishing — and a powerful statement about inclusive design that no publisher currently offers.</div>
+        <div class="usecase-tags">
+          <span class="uc-tag">Braille Overlay</span>
+          <span class="uc-tag">Visually Impaired Parents</span>
+          <span class="uc-tag">World First</span>
+          <span class="uc-tag">Inclusive Design</span>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ════ TARGET PUBLISHERS ════ -->
-<section id="publishers">
-  <div class="pub-bg"></div>
-  <div class="container" style="position:relative;z-index:1;">
-    <div class="pub-intro">
-      <span class="label label-white">Licensing Opportunities</span>
-      <h2 class="pub-h2">Built for the world's <em>leading</em> children's publishers.</h2>
-      <p class="pub-subhead">
-        StoryPatch is offered as a B2B licensing model. Publishers acquire the right to use
-        the protected technology across their catalogue — unlocking new markets without new
-        production investment. Each licence covers exclusive territorial application.
-      </p>
-    </div>
 
-    <div class="publishers-list">
-
-      <div class="pub-card">
-        <span class="pub-country">🇩🇪 Germany</span>
-        <div class="pub-name">Coppenrath Verlag</div>
-        <div class="pub-desc">Market leader in the German 0–3 board book segment with the ministeps® programme. Deep distribution infrastructure across DACH.</div>
-        <div class="pub-opportunity">Opportunity: Turkey, Arabic, Russian, Polish-speaking communities in Germany — 258,000+ children per age cohort without a single mother-tongue board book.</div>
-      </div>
-
-      <div class="pub-card">
-        <span class="pub-country">🇪🇸 Spain / Latin America</span>
-        <div class="pub-name">Combel Editorial</div>
-        <div class="pub-desc">Barcelona-based publisher with multilingual heritage and distribution across all Spanish-speaking Latin America. Catalan, Basque and Galician co-official markets on home turf.</div>
-        <div class="pub-opportunity">Opportunity: 900,000 Moroccan residents + co-official Spanish languages + indigenous languages of Latin America — all from a single stock.</div>
-      </div>
-
-      <div class="pub-card">
-        <span class="pub-country">🇹🇷 Turkey</span>
-        <div class="pub-name">Altın Kitaplar</div>
-        <div class="pub-desc">Turkey's leading children's publisher. 60+ years of heritage, award-winning 0–6 catalogue, and the deepest brand trust with Turkish families.</div>
-        <div class="pub-opportunity">Opportunity: Kurdish (~375K children 0–3), Arabic (~200K), Zaza (~30K) — uncontested categories in Turkey's 0–3 segment.</div>
-      </div>
-
-      <div class="pub-card">
-        <span class="pub-country">🇯🇵 Japan</span>
-        <div class="pub-name">Koguma Publishing</div>
-        <div class="pub-desc">こぐま社 — 58 years of concept-driven picture books. One of Japan's most trusted 0–6 brands with the Kuma-kun heritage catalogue.</div>
-        <div class="pub-opportunity">Opportunity: Chinese (760K), Vietnamese (310K), Korean (450K), Nikkei Brazilian (200K) residents — 150K+ children 0–3 without a Japanese-language board book in their mother tongue.</div>
-      </div>
-
-      <div class="pub-card">
-        <span class="pub-country">🇳🇱 Netherlands · 🇨🇭 Switzerland</span>
-        <div class="pub-name">Benelux & Alpine Publishers</div>
-        <div class="pub-desc">Switzerland's four national languages and the Netherlands' exceptionally high multilingual urban population make both markets ideal early-adoption territories.</div>
-        <div class="pub-opportunity">Opportunity: Immediate product differentiation. Switzerland's German/French/Italian trilingual reality is a natural fit for the StoryPatch system at retail.</div>
-      </div>
-
-      <div class="pub-card" style="background:rgba(212,120,47,0.08); border-color:rgba(212,120,47,0.25);">
-        <span class="pub-country" style="color:var(--copper);">🌍 Your Market</span>
-        <div class="pub-name" style="color:var(--white);">Open Licensing Enquiry</div>
-        <div class="pub-desc">Every major multilingual country presents a first-mover licensing opportunity. If your market has significant immigrant communities or minority languages — StoryPatch is built for you.</div>
-        <div class="pub-opportunity" style="color:rgba(255,255,255,0.5); border-top-color:rgba(255,255,255,0.1);">
-          <a href="mailto:hello@storypatch.com" style="color:var(--copper); text-decoration:none; font-weight:700;">hello@storypatch.com →</a>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- ════ BRAILLE / ACCESSIBILITY ════ -->
-<section id="braille">
-  <div class="braille-glow"></div>
+<!-- ═══════════════════════════════
+     MARKETS
+═══════════════════════════════ -->
+<section id="markets">
   <div class="container">
-    <div class="braille-inner">
-      <div class="braille-dots">
-        <div class="bdot lit">⬛</div>
-        <div class="bdot"></div>
-        <div class="bdot lit">⬛</div>
-        <div class="bdot lit">⬛</div>
-        <div class="bdot"></div>
-        <div class="bdot"></div>
-        <div class="bdot lit">⬛</div>
-        <div class="bdot lit">⬛</div>
-        <div class="bdot"></div>
-        <div class="bdot"></div>
-        <div class="bdot lit">⬛</div>
-        <div class="bdot lit">⬛</div>
-        <div class="bdot lit">⬛</div>
-        <div class="bdot"></div>
-        <div class="bdot lit">⬛</div>
-        <div class="bdot lit">⬛</div>
-        <div class="bdot lit">⬛</div>
-        <div class="bdot"></div>
-      </div>
-
+    <div class="markets-header">
       <div>
-        <span class="label label-slate">Accessibility · A World First</span>
-        <h2 class="braille-h2">A blind parent. A sighted child.<br><em>One shared story.</em></h2>
-        <p class="braille-body">
-          The StoryPatch system includes transparent Braille overlay film — placed over the
-          existing printed page without damage or alteration. <strong>A blind parent reads with
-          their fingertips. Their child sees the same illustrations. They share the same page
-          at the same moment.</strong>
-        </p>
-        <p class="braille-body">
-          This is the world's first systematised Braille layer for a mass-market children's
-          board book. A premium SKU. A genuine CSR story. A new product category at
-          minimal additional production cost.
-        </p>
-        <div class="braille-quote">
-          "A father who cannot see — reading to his child in the dark — and his child hearing his voice follow every word on the page."
-        </div>
+        <div class="section-eyebrow reveal">Target Markets</div>
+        <div class="section-title reveal reveal-delay-1">Countries with <em>large multilingual communities</em></div>
+      </div>
+      <div class="section-body reveal reveal-delay-2">
+        Each market represents an underserved language community within a country where publishers already operate — making StoryPatch a low-barrier, high-return expansion strategy.
+      </div>
+    </div>
+    <div class="markets-grid">
+      <div class="market-card reveal">
+        <span class="market-flag">🇩🇪</span>
+        <div class="market-name">Germany</div>
+        <div class="market-stat">13M+</div>
+        <div class="market-label">People with immigrant background · Turkish, Arabic, Russian, Polish communities</div>
+      </div>
+      <div class="market-card reveal reveal-delay-1">
+        <span class="market-flag">🇪🇸</span>
+        <div class="market-name">Spain</div>
+        <div class="market-stat">5M+</div>
+        <div class="market-label">Immigrants · plus 4 official languages (Catalan, Basque, Galician)</div>
+      </div>
+      <div class="market-card reveal reveal-delay-2">
+        <span class="market-flag">🇹🇷</span>
+        <div class="market-name">Turkey</div>
+        <div class="market-stat">50+</div>
+        <div class="market-label">Minority languages and dialects · large Kurdish community · unique regional opportunity</div>
+      </div>
+      <div class="market-card reveal reveal-delay-3">
+        <span class="market-flag">🇯🇵</span>
+        <div class="market-name">Japan</div>
+        <div class="market-stat">3M+</div>
+        <div class="market-label">Foreign residents · growing international community · premium market for multilingual products</div>
+      </div>
+      <div class="market-card reveal">
+        <span class="market-flag">🇵🇱</span>
+        <div class="market-name">Poland</div>
+        <div class="market-stat">1M+</div>
+        <div class="market-label">Ukrainian refugees and workers · fast-growing multilingual community since 2022</div>
+      </div>
+      <div class="market-card reveal reveal-delay-1">
+        <span class="market-flag">🇮🇹</span>
+        <div class="market-name">Italy</div>
+        <div class="market-stat">5M+</div>
+        <div class="market-label">Foreign nationals · Arabic, Romanian, Chinese, Albanian communities in major cities</div>
+      </div>
+      <div class="market-card reveal reveal-delay-2">
+        <span class="market-flag">🇳🇱</span>
+        <div class="market-name">Netherlands</div>
+        <div class="market-stat">4M+</div>
+        <div class="market-label">Non-Dutch background residents · highly international urban population in Amsterdam, Rotterdam</div>
+      </div>
+      <div class="market-card reveal reveal-delay-3">
+        <span class="market-flag">🇨🇭</span>
+        <div class="market-name">Switzerland</div>
+        <div class="market-stat">4</div>
+        <div class="market-label">Official languages (German, French, Italian, Romansh) · 25% foreign resident population</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ════ IP / LEGAL ════ -->
-<section id="ip">
+
+<!-- ═══════════════════════════════
+     ACCESSIBILITY
+═══════════════════════════════ -->
+<section id="accessibility">
   <div class="container">
-    <div class="section-header">
-      <span class="label">Intellectual Property</span>
-      <h2 class="section-h2">A legally protected <em>publishing infrastructure</em>.</h2>
-    </div>
-
-    <div class="ip-grid">
-
-      <div class="ip-card highlight">
-        <span class="ip-card-icon">🛡️</span>
-        <div class="ip-card-title">Utility Model · CZ 39118 U1</div>
-        <div class="ip-card-body">
-          Registered at the Czech Industrial Property Office on 06 January 2026.
-          Application number 2025-43348. Covers the technical solution for interchangeable
-          text layers on children's books. Classifications: B42D 13/00 · B42D 1/00.
-          Owner: Tomáš Pavlík, Brno, Czech Republic.
+    <div class="accessibility-grid">
+      <div class="accessibility-visual reveal">
+        <div class="braille-dots">
+          <div class="bdot active"></div><div class="bdot"></div><div class="bdot active"></div><div class="bdot active"></div><div class="bdot"></div><div class="bdot active"></div>
+          <div class="bdot active"></div><div class="bdot active"></div><div class="bdot"></div><div class="bdot"></div><div class="bdot active"></div><div class="bdot"></div>
+          <div class="bdot"></div><div class="bdot active"></div><div class="bdot active"></div><div class="bdot active"></div><div class="bdot"></div><div class="bdot active"></div>
+          <div class="bdot active"></div><div class="bdot"></div><div class="bdot"></div><div class="bdot active"></div><div class="bdot active"></div><div class="bdot"></div>
+        </div>
+        <div class="braille-caption">Transparent Braille Overlay System</div>
+        <div class="braille-overlay-demo">
+          <div class="bod-line" style="width:90%; background:#5C7A96; opacity:0.2;"></div>
+          <div class="bod-line" style="width:75%;"></div>
+          <div class="bod-line braille" style="background:#1B2D40; opacity:0.5;"></div>
+          <div class="bod-line" style="width:85%; background:#5C7A96; opacity:0.2; margin-top:10px;"></div>
+          <div class="bod-line" style="width:60%;"></div>
+          <div class="bod-line braille" style="background:#1B2D40; opacity:0.5;"></div>
+          <div style="font-size:10px; color:#A09080; margin-top:12px; font-weight:300; letter-spacing:1.5px; text-transform:uppercase;">Print text visible ↑ &nbsp; Braille layer over text ↑</div>
         </div>
       </div>
+      <div class="accessibility-content reveal reveal-delay-2">
+        <div class="section-eyebrow">Inclusion & Accessibility</div>
+        <div class="section-title">A blind parent can finally read to their child — <em>from the same book.</em></div>
+        <p class="section-body">The transparent Braille film overlay is a world first in children's board books. It sits invisibly over the original printed page — the child sees and hears normal text, the visually impaired parent reads Braille with their fingertips.</p>
 
-      <div class="ip-card">
-        <span class="ip-card-icon">📜</span>
-        <div class="ip-card-title">Patent Application in Progress</div>
-        <div class="ip-card-body">
-          A full patent application is being pursued in parallel, seeking broader territorial
-          protection across European and international markets. Represented by Dobroslav Musil
-          a partneři s.r.o., Brno. The registered utility model provides immediate,
-          enforceable protection during the patent process.
+        <div class="accessibility-feature">
+          <div class="af-icon">⬛</div>
+          <div>
+            <div class="af-title">Transparent Braille Film</div>
+            <div class="af-body">A clear overlay carries raised Braille text without obscuring original illustrations or print — both sighted and visually impaired readers use the same physical book simultaneously.</div>
+          </div>
+        </div>
+        <div class="accessibility-feature">
+          <div class="af-icon">👨‍👧</div>
+          <div>
+            <div class="af-title">Shared Family Reading Experience</div>
+            <div class="af-body">Visually impaired parents can read to their children from the same book. A moment that was previously impossible — now made possible through a simple, low-cost overlay.</div>
+          </div>
+        </div>
+        <div class="accessibility-feature">
+          <div class="af-icon">🏆</div>
+          <div>
+            <div class="af-title">First-to-Market Competitive Advantage</div>
+            <div class="af-body">No publisher currently offers a standard board book with integrated Braille capability. Whoever licenses StoryPatch owns this segment entirely — and the powerful brand story that comes with it.</div>
+          </div>
         </div>
       </div>
-
-      <div class="ip-card">
-        <span class="ip-card-icon">🔐</span>
-        <div class="ip-card-title">Exclusive Territorial Licensing</div>
-        <div class="ip-card-body">
-          The technology is offered to publishers as an exclusive territorial licence.
-          The first publisher to licence in each country holds a protected, uncontested
-          position in the multilingual board book segment. No competitor can legally
-          replicate the system within the licensed territory.
-        </div>
-      </div>
-
     </div>
   </div>
 </section>
 
-<!-- ════ CTA ════ -->
-<section id="cta">
-  <div class="cta-texture"></div>
+
+<!-- ═══════════════════════════════
+     PATENT
+═══════════════════════════════ -->
+<section id="patent">
   <div class="container">
-    <div class="cta-inner">
-      <span class="label label-white" style="font-size:11px; letter-spacing:5px;">Licensing · Partnership · Enquiry</span>
-      <h2 class="cta-h2">Ready to reach<br>every language market?</h2>
-      <p class="cta-subhead">
-        StoryPatch licensing is open to leading children's publishers worldwide.
-        First enquiry per territory establishes priority. Contact us to receive
-        a confidential licensing proposal tailored to your catalogue and market.
-      </p>
-      <div class="cta-buttons">
-        <a href="mailto:hello@storypatch.com" class="btn btn-white btn-arrow">Request Licensing Info</a>
-        <a href="mailto:hello@storypatch.com?subject=StoryPatch - Partnership Enquiry" class="btn btn-ghost">Discuss Partnership</a>
+    <div class="patent-inner">
+      <div class="reveal">
+        <div class="section-eyebrow">Protected Innovation</div>
+        <div class="section-title">Registered utility model.<br><em>International patent pending.</em></div>
+        <p class="section-body" style="margin-bottom:0;">StoryPatch is a legally protected publishing innovation — not a concept, not a prototype. The utility model CZ 39118 U1 is active and enforceable. International patent application is in progress, providing additional protection across key markets.</p>
       </div>
-      <p class="cta-contact">
-        Direct contact: <a href="mailto:hello@storypatch.com">hello@storypatch.com</a>
-        &nbsp;·&nbsp; Tomáš Pavlík, Brno, Czech Republic
-      </p>
+      <div class="reveal reveal-delay-2">
+        <div class="patent-badge">
+          <div class="patent-badge-icon">🛡️</div>
+          <div>
+            <div class="patent-num">CZ 39118 U1</div>
+            <div class="patent-date">Registered: 06 January 2026 · Industrial Property Office, Czech Republic</div>
+          </div>
+        </div>
+        <div class="patent-facts">
+          <div class="patent-fact">
+            <div class="pf-label">Registration Type</div>
+            <div class="pf-value">Utility Model (Registered)</div>
+          </div>
+          <div class="patent-fact">
+            <div class="pf-label">Registration Date</div>
+            <div class="pf-value">06 January 2026</div>
+          </div>
+          <div class="patent-fact">
+            <div class="pf-label">Patent Status</div>
+            <div class="pf-value">Application in Progress</div>
+          </div>
+          <div class="patent-fact">
+            <div class="pf-label">Holder</div>
+            <div class="pf-value">Tomáš Pavlík, Brno · Czech Republic</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ════ FOOTER ════ -->
+
+<!-- ═══════════════════════════════
+     CONTACT / CTA
+═══════════════════════════════ -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="contact-eyebrow reveal">Licensing & Partnership</div>
+    <h2 class="contact-title reveal reveal-delay-1">
+      Ready to bring <em>StoryPatch</em><br>to your catalog?
+    </h2>
+    <p class="contact-body reveal reveal-delay-2">
+      We're currently offering licensing partnerships to leading children's publishers in key markets. Early partners gain exclusive market access and strategic co-development opportunities. Availability is limited.
+    </p>
+    <div class="contact-actions reveal reveal-delay-3">
+      <a href="/cdn-cgi/l/email-protection#08606d646467487b7c677a7178697c6b6026677a6f" class="btn-cta-light">
+        Request Partnership →
+      </a>
+      <a href="/cdn-cgi/l/email-protection#432b262f2f2c0330372c313a332237202b6d2c3124" class="btn-email-link"><span class="__cf_email__" data-cfemail="127a777e7e7d5261667d606b627366717a3c7d6075">[email&#160;protected]</span></a>
+    </div>
+    <hr class="contact-divider reveal reveal-delay-4">
+    <div class="contact-tagline reveal reveal-delay-4">One Book &nbsp;·&nbsp; Every Language &nbsp;·&nbsp; StoryPatch</div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════
+     FOOTER
+═══════════════════════════════ -->
 <footer>
-  <div class="container">
-    <div class="footer-top">
-      <div class="footer-brand">
-        <div style="display:flex; align-items:center; gap:14px;">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 68" width="40" height="34">
-            <defs>
-              <filter id="fs" x="-25%" y="-25%" width="160%" height="160%">
-                <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.3"/>
-              </filter>
-              <linearGradient id="fpg" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#E8C9A0"/>
-                <stop offset="100%" stop-color="#BF8B56"/>
-              </linearGradient>
-            </defs>
-            <g transform="rotate(-1.5 40 34)">
-              <polygon points="79,50 62.5,67.5 80,67.5" fill="rgba(0,0,0,0.2)"/>
-              <path d="M 11,2 H 69 Q 78,2 78,11 V 48 L 60,66 H 11 Q 2,66 2,57 V 11 Q 2,2 11,2 Z"
-                    fill="#FFFFFF" filter="url(#fs)"/>
-              <polygon points="78,48 60,66 78,66" fill="url(#fpg)"/>
-              <path d="M 12,19 C 16.5,17.5 24,20.5 28.5,19 C 33,17.5 40.5,20.5 45,19 C 48.5,17.5 52,19.2 54,19"
-                    fill="none" stroke="#D4782F" stroke-width="2.5" stroke-linecap="round"/>
-              <path d="M 12,33 C 16.5,31.5 24,34.5 28.5,33 C 33,31.5 40.5,34.5 45,33 C 49.5,31.5 57,34.5 61.5,33 C 64,32 66,33.2 67,33"
-                    fill="none" stroke="#5C7A96" stroke-width="1.8" stroke-linecap="round"/>
-              <path d="M 12,47 C 16.5,45.5 24,48.5 28.5,47 C 33,45.5 40.5,48.5 45,47 C 48,45.8 51,47.3 52,47"
-                    fill="none" stroke="#5C7A96" stroke-width="1.8" stroke-linecap="round"/>
-            </g>
-          </svg>
-          <div style="font-size:22px; font-weight:300; color:#fff; letter-spacing:-0.3px;">Story<strong style="font-weight:800; color:#D4782F;">Patch</strong></div>
+  <div class="footer-inner">
+    <div class="footer-logo">
+      <div class="footer-logo-inner">
+        <!-- Footer icon: same shape, ghost/white version for dark bg -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="38" height="38" aria-hidden="true">
+          <defs>
+            <linearGradient id="ftfold" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#E2C48A"/>
+              <stop offset="100%" stop-color="#BF9050"/>
+            </linearGradient>
+          </defs>
+          <!-- Beige frame (semi-transparent on dark bg) -->
+          <rect x="0" y="0" width="100" height="100" rx="20" fill="rgba(221,213,202,0.25)"/>
+          <!-- Card (semi-transparent white) -->
+          <path d="M 6,20 Q 6,6 20,6 L 80,6 Q 94,6 94,20 L 94,70 L 70,94 L 20,94 Q 6,94 6,80 Z" fill="rgba(255,255,255,0.10)"/>
+          <!-- Gold fold -->
+          <path d="M 94,70 L 70,94 L 94,94 Z" fill="url(#ftfold)" opacity="0.8"/>
+          <!-- Orange bar -->
+          <rect x="18" y="27" width="54" height="11" rx="5.5" fill="#D4782F"/>
+          <!-- Blue/white bars -->
+          <rect x="18" y="45" width="43" height="11" rx="5.5" fill="rgba(255,255,255,0.55)"/>
+          <rect x="18" y="63" width="33" height="11" rx="5.5" fill="rgba(255,255,255,0.55)"/>
+        </svg>
+        <div>
+          <div class="footer-wordmark"><span class="w-story">Story</span><span class="w-patch">Patch</span></div>
+          <div class="footer-tagline">One Book · Every Language</div>
         </div>
-        <p>A patented publishing technology that replaces language-locked print runs with interchangeable text layers — enabling one board book to serve every language market.</p>
-        <p style="margin-top:8px; font-size:11px; color:rgba(255,255,255,0.2); letter-spacing:0.5px; text-transform:uppercase;">One book · Every language</p>
-      </div>
-
-      <div class="footer-col">
-        <div class="footer-col-title">Technology</div>
-        <ul>
-          <li><a href="#innovation">The Innovation</a></li>
-          <li><a href="#howitworks">How It Works</a></li>
-          <li><a href="#braille">Braille Access</a></li>
-          <li><a href="#ip">IP & Protection</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-col">
-        <div class="footer-col-title">For Publishers</div>
-        <ul>
-          <li><a href="#benefits">Business Benefits</a></li>
-          <li><a href="#publishers">Licensing Markets</a></li>
-          <li><a href="#usecases">Use Cases</a></li>
-          <li><a href="mailto:hello@storypatch.com">Request Info Pack</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-col">
-        <div class="footer-col-title">Contact</div>
-        <ul>
-          <li><a href="mailto:hello@storypatch.com">hello@storypatch.com</a></li>
-          <li><a href="#">Tomáš Pavlík</a></li>
-          <li><a href="#">Brno, Czech Republic</a></li>
-          <li><a href="#">UZ CZ 39118</a></li>
-        </ul>
       </div>
     </div>
-
-    <div class="footer-bottom">
-      <p>© 2026 Tomáš Pavlík · StoryPatch · All rights reserved · Utility Model CZ 39118 U1 · Czech Industrial Property Office</p>
-      <div class="footer-ip">Protected Technology · CZ 39118 U1</div>
+    <div class="footer-patent">
+      Utility Model CZ 39118 U1 · Registered 06.01.2026<br>
+      Úřad průmyslového vlastnictví ČR · Holder: Tomáš Pavlík
+    </div>
+    <div class="footer-email">
+      <a href="/cdn-cgi/l/email-protection#fa929f969695ba898e9588838a9b8e9992d495889d"><span class="__cf_email__" data-cfemail="f8909d949497b88b8c978a8188998c9b90d6978a9f">[email&#160;protected]</span></a>
     </div>
   </div>
 </footer>
+
+
+<!-- ═══════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════ -->
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// Nav scroll effect
+const nav = document.getElementById('mainNav');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 40) {
+    nav.classList.add('scrolled');
+  } else {
+    nav.classList.remove('scrolled');
+  }
+});
+
+// Scroll reveal
+const revealElements = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+
+revealElements.forEach(el => observer.observe(el));
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      const targetPos = target.getBoundingClientRect().top + window.scrollY - 68;
+      window.scrollTo({ top: targetPos, behavior: 'smooth' });
+    }
+  });
+});
+</script>
 
 </body>
 </html>
