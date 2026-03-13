@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>StoryPatch — Norway</title>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,600;0,800;1,300;1,800&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#1B2D40;--ink-dark:#111e2b;--ink-mid:#253d56;--parchment:#F5EDE4;--parchment-border:#E0D5C6;--copper:#D4782F;--copper-light:#F5EDE4;--copper-bright:#bf6a25;--slate:#5C7A96;--slate-light:#d0dce8;--peel-light:#E8C9A0;--peel-dark:#BF8B56;--white:#ffffff;--warm-gray:#9A8A80;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Raleway',sans-serif;background:var(--white);color:var(--ink);width:210mm;min-height:297mm;margin:0 auto;font-size:10px;font-weight:400;display:flex;flex-direction:column;}
+  .hdr{background:var(--ink-dark);padding:18px 28px 16px;position:relative;overflow:hidden;}
+  .hdr::before{content:'';position:absolute;top:-40px;right:-40px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(212,120,47,.15) 0%,transparent 70%);}
+  .hdr::after{content:'';position:absolute;bottom:-30px;left:60px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.04) 0%,transparent 70%);}
+  .hdr-row{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;}
+  .hdr-left{flex:1;position:relative;z-index:1;} .hdr-right{text-align:right;flex-shrink:0;position:relative;z-index:1;}
+  .logo-wrap{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+  .logo-icon{width:36px;height:36px;background:var(--white);border-radius:7px;border:1.5px solid var(--peel-light);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:7px 8px;position:relative;flex-shrink:0;}
+  .logo-icon::after{content:'';position:absolute;bottom:4px;right:4px;width:8px;height:8px;background:var(--peel-dark);clip-path:polygon(100% 0,100% 100%,0 100%);}
+  .logo-bar{height:3px;border-radius:2px;margin-bottom:3px;}.logo-bar:last-child{margin-bottom:0;}
+  .lb1{width:100%;background:var(--copper);}.lb2{width:85%;background:var(--slate);}.lb3{width:65%;background:var(--slate);}
+  .logo-text{display:flex;flex-direction:column;}
+  .logo-wordmark{font-size:18px;font-weight:300;color:var(--white);line-height:1;letter-spacing:-0.3px;}
+  .logo-wordmark span{font-weight:800;color:var(--copper);}
+  .logo-tagline{font-size:7px;font-weight:300;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-top:2px;}
+  .per-tag{font-size:8px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--copper);margin-bottom:6px;}
+  .hdr-headline{font-size:17px;font-weight:800;color:var(--white);line-height:1.2;max-width:410px;}
+  .hdr-headline span{color:var(--copper);font-style:italic;font-weight:300;}
+  .hdr-sub{margin-top:5px;font-size:9px;font-weight:300;color:rgba(255,255,255,.42);max-width:390px;line-height:1.4;}
+  .uz-badge{display:inline-block;background:var(--copper);color:var(--white);font-size:8.5px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:3px 9px;border-radius:2px;margin-bottom:5px;}
+  .hdr-meta{font-size:9.5px;color:rgba(255,255,255,.35);font-weight:300;line-height:1.7;}
+  .hdr-meta strong{color:rgba(255,255,255,.6);font-weight:600;}
+  .strip{height:3px;background:linear-gradient(90deg,var(--copper) 0%,var(--slate) 50%,var(--parchment) 100%);}
+  .main{padding:8px 20px 6px;display:grid;grid-template-columns:1fr 1fr;gap:7px;flex:1;}
+  .full{grid-column:1/-1;}
+  .lbl{font-size:8.5px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--copper);margin-bottom:3px;}
+  .ttl{font-size:13px;font-weight:800;color:var(--ink);margin-bottom:4px;line-height:1.2;}
+  .divider{height:1px;background:var(--parchment-border);margin:3px 0 5px;}
+  .concept{grid-column:1/-1;display:grid;grid-template-columns:1fr 28px 1fr;background:var(--parchment);border-radius:7px;border:1.5px solid var(--parchment-border);overflow:hidden;}
+  .cs{padding:9px 12px;}.cs.r{background:var(--ink-dark);}
+  .ctag{display:inline-block;font-size:8px;font-weight:600;letter-spacing:1.8px;text-transform:uppercase;padding:2px 7px;border-radius:20px;margin-bottom:4px;}
+  .ctag.pr{background:var(--slate-light);color:var(--ink);}.ctag.so{background:rgba(255,255,255,.1);color:rgba(255,255,255,.6);}
+  .cttl{font-size:11px;font-weight:800;margin-bottom:3px;line-height:1.25;color:var(--ink);}.cs.r .cttl{color:var(--white);}
+  .cbdy{font-size:9.5px;line-height:1.4;color:#5a4a40;font-weight:300;}.cs.r .cbdy{color:rgba(255,255,255,.5);}
+  .carr{display:flex;align-items:center;justify-content:center;background:var(--ink-mid);font-size:16px;color:var(--copper);}
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:3px;}
+  .st{background:var(--parchment);border-radius:5px;padding:7px 8px;border-left:3px solid var(--parchment-border);}.st.hl{border-left-color:var(--copper);}
+  .stn{font-size:8px;font-weight:700;letter-spacing:1px;color:var(--copper);margin-bottom:1px;}
+  .stt{font-size:9.5px;font-weight:700;color:var(--ink);margin-bottom:2px;line-height:1.25;}
+  .stb{font-size:9px;line-height:1.35;color:var(--warm-gray);font-weight:300;}
+  .bencard{background:var(--white);border:1.5px solid var(--parchment-border);border-radius:7px;padding:9px 11px;}
+  .brow{display:flex;gap:7px;align-items:flex-start;padding:3px 0;border-bottom:1px solid var(--parchment);}.brow:last-child{border-bottom:none;}
+  .bico{width:17px;height:17px;background:var(--copper-light);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10.5px;flex-shrink:0;margin-top:1px;}
+  .btxt{font-size:9.5px;line-height:1.35;color:#5a4a40;font-weight:300;}
+  .btxt strong{color:var(--ink);font-weight:700;font-size:10px;display:block;margin-bottom:1px;}
+  .mktcard{background:var(--parchment);border-radius:7px;padding:9px 11px;border:1.5px solid var(--parchment-border);}
+  .mrow{display:flex;justify-content:space-between;align-items:center;padding:2.5px 0;border-bottom:1px solid var(--parchment-border);}.mrow:last-child{border-bottom:none;}
+  .mlbl{font-size:9.5px;color:#5a4a40;font-weight:300;display:flex;align-items:center;gap:5px;}.mflag{font-size:13px;}
+  .mright{text-align:right;}.mval{font-size:14px;font-weight:800;color:var(--ink-dark);}.msub{font-size:8.5px;color:#bbb;font-weight:300;line-height:1.35;}
+  .inclcard{background:var(--ink-dark);border-radius:7px;padding:9px 12px;grid-column:1/-1;}
+  .inclcard .lbl{color:var(--peel-light);}.inclcard .ttl{color:var(--white);margin-bottom:6px;}
+  .incl-cols{display:grid;grid-template-columns:1fr 1fr;gap:0 16px;}
+  .irow{display:flex;gap:7px;align-items:flex-start;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.1);}.irow:last-child{border-bottom:none;}
+  .iico{width:17px;height:17px;background:rgba(255,255,255,.1);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10.5px;flex-shrink:0;margin-top:1px;}
+  .itxt{font-size:9px;line-height:1.35;color:rgba(255,255,255,.5);font-weight:300;}
+  .itxt strong{color:var(--white);font-weight:700;font-size:9.5px;display:block;margin-bottom:1px;}
+  .hlbox{grid-column:1/-1;background:var(--copper-light);border:1.5px solid var(--peel-light);border-radius:7px;padding:8px 12px;display:flex;gap:10px;align-items:flex-start;}
+  .hlico{font-size:17px;flex-shrink:0;line-height:1;margin-top:1px;}
+  .hllbl{font-size:7px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--copper-bright);margin-bottom:2px;}
+  .hlttl{font-size:10px;font-weight:600;color:var(--ink);line-height:1.35;}
+  .msbox{grid-column:1/-1;background:linear-gradient(135deg,var(--ink-dark) 0%,var(--ink-mid) 100%);border-radius:7px;padding:9px 14px;display:flex;justify-content:space-between;align-items:center;gap:14px;}
+  .msbox-left{flex:1;}.msbox-lbl{font-size:8px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:3px;}
+  .msbox-ttl{font-size:13px;font-weight:800;color:var(--white);line-height:1.2;}.msbox-ttl em{color:var(--copper);font-style:italic;font-weight:300;}
+  .msbox-sub{font-size:9px;color:rgba(255,255,255,.5);font-weight:300;margin-top:3px;line-height:1.35;}
+  .msbox-right{flex-shrink:0;text-align:right;}.msbox-stat{font-size:24px;font-weight:800;color:var(--copper);line-height:1;}
+  .msbox-statlbl{font-size:8px;color:rgba(255,255,255,.4);font-weight:300;line-height:1.4;}
+  .ftr{background:var(--parchment);border-top:1px solid var(--parchment-border);padding:5px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:auto;}
+  .fl{font-size:9px;color:var(--warm-gray);font-weight:300;line-height:1.6;}.fl strong{color:var(--ink);font-weight:700;display:block;margin-bottom:1px;}
+  .fr{text-align:right;flex-shrink:0;}.fbadge{font-size:9.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--copper);margin-bottom:2px;}
+  .fdet{font-size:8.5px;color:#bbb;font-weight:300;line-height:1.5;}
+  .fcontact{display:flex;gap:12px;align-items:center;margin-top:3px;}.fcontact a{font-size:9px;font-weight:600;color:var(--copper);text-decoration:none;letter-spacing:0.3px;}
+  .fsep{font-size:9px;color:var(--parchment-border);}
+  .flogo{display:flex;align-items:center;gap:7px;}
+  .flogo-icon{width:22px;height:22px;background:var(--white);border-radius:4px;border:1px solid var(--parchment-border);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:4px 5px;position:relative;flex-shrink:0;}
+  .flogo-icon::after{content:'';position:absolute;bottom:2px;right:2px;width:5px;height:5px;background:var(--peel-dark);clip-path:polygon(100% 0,100% 100%,0 100%);}
+  .fbar{height:2px;border-radius:1px;margin-bottom:2px;}.fbar:last-child{margin-bottom:0;}
+  .fb1{width:100%;background:var(--copper);}.fb2{width:85%;background:var(--slate);}.fb3{width:65%;background:var(--slate);}
+  .fwm{font-size:11px;font-weight:300;color:var(--ink);}.fwm span{font-weight:800;color:var(--copper);}
+  .src-note{font-size:8px;color:#bbb;font-weight:300;line-height:1.35;margin-top:3px;}
+</style></head>
+<body>
+<div class="hdr"><div class="hdr-row">
+  <div class="hdr-left">
+    <div class="logo-wrap">
+      <div class="logo-icon"><div class="logo-bar lb1"></div><div class="logo-bar lb2"></div><div class="logo-bar lb3"></div></div>
+      <div class="logo-text"><div class="logo-wordmark">Story<span>Patch</span></div><div class="logo-tagline">One Book · Every Language</div></div>
+    </div>
+    <div class="per-tag">Licensing Offer · Children's Publishing · Norway</div>
+    <div class="hdr-headline">Print once.<br><span>Every language. Zero inventory risk.</span></div>
+    <div class="hdr-sub">UZ CZ 39118 — one print run, every community language served. Norway's Barnehageloven mandates language support and the Sami Language Act creates unique indigenous demand — 5,900 barnehager are direct buyers.</div>
+  </div>
+  <div class="hdr-right">
+    <div class="uz-badge">Utility Model CZ 39118</div>
+    <div class="hdr-meta">Number: <strong>CZ 39118 U1</strong><br>Registered: 06.01.2026<br>Industrial Property Office, Czech Republic<br><strong style="color:var(--copper);">Patent pending</strong></div>
+  </div>
+</div></div>
+<div class="strip"></div>
+<div class="main">
+  <div class="concept full">
+    <div class="cs"><div class="ctag pr">The current problem</div><div class="cttl">Sami (co-official), Polish (110k), Somali (45k), Arabic — strong public library procurement and official indigenous language mandate</div><div class="cbdy">Norway has 900k+ residents with immigrant background and two legally co-official Sami languages. Polish (110k), Somali (45k), Arabic (50k), Dari (40k) — communities whose children attend barnehager with no mother-tongue board books. Norway's public procurement system for libraries and barnehager is among the most professional in the world.</div></div>
+    <div class="carr">→</div>
+    <div class="cs r"><div class="ctag so">Solution · UZ CZ 39118</div><div class="cttl">Removable text carriers: one print run, every language served</div><div class="cbdy">Pre-printed translation carriers placed over the original pages. One Norwegian base edition; language sets for Northern Sami, Polish, Somali, Arabic and Dari are produced centrally — no inventory risk per language.</div></div>
+  </div>
+  <div class="full">
+    <div style="margin-bottom:3px;"><span style="font-size:8.5px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--copper);">How it works</span><span style="font-size:8.5px;font-weight:300;color:var(--warm-gray);letter-spacing:1px;"> &nbsp;·&nbsp; </span><span style="font-size:12px;font-weight:800;color:var(--ink);">From original to multilingual range in four steps</span></div>
+    <div class="steps"><div class="st"><div class="stn">STEP 01</div><div class="stt">One print run</div><div class="stb">Printed once in Norwegian (Bokmål) — the base for all community and Sami language groups.</div></div><div class="st hl"><div class="stn">STEP 02</div><div class="stt">Language carriers</div><div class="stb">Sets for Sami, PL, SO, AR, FA… produced as inserts — fraction of a reprint.</div></div><div class="st hl"><div class="stn">STEP 03</div><div class="stt">Barnehage & bibliotek channel</div><div class="stb">Every barnehage, folkebibliotek and bookshop receives the right set on demand.</div></div><div class="st"><div class="stn">STEP 04</div><div class="stt">Nordic redistribution</div><div class="stb">Unsold stock redistributed within the Nordic region from one production run.</div></div></div>
+  </div>
+  <div class="bencard"><div class="lbl">Strategic value for your publishing house</div><div class="ttl">Why StoryPatch fits Norway's children's market</div><div class="divider"></div><div class="brow"><div class="bico">📦</div><div class="btxt"><strong>Zero inventory risk across all community and indigenous languages</strong>One base print run covers NO + Sami, PL, SO, AR carrier sets — on demand through Norwegian book trade.</div></div><div class="brow"><div class="bico">🏛️</div><div class="btxt"><strong>Barnehageloven and Sami Language Act mandate language support — barnehager as buyers</strong>Norway's 5,900+ barnehager and Sami municipalities are direct institutional buyers with no multilingual product available.</div></div><div class="brow"><div class="bico">📚</div><div class="btxt"><strong>Any Gyldendal Norsk or Cappelen Damm title becomes multilingual</strong>Every Norwegian publisher's existing backlist becomes a multilingual range without redesign.</div></div><div class="brow"><div class="bico">🌿</div><div class="btxt"><strong>Unique Sami market — unserved by any other publisher format</strong>Sami language carriers serve a culturally significant market that no print-run economics could otherwise reach.</div></div></div>
+  <div class="mktcard"><div class="lbl">Target markets · Language communities in Norway</div><div class="ttl">Children 0–3 with non-majority home language</div><div class="divider"></div><div class="mrow"><div class="mlbl"><span class="mflag">🇵🇱</span>Polish-speaking households (NO)</div><div class="mright"><div class="mval">~10k</div><div class="msub">Children 0–3 · ~110k Polish speakers · SSB 2022</div></div></div><div class="mrow"><div class="mlbl"><span class="mflag">🇸🇴</span>Somali-speaking households (NO)</div><div class="mright"><div class="mval">~8k</div><div class="msub">Children 0–3 · ~45k Somali speakers · SSB 2022</div></div></div><div class="mrow"><div class="mlbl"><span class="mflag">🇸🇾</span>Arabic-speaking households (NO)</div><div class="mright"><div class="mval">~8k</div><div class="msub">Children 0–3 · ~50k Arabic speakers · SSB 2022</div></div></div><div class="mrow"><div class="mlbl"><span class="mflag">🇳🇴</span>Northern Sami-speaking households</div><div class="mright"><div class="mval">~3k</div><div class="msub">Children 0–3 · ~20k Sami speakers · Sámidiggi 2022</div></div></div><div class="mrow"><div class="mlbl"><span class="mflag">🌍</span>Dari, Tigrinya, Lithuanian, other</div><div class="mright"><div class="mval">~6k</div><div class="msub">Children 0–3 · remaining non-Norwegian home-language HH · SSB 2022</div></div></div><div class="src-note">Sources: Statistics Norway (SSB) 2022 · Barnehageloven documentation · Sami Language Act · own estimates</div></div>
+  <div class="msbox full">
+    <div class="msbox-left">
+      <div class="msbox-lbl">Core argument · Norway children's publishing market</div>
+      <div class="msbox-ttl">Norway's Barnehageloven mandates language development support and the Sami Language Act creates unique indigenous demand — 5,900 barnehager are direct buyers for a product no Norwegian publisher currently offers.<br><em>Barnehageloven requires language support for multilingual children; Sami Language Act gives Northern Sami co-official status.</em></div>
+      <div class="msbox-sub">One licensed title. One stock. Every community and indigenous language served.</div>
+    </div>
+    <div class="msbox-right"><div class="msbox-stat">~35k</div><div class="msbox-statlbl">children 0–3 p.a.
+with non-Norwegian
+home language in NO</div></div>
+  </div>
+  <div class="inclcard full"><div class="lbl">Inclusion &amp; Accessibility</div><div class="ttl">The same system — two additional segments</div>
+    <div class="incl-cols"><div><div class="irow"><div class="iico">🌍</div><div class="itxt"><strong>Language support — mandated by Barnehageloven for all multilingual children</strong>Norway's kindergarten law requires language support from birth — institutional demand is unmet.</div></div><div class="irow"><div class="iico">🏫</div><div class="itxt"><strong>5,900+ barnehager as direct institutional buyers</strong>No major Norwegian publisher offers a multilingual board book for 0–3.</div></div></div><div><div class="irow"><div class="iico">⬛</div><div class="itxt"><strong>Braille carriers for visually impaired parents</strong>Transparent Braille film overlays the original without damage.</div></div><div class="irow"><div class="iico">🎁</div><div class="itxt"><strong>Premium Sami cultural gift market</strong>NO + Northern Sami gift sets serve Norway's unique indigenous cultural heritage market.</div></div></div></div>
+  </div>
+  <div class="hlbox full"><div class="hlico">📊</div><div><div class="hllbl">Key figure · Norway market</div><div class="hlttl">Norway has 900,000+ immigrants and two legally co-official Sami languages. The Barnehageloven requires language support for multilingual children in all barnehager — yet no major Norwegian publisher offers a scalable multilingual board book for children 0–3.</div></div></div>
+</div>
+<div class="ftr">
+  <div class="flogo"><div class="flogo-icon"><div class="fbar fb1"></div><div class="fbar fb2"></div><div class="fbar fb3"></div></div><div class="fwm">Story<span>Patch</span></div></div>
+  <div class="fl"><strong>Tomáš Pavlík · Owner UZ CZ 39118</strong><div class="fcontact"><a href="https://www.storypatch.org">www.storypatch.org</a><span class="fsep">·</span><a href="/cdn-cgi/l/email-protection#f8909d949497b88b8c978a8188998c9b90d6978a9f"><span class="__cf_email__" data-cfemail="c6aea3aaaaa986b5b2a9b4bfb6a7b2a5aee8a9b4a1">[email&#160;protected]</span></a></div></div>
+  <div cla
