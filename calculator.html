@@ -625,4 +625,10 @@
     const total5 = f1 + varFeeAnn
                  + f2 + varFeeAnn
                  + (fixedFull + varFeeAnn) * 3;
-    const avgPerYear = tot
+    const avgPerYear = total5 / 5;
+    
+document.getElementById('total5').textContent =
+  total5 > 0 ? fmt(total5) : '—';
+
+document.getElementById('avgYear').textContent =
+  avgPerYear > 0 ? fmt(avgPerYear) : '—';
