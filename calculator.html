@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>StoryPatch — Licensing Proposal</title>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,600;0,800;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1B2D40;
+    --ink-dark: #111e2b;
+    --ink-mid: #253d56;
+    --parchment: #F5EDE4;
+    --parchment-mid: #EDE3D8;
+    --parchment-border: #E0D5C6;
+    --copper: #D4782F;
+    --copper-light: #f9efe4;
+    --copper-bright: #bf6a25;
+    --slate: #5C7A96;
+    --slate-light: #d0dce8;
+    --peel-light: #E8C9A0;
+    --peel-dark: #BF8B56;
+    --white: #ffffff;
+    --warm-gray: #9A8A80;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Raleway', 'Trebuchet MS', sans-serif;
+    background: #ccc;
+    color: var(--ink);
+    font-size: 10px;
+    font-weight: 400;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    background: var(--white);
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.18);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ── HEADER ── */
+  .hdr {
+    background: var(--ink-dark);
+    padding: 16px 24px 14px;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .hdr::before {
+    content: '';
+    position: absolute;
+    top: -50px; right: -50px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(212,120,47,.12) 0%, transparent 70%);
+  }
+  .hdr-row { display: flex; justify-content: space-between; align-items: center; gap: 16px; position: relative; z-index: 1; }
+  .logo-wrap { display: flex; align-items: center; gap: 9px; }
+  .logo-icon {
+    width: 32px; height: 32px;
+    background: var(--white);
+    border-radius: 6px;
+    border: 1.5px solid var(--peel-light);
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: flex-start;
+    padding: 6px 7px;
+    position: relative; flex-shrink: 0;
+  }
+  .logo-icon::after {
+    content: '';
+    position: absolute; bottom: 3px; right: 3px;
+    width: 7px; height: 7px;
+    background: var(--peel-dark);
+    clip-path: polygon(100% 0, 100% 100%, 0 100%);
+  }
+  .logo-bar { height: 2.5px; border-radius: 2px; margin-bottom: 2.5px; }
+  .logo-bar:last-child { margin-bottom: 0; }
+  .lb1 { width: 100%; background: var(--copper); }
+  .lb2 { width: 85%; background: var(--slate); }
+  .lb3 { width: 65%; background: var(--slate); }
+  .logo-text { display: flex; flex-direction: column; }
+  .logo-wordmark { font-size: 17px; font-weight: 300; color: var(--white); line-height: 1; letter-spacing: -0.3px; }
+  .logo-wordmark span { font-weight: 800; color: var(--copper); }
+  .logo-tagline { font-size: 6.5px; font-weight: 300; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,.35); margin-top: 2px; }
+  .hdr-right { text-align: right; }
+  .hdr-title { font-size: 14px; font-weight: 800; color: var(--white); line-height: 1.2; }
+  .hdr-title em { color: var(--copper); font-style: italic; font-weight: 300; }
+  .hdr-sub { font-size: 8px; font-weight: 300; color: rgba(255,255,255,.4); margin-top: 3px; }
+  .uz-badge {
+    display: inline-block;
+    background: var(--copper); color: var(--white);
+    font-size: 7.5px; font-weight: 600;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 2px 8px; border-radius: 2px; margin-bottom: 4px;
+  }
+
+  .strip { height: 3px; background: linear-gradient(90deg, var(--copper) 0%, var(--slate) 50%, var(--parchment) 100%); flex-shrink: 0; }
+
+  /* ── BODY ── */
+  .body { padding: 12px 24px 10px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+
+  /* Section label */
+  .sec-label {
+    font-size: 7.5px; font-weight: 600;
+    letter-spacing: 2.5px; text-transform: uppercase;
+    color: var(--copper); margin-bottom: 2px;
+  }
+  .sec-title {
+    font-size: 12px; font-weight: 800; color: var(--ink); margin-bottom: 6px; line-height: 1.2;
+  }
+  .divider { height: 1px; background: var(--parchment-border); margin: 1px 0 6px; }
+
+  /* ── CALC GRID ── */
+  .calc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px 14px;
+  }
+
+  .calc-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 8px;
+    background: var(--parchment);
+    border-radius: 4px;
+    border-left: 3px solid var(--parchment-border);
+    gap: 8px;
+  }
+  .calc-row.highlight { border-left-color: var(--copper); background: var(--copper-light); }
+  .calc-row.result { background: var(--ink-dark); border-left-color: var(--copper); }
+  .calc-row.full { grid-column: 1 / -1; }
+
+  .row-label {
+    font-size: 8.5px; font-weight: 400; color: #5a4a40;
+    line-height: 1.3; flex: 1;
+  }
+  .calc-row.result .row-label { color: rgba(255,255,255,.55); }
+  .row-label strong { display: block; font-weight: 700; color: var(--ink); font-size: 9px; }
+  .calc-row.result .row-label strong { color: rgba(255,255,255,.9); }
+
+  .row-value {
+    flex-shrink: 0;
+    text-align: right;
+    min-width: 90px;
+  }
+
+  /* editable input */
+  .inp {
+    font-family: 'Raleway', sans-serif;
+    font-size: 12px; font-weight: 800;
+    color: var(--ink-dark);
+    background: var(--white);
+    border: 1.5px solid var(--parchment-border);
+    border-radius: 3px;
+    padding: 2px 5px;
+    width: 90px;
+    text-align: right;
+    outline: none;
+    transition: border-color .15s;
+  }
+  .inp:focus { border-color: var(--copper); }
+  .inp.unit::after { content: '€'; }
+  .inp-wrap { display: flex; align-items: center; gap: 3px; justify-content: flex-end; }
+  .unit-sym { font-size: 9px; font-weight: 600; color: var(--warm-gray); }
+
+  /* calculated output */
+  .calc-out {
+    font-family: 'Raleway', sans-serif;
+    font-size: 13px; font-weight: 800;
+    color: var(--ink-dark);
+    text-align: right;
+  }
+  .calc-row.result .calc-out { color: var(--copper); font-size: 14px; }
+  .calc-sub { font-size: 7.5px; color: var(--warm-gray); font-weight: 300; display: block; text-align: right; line-height: 1.3; }
+  .calc-row.result .calc-sub { color: rgba(255,255,255,.35); }
+
+  /* ── FORMULA ROW ── */
+  .formula-row {
+    grid-column: 1 / -1;
+    padding: 4px 8px;
+    background: var(--slate-light);
+    border-radius: 4px;
+    border-left: 3px solid var(--slate);
+    display: flex; align-items: center; gap: 8px;
+    justify-content: space-between;
+  }
+  .formula-text { font-size: 8px; color: var(--slate); font-weight: 400; flex: 1; }
+  .formula-text strong { font-weight: 700; color: var(--ink-mid); }
+
+  /* ── LICENCE SECTION ── */
+  .lic-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px 14px;
+  }
+
+  .lic-card {
+    background: var(--parchment);
+    border-radius: 5px;
+    padding: 7px 10px;
+    border-top: 3px solid var(--parchment-border);
+  }
+  .lic-card.copper-top { border-top-color: var(--copper); }
+  .lic-card.slate-top { border-top-color: var(--slate); }
+  .lic-card.full { grid-column: 1 / -1; }
+  .lic-card.dark { background: var(--ink-dark); }
+
+  .lic-label { font-size: 7.5px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--copper); margin-bottom: 2px; }
+  .lic-card.dark .lic-label { color: var(--peel-light); }
+  .lic-title { font-size: 10px; font-weight: 800; color: var(--ink); margin-bottom: 4px; line-height: 1.25; }
+  .lic-card.dark .lic-title { color: var(--white); }
+  .lic-body { font-size: 8.5px; line-height: 1.4; color: #5a4a40; font-weight: 300; }
+  .lic-card.dark .lic-body { color: rgba(255,255,255,.45); }
+
+  .fee-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 3px 0; border-bottom: 1px solid var(--parchment-border);
+  }
+  .fee-row:last-child { border-bottom: none; }
+  .fee-lbl { font-size: 8.5px; color: #5a4a40; font-weight: 300; }
+  .fee-val { font-size: 11px; font-weight: 800; color: var(--ink-dark); font-family: 'Raleway', sans-serif; }
+  .fee-val.copper { color: var(--copper); }
+  .fee-val.white { color: var(--white); }
+
+  .discount-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,.1);
+  }
+  .discount-row:last-child { border-bottom: none; }
+  .d-label { font-size: 8.5px; color: rgba(255,255,255,.5); font-weight: 300; }
+  .d-inp {
+    font-family: 'Raleway', sans-serif;
+    font-size: 11px; font-weight: 800;
+    color: var(--copper);
+    background: rgba(255,255,255,.07);
+    border: 1.5px solid rgba(255,255,255,.15);
+    border-radius: 3px;
+    padding: 1px 5px;
+    width: 50px;
+    text-align: right;
+    outline: none;
+  }
+  .d-inp:focus { border-color: var(--copper); }
+  .d-result { font-size: 8px; color: rgba(255,255,255,.35); text-align: right; margin-top: 1px; }
+
+  /* Summary box */
+  .summary-box {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, var(--ink-dark) 0%, var(--ink-mid) 100%);
+    border-radius: 6px;
+    padding: 9px 14px;
+    display: flex; justify-content: space-between; align-items: center; gap: 14px;
+  }
+  .sum-left { flex: 1; }
+  .sum-lbl { font-size: 7px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,.4); margin-bottom: 2px; }
+  .sum-title { font-size: 11px; font-weight: 800; color: var(--white); line-height: 1.25; }
+  .sum-title em { color: var(--copper); font-style: italic; font-weight: 300; }
+  .sum-sub { font-size: 8px; color: rgba(255,255,255,.4); font-weight: 300; margin-top: 2px; }
+  .sum-stats { display: flex; gap: 14px; flex-shrink: 0; }
+  .sum-stat { text-align: center; }
+  .sum-val { font-size: 18px; font-weight: 800; color: var(--copper); line-height: 1; font-family: 'Raleway', sans-serif; }
+  .sum-val-lbl { font-size: 7.5px; color: rgba(255,255,255,.4); font-weight: 300; line-height: 1.4; margin-top: 1px; }
+  .sum-divider { width: 1px; background: rgba(255,255,255,.1); align-self: stretch; }
+
+  /* ── FOOTER ── */
+  .ftr {
+    background: var(--parchment);
+    border-top: 1px solid var(--parchment-border);
+    padding: 5px 24px;
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    flex-shrink: 0;
+  }
+  .ftr-logo { display: flex; align-items: center; gap: 6px; }
+  .ftr-icon {
+    width: 18px; height: 18px; background: var(--white);
+    border-radius: 3px; border: 1px solid var(--parchment-border);
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: flex-start;
+    padding: 3px 4px; position: relative; flex-shrink: 0;
+  }
+  .ftr-icon::after { content: ''; position: absolute; bottom: 2px; right: 2px; width: 4px; height: 4px; background: var(--peel-dark); clip-path: polygon(100% 0,100% 100%,0 100%); }
+  .fbar { height: 1.5px; border-radius: 1px; margin-bottom: 1.5px; }
+  .fbar:last-child { margin-bottom: 0; }
+  .fb1 { width: 100%; background: var(--copper); }
+  .fb2 { width: 85%; background: var(--slate); }
+  .fb3 { width: 65%; background: var(--slate); }
+  .ftr-wm { font-size: 10px; font-weight: 300; color: var(--ink); }
+  .ftr-wm span { font-weight: 800; color: var(--copper); }
+  .ftr-mid { font-size: 8px; color: var(--warm-gray); font-weight: 300; text-align: center; line-height: 1.6; }
+  .ftr-mid strong { color: var(--ink); font-weight: 700; display: block; }
+  .ftr-right { text-align: right; }
+  .ftr-badge { font-size: 8.5px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--copper); }
+  .ftr-det { font-size: 7.5px; color: #bbb; font-weight: 300; }
+
+  @media print {
+    body { background: white; }
+    .page { margin: 0; box-shadow: none; }
+    .inp, .d-inp { border: 1px solid #ccc !important; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="hdr">
+    <div class="hdr-row">
+      <div class="logo-wrap">
+        <div class="logo-icon">
+          <div class="logo-bar lb1"></div>
+          <div class="logo-bar lb2"></div>
+          <div class="logo-bar lb3"></div>
+        </div>
+        <div class="logo-text">
+          <div class="logo-wordmark">Story<span>Patch</span></div>
+          <div class="logo-tagline">One Book · Every Language</div>
+        </div>
+      </div>
+      <div class="hdr-right">
+        <div class="uz-badge">Utility Model CZ 39118</div>
+        <div class="hdr-title">Licensing Offer —<br><em>Indicative Calculation</em></div>
+        <div class="hdr-sub">Territorial exclusivity · 5-year contract · Patent pending</div>
+      </div>
+    </div>
+  </div>
+  <div class="strip"></div>
+
+  <!-- BODY -->
+  <div class="body">
+
+    <!-- MARKET CALCULATOR -->
+    <div>
+      <div class="sec-label">Section 01</div>
+      <div class="sec-title">Market Size & Revenue Potential</div>
+      <div class="divider"></div>
+
+      <div class="calc-grid">
+
+        <!-- Market size -->
+        <div class="calc-row highlight">
+          <div class="row-label"><strong>Estimated market size</strong>Children aged 0–3 in target territory</div>
+          <div class="row-value">
+            <div class="inp-wrap">
+              <input class="inp" id="mktSize" type="number" value="" placeholder="e.g. 295000" oninput="calc()">
+              <span class="unit-sym">children</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Avg books 0–3 -->
+        <div class="calc-row">
+          <div class="row-label"><strong>Avg. books per child · 0–3 years</strong>Total books purchased over the full period</div>
+          <div class="row-value">
+            <div class="inp-wrap">
+              <input class="inp" id="booksTotal" type="number" value="15" oninput="calc()">
+              <span class="unit-sym">books</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Avg books per year -->
+        <div class="calc-row">
+          <div class="row-label"><strong>Avg. books per child · per year</strong>Annual purchasing rate (booksTotal ÷ 3)</div>
+          <div class="row-value">
+            <div class="inp-wrap">
+              <input class="inp" id="booksYear" type="number" value="5" oninput="calc()">
+              <span class="unit-sym">books/yr</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Book price -->
+        <div class="calc-row">
+          <div class="row-label"><strong>Standard book price</strong>Average retail price per title</div>
+          <div class="row-value">
+            <div class="inp-wrap">
+              <input class="inp" id="bookPrice" type="number" step="0.5" value="" placeholder="e.g. 12" oninput="calc()">
+              <span class="unit-sym">€</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Carrier price -->
+        <div class="calc-row">
+          <div class="row-label"><strong>Language carrier price</strong>Retail price of a language insert set</div>
+          <div class="row-value">
+            <div class="inp-wrap">
+              <input class="inp" id="carrierPrice" type="number" step="0.1" value="" placeholder="e.g. 3" oninput="calc()">
+              <span class="unit-sym">€</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Book revenue potential -->
+        <div class="calc-row">
+          <div class="row-label"><strong>Book revenue potential</strong>Market × books/yr × book price</div>
+          <div class="row-value">
+            <div class="calc-out" id="bookRev">—</div>
+            <span class="calc-sub" id="bookRevSub">fill in fields above</span>
+          </div>
+        </div>
+
+        <!-- Carrier revenue potential -->
+        <div class="calc-row">
+          <div class="row-label"><strong>Carrier revenue potential</strong>Market × books/yr × carrier price</div>
+          <div class="row-value">
+            <div class="calc-out" id="carrierRev">—</div>
+            <span class="calc-sub" id="carrierRevSub">fill in fields above</span>
+          </div>
+        </div>
+
+        <!-- Market coverage -->
+        <div class="calc-row highlight full">
+          <div class="row-label"><strong>Estimated market coverage</strong>Publisher's expected share of target segment</div>
+          <div class="row-value">
+            <div class="inp-wrap">
+              <input class="inp" id="coverage" type="number" step="1" value="" placeholder="e.g. 20" oninput="calc()" style="width:60px">
+              <span class="unit-sym">%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formula note -->
+        <div class="formula-row">
+          <div class="formula-text">
+            <strong>Total Revenue (books) =</strong>&nbsp;
+            coverage&nbsp;%&nbsp;×&nbsp;book revenue potential &nbsp;·&nbsp; <strong>Fixed fee base = book revenues only · carrier revenues feed variable fee</strong>
+          </div>
+        </div>
+
+        <!-- Total revenues -->
+        <div class="calc-row result full">
+          <div class="row-label"><strong>Total addressable revenues from books (annual)</strong>Basis for fixed licence fee calculation</div>
+          <div class="row-value">
+            <div class="calc-out" id="totalRev">—</div>
+            <span class="calc-sub" id="totalRevSub">per year · at stated coverage</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- LICENCE STRUCTURE -->
+    <div>
+      <div class="sec-label">Section 02</div>
+      <div class="sec-title">Proposed Licence Structure</div>
+      <div class="divider"></div>
+
+      <div class="lic-grid">
+
+        <!-- Terms -->
+        <div class="lic-card copper-top">
+          <div class="lic-label">Terms</div>
+          <div class="lic-title">Territorial exclusivity · 5 years</div>
+          <div class="fee-row">
+            <span class="fee-lbl">Contract term</span>
+            <span class="fee-val">5 years</span>
+          </div>
+          <div class="fee-row">
+            <span class="fee-lbl">Territory</span>
+            <span class="fee-val" style="font-size:9px;">Exclusive · 1 country</span>
+          </div>
+          <div class="fee-row">
+            <span class="fee-lbl">Scope</span>
+            <span class="fee-val" style="font-size:9px;">All carrier formats</span>
+          </div>
+        </div>
+
+        <!-- Fixed fee -->
+        <div class="lic-card slate-top">
+          <div class="lic-label">Fixed Annual Fee</div>
+          <div class="lic-title">2% of addressable revenues · paid annually</div>
+          <div class="fee-row">
+            <span class="fee-lbl">Rate</span>
+            <span class="fee-val copper">2%</span>
+          </div>
+          <div class="fee-row">
+            <span class="fee-lbl">Base</span>
+            <span class="fee-val" style="font-size:9px;">Addressable revenues from books</span>
+          </div>
+          <div class="fee-row">
+            <span class="fee-lbl">Annual fixed fee (full)</span>
+            <span class="fee-val copper" id="fixedFee">—</span>
+          </div>
+        </div>
+
+        <!-- Discounts card -->
+        <div class="lic-card dark full">
+          <div class="lic-label">Ramp-up Discounts on Fixed Fee · Years 1 &amp; 2</div>
+          <div class="lic-title" style="color:var(--white); margin-bottom:5px;">Reduced entry cost to accelerate adoption</div>
+
+          <!-- Year 1 -->
+          <div class="discount-row">
+            <span class="d-label">Year 1 discount on fixed fee</span>
+            <div style="display:flex;align-items:center;gap:5px;">
+              <input class="d-inp" id="disc1" type="number" value="30" min="0" max="100" oninput="calc()">
+              <span style="font-size:9px;color:rgba(255,255,255,.35);">%</span>
+            </div>
+          </div>
+          <div class="d-result">Year 1 fixed fee: <span style="color:var(--copper);font-weight:700;" id="fee1">—</span></div>
+
+          <!-- Year 2 -->
+          <div class="discount-row" style="margin-top:3px;">
+            <span class="d-label">Year 2 discount on fixed fee</span>
+            <div style="display:flex;align-items:center;gap:5px;">
+              <input class="d-inp" id="disc2" type="number" value="15" min="0" max="100" oninput="calc()">
+              <span style="font-size:9px;color:rgba(255,255,255,.35);">%</span>
+            </div>
+          </div>
+          <div class="d-result">Year 2 fixed fee: <span style="color:var(--copper);font-weight:700;" id="fee2">—</span> &nbsp;·&nbsp; Years 3–5: full rate</div>
+        </div>
+
+        <!-- Variable fee -->
+        <div class="lic-card copper-top">
+          <div class="lic-label">Variable Fee · per sold sheet</div>
+          <div class="lic-title">€ 0.05 per language carrier sheet sold</div>
+          <div class="fee-row">
+            <span class="fee-lbl">Rate</span>
+            <span class="fee-val copper">€ 0.05 / sheet</span>
+          </div>
+          <div class="fee-row">
+            <span class="fee-lbl">Assessed</span>
+            <span class="fee-val" style="font-size:9px;">Annually · post year-end review</span>
+          </div>
+          <div class="fee-row">
+            <span class="fee-lbl">Est. annual variable fee</span>
+            <span class="fee-val copper" id="varFee">—</span>
+          </div>
+        </div>
+
+        <!-- 5-year summary -->
+        <div class="summary-box">
+          <div class="sum-left">
+            <div class="sum-lbl">5-year contract value · indicative estimate</div>
+            <div class="sum-title">Total licence cost over full term —<br><em>fixed + variable combined</em></div>
+            <div class="sum-sub">Yr 1 &amp; 2 at discounted rate · Yr 3–5 at full rate · variable added annually</div>
+          </div>
+          <div class="sum-stats">
+            <div class="sum-stat">
+              <div class="sum-val" id="sum5yr">—</div>
+              <div class="sum-val-lbl">5-year total<br>licence cost</div>
+            </div>
+            <div class="sum-divider"></div>
+            <div class="sum-stat">
+              <div class="sum-val" id="sumAvg">—</div>
+              <div class="sum-val-lbl">average<br>per year</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /body -->
+
+  <!-- FOOTER -->
+  <div class="ftr">
+    <div class="ftr-logo">
+      <div class="ftr-icon"><div class="fbar fb1"></div><div class="fbar fb2"></div><div class="fbar fb3"></div></div>
+      <div class="ftr-wm">Story<span>Patch</span></div>
+    </div>
+    <div class="ftr-mid">
+      <strong>Tomáš Pavlík · Owner UZ CZ 39118</strong>
+      <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a0c8c5cccccfe0d3d4cfd2d9d0c1d4c3c88ecfd2c7">[email&#160;protected]</a> · www.storypatch.org
+    </div>
+    <div class="ftr-right">
+      <div class="ftr-badge">CZ 39118 U1</div>
+      <div class="ftr-det">Registered 06.01.2026 · Patent pending · Indicative figures only</div>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  function fmt(n) {
+    if (!isFinite(n) || isNaN(n)) return '—';
+    if (n >= 1e6) return '€ ' + (n/1e6).toFixed(2) + ' M';
+    if (n >= 1e3) return '€ ' + Math.round(n).toLocaleString('en-EU');
+    return '€ ' + n.toFixed(0);
+  }
+
+  function calc() {
+    const mkt        = parseFloat(document.getElementById('mktSize').value) || 0;
+    const booksY     = parseFloat(document.getElementById('booksYear').value) || 0;
+    const bookP      = parseFloat(document.getElementById('bookPrice').value) || 0;
+    const carrP      = parseFloat(document.getElementById('carrierPrice').value) || 0;
+    const cov        = parseFloat(document.getElementById('coverage').value) || 0;
+    const disc1      = parseFloat(document.getElementById('disc1').value) || 0;
+    const disc2      = parseFloat(document.getElementById('disc2').value) || 0;
+
+    const bookRevAbs    = mkt * booksY * bookP;
+    const carrierRevAbs = mkt * booksY * carrP;
+    const bookRevCov    = bookRevAbs * cov / 100;
+    const carrierRevCov = carrierRevAbs * cov / 100;
+    const totalRevVal   = bookRevCov; // fixed fee base = books only
+
+    document.getElementById('bookRev').textContent    = bookRevAbs > 0 ? fmt(bookRevAbs) : '—';
+    document.getElementById('bookRevSub').textContent = bookRevAbs > 0 ? 'full market · before coverage' : 'fill in fields above';
+    document.getElementById('carrierRev').textContent    = carrierRevAbs > 0 ? fmt(carrierRevAbs) : '—';
+    document.getElementById('carrierRevSub').textContent = carrierRevAbs > 0 ? 'full market · before coverage' : 'fill in fields above';
+    document.getElementById('totalRev').textContent   = totalRevVal > 0 ? fmt(totalRevVal) : '—';
+
+    // Fixed fee = 2% of total addressable
+    const fixedFull = totalRevVal * 0.02;
+    document.getElementById('fixedFee').textContent = fixedFull > 0 ? fmt(fixedFull) : '—';
+
+    const f1 = fixedFull * (1 - disc1/100);
+    const f2 = fixedFull * (1 - disc2/100);
+    document.getElementById('fee1').textContent = fixedFull > 0 ? fmt(f1) : '—';
+    document.getElementById('fee2').textContent = fixedFull > 0 ? fmt(f2) : '—';
+
+    // Variable fee = 0.05 per sheet sold (sheets ≈ coverage × mkt × booksY)
+    const sheetsAnnual = mkt * cov/100 * booksY;
+    const varFeeAnn = sheetsAnnual * 0.05;
+    document.getElementById('varFee').textContent = varFeeAnn > 0 ? fmt(varFeeAnn) : '—';
+
+    // 5-year total
+    const total5 = f1 + varFeeAnn
+                 + f2 + varFeeAnn
+                 + (fixedFull + varFeeAnn) * 3;
+    const avgPerYear = tot
