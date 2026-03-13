@@ -621,14 +621,16 @@
     const varFeeAnn = sheetsAnnual * 0.05;
     document.getElementById('varFee').textContent = varFeeAnn > 0 ? fmt(varFeeAnn) : '—';
 
-    // 5-year total
-    const total5 = f1 + varFeeAnn
-                 + f2 + varFeeAnn
-                 + (fixedFull + varFeeAnn) * 3;
-    const avgPerYear = total5 / 5;
-    
+// 5-year total
+const total5 = f1 + varFeeAnn
+             + f2 + varFeeAnn
+             + (fixedFull + varFeeAnn) * 3;
+
+const avgPerYear = total5 / 5;
+
 document.getElementById('total5').textContent =
   total5 > 0 ? fmt(total5) : '—';
 
 document.getElementById('avgYear').textContent =
   avgPerYear > 0 ? fmt(avgPerYear) : '—';
+}
