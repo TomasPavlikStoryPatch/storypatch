@@ -305,6 +305,26 @@
   .ftr-badge { font-size: clamp(8px, 1.1vw, 10px); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--copper); }
   .ftr-det { font-size: clamp(7px, 0.9vw, 9px); color: #bbb; font-weight: 300; }
 
+  /* ── COUNTRY SELECTOR ── */
+  .country-bar {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 10px;
+  }
+  .country-lbl {
+    font-size: clamp(7px, 1vw, 8.5px); font-weight: 600;
+    letter-spacing: 2.5px; text-transform: uppercase; color: var(--copper);
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .country-sel {
+    font-family: 'Raleway', sans-serif;
+    font-size: clamp(10px, 1.3vw, 13px); font-weight: 700;
+    color: var(--ink-dark); background: var(--white);
+    border: 1.5px solid var(--parchment-border); border-radius: 4px;
+    padding: 4px 10px; outline: none; cursor: pointer;
+    transition: border-color .15s; flex: 1; max-width: 280px;
+  }
+  .country-sel:focus { border-color: var(--copper); box-shadow: 0 0 0 2px rgba(212,120,47,.12); }
+
   /* ── RESPONSIVE ── */
   @media (max-width: 620px) {
     .calc-grid { grid-template-columns: 1fr; }
@@ -354,7 +374,10 @@
 
     <!-- SECTION 01 -->
     <div>
-      <div class="sec-label">Section 01</div>
+      <div class="country-bar">
+        <span class="country-lbl">Target country</span>
+        <input class="country-sel" id="countrySelect" type="text" placeholder="e.g. Germany, Japan, Spain…">
+      </div>
       <div class="sec-title">Market Size & Revenue Potential</div>
       <div class="divider"></div>
       <div class="calc-grid">
@@ -400,7 +423,7 @@
         </div>
 
         <div class="calc-row">
-          <div class="row-label"><strong>Book revenue potential</strong>Market × books/yr × book price</div>
+          <div class="row-label"><strong>Book revenue potential</strong>Full market × books/yr × book price</div>
           <div class="row-value">
             <div class="calc-out" id="bookRev">—</div>
             <span class="calc-sub" id="bookRevSub">fill in fields above</span>
@@ -408,14 +431,14 @@
         </div>
 
         <div class="calc-row">
-          <div class="row-label"><strong>Carrier revenue potential</strong>Market × books/yr × carrier price</div>
+          <div class="row-label"><strong>Carrier revenue potential</strong>Full market × books/yr × carrier price</div>
           <div class="row-value">
             <div class="calc-out" id="carrierRev">—</div>
             <span class="calc-sub" id="carrierRevSub">fill in fields above</span>
           </div>
         </div>
 
-        <div class="calc-row highlight full">
+        <div class="calc-row highlight">
           <div class="row-label"><strong>Estimated market coverage</strong>Publisher's expected share of target segment</div>
           <div class="row-value"><div class="inp-wrap">
             <input class="inp" id="coverage" type="number" step="1" placeholder="e.g. 20" oninput="calc()" style="width:70px">
@@ -423,15 +446,8 @@
           </div></div>
         </div>
 
-        <div class="formula-row">
-          <div class="formula-text">
-            <strong>Total Revenue (books) =</strong>&nbsp;coverage % × book revenue potential &nbsp;·&nbsp;
-            <strong>Fixed fee base = book revenues only · carrier revenues feed variable fee</strong>
-          </div>
-        </div>
-
         <div class="calc-row result full">
-          <div class="row-label"><strong>Total addressable revenues from books (annual)</strong>Basis for fixed licence fee calculation</div>
+          <div class="row-label"><strong>Total addressable revenues</strong>Children × books/yr × coverage % × (book + carrier price)</div>
           <div class="row-value">
             <div class="calc-out" id="totalRev">—</div>
             <span class="calc-sub">per year · at stated coverage</span>
@@ -443,49 +459,26 @@
 
     <!-- SECTION 02 -->
     <div>
-      <div class="sec-label">Section 02</div>
       <div class="sec-title">Proposed Licence Structure</div>
       <div class="divider"></div>
       <div class="lic-grid">
 
-        <!-- Variable fee (first position) -->
+        <!-- Fixed fee — first position -->
         <div class="lic-card copper-top">
-          <div class="lic-label">Variable Fee · per sold sheet</div>
-          <div class="lic-title">€ 0.05 per language carrier sheet sold</div>
-          <div class="fee-row"><span class="fee-lbl">Rate</span><span class="fee-val copper">€ 0.05 / sheet</span></div>
-          <div class="fee-row"><span class="fee-lbl">Assessed</span><span class="fee-val" style="font-size:0.9em;">Annually · post year-end review</span></div>
-          <div class="fee-row"><span class="fee-lbl">Est. annual variable fee</span><span class="fee-val copper" id="varFee">—</span></div>
-        </div>
-
-        <!-- Fixed fee -->
-        <div class="lic-card slate-top">
           <div class="lic-label">Fixed Annual Fee</div>
-          <div class="lic-title">2% of addressable revenues · paid annually</div>
-          <div class="fee-row"><span class="fee-lbl">Rate</span><span class="fee-val copper">2%</span></div>
-          <div class="fee-row"><span class="fee-lbl">Base</span><span class="fee-val" style="font-size:0.9em;">Addressable revenues from books</span></div>
-          <div class="fee-row"><span class="fee-lbl">Annual fixed fee (full)</span><span class="fee-val copper" id="fixedFee">—</span></div>
+          <div class="lic-title">€ 1,000 – € 4,000 · annually based on target country size</div>
+          <div class="fee-row"><span class="fee-lbl">Range</span><span class="fee-val copper">€ 1,000 – € 4,000 / yr</span></div>
+          <div class="fee-row"><span class="fee-lbl">Assessed</span><span class="fee-val" style="font-size:0.9em;">Annually · based on territory population</span></div>
+          <div class="fee-row"><span class="fee-lbl">Payment</span><span class="fee-val" style="font-size:0.9em;">Due at contract start of each year</span></div>
         </div>
 
-        <!-- Discounts -->
-        <div class="lic-card dark full">
-          <div class="lic-label">Ramp-up Discounts on Fixed Fee · Years 1 &amp; 2</div>
-          <div class="lic-title" style="color:var(--white);margin-bottom:6px;">Reduced entry cost to accelerate adoption</div>
-          <div class="discount-row">
-            <span class="d-label">Year 1 discount on fixed fee</span>
-            <div style="display:flex;align-items:center;gap:6px;">
-              <input class="d-inp" id="disc1" type="number" value="30" min="0" max="100" oninput="calc()">
-              <span style="font-size:0.9em;color:rgba(255,255,255,.35);">%</span>
-            </div>
-          </div>
-          <div class="d-result">Year 1 fixed fee: <span style="color:var(--copper);font-weight:700;" id="fee1">—</span></div>
-          <div class="discount-row" style="margin-top:5px;">
-            <span class="d-label">Year 2 discount on fixed fee</span>
-            <div style="display:flex;align-items:center;gap:6px;">
-              <input class="d-inp" id="disc2" type="number" value="15" min="0" max="100" oninput="calc()">
-              <span style="font-size:0.9em;color:rgba(255,255,255,.35);">%</span>
-            </div>
-          </div>
-          <div class="d-result">Year 2 fixed fee: <span style="color:var(--copper);font-weight:700;" id="fee2">—</span> &nbsp;·&nbsp; Years 3–5: full rate</div>
+        <!-- Variable fee -->
+        <div class="lic-card slate-top">
+          <div class="lic-label">Variable Fee · annual royalty</div>
+          <div class="lic-title">3% of Total addressable revenues · paid annually</div>
+          <div class="fee-row"><span class="fee-lbl">Rate</span><span class="fee-val copper">3%</span></div>
+          <div class="fee-row"><span class="fee-lbl">Formula</span><span class="fee-val" style="font-size:0.85em;line-height:1.3;">Children × books/yr × cov% × (book&nbsp;+&nbsp;carrier price) × 3%</span></div>
+          <div class="fee-row"><span class="fee-lbl">Est. variable fee (at input coverage)</span><span class="fee-val copper" id="varFee">—</span></div>
         </div>
 
         <!-- YEAR-BY-YEAR BREAKDOWN -->
@@ -497,14 +490,15 @@
           <table class="breakdown-table">
             <thead>
               <tr>
-                <th>Year</th>
+                <th style="text-align:left;">Year</th>
                 <th>Fixed Fee</th>
+                <th>Expected Coverage %</th>
                 <th>Expected Variable Fee</th>
                 <th>Total Fee</th>
               </tr>
             </thead>
             <tbody id="breakdownBody">
-              <tr><td colspan="4" style="text-align:center;color:var(--warm-gray);padding:16px;font-size:0.9em;">Fill in the fields above to see the breakdown</td></tr>
+              <tr><td colspan="5" style="text-align:center;color:var(--warm-gray);padding:16px;font-size:0.9em;">Fill in the fields above to see the breakdown</td></tr>
             </tbody>
           </table>
         </div>
@@ -514,7 +508,7 @@
           <div class="sum-left">
             <div class="sum-lbl">5-year contract value · indicative estimate</div>
             <div class="sum-title">Total licence cost over full term —<br><em>fixed + variable combined</em></div>
-            <div class="sum-sub">Yr 1 &amp; 2 at discounted rate · Yr 3–5 at full rate · variable added annually</div>
+            <div class="sum-sub">Fixed fee € 1,000–€ 4,000 · variable at 3% of addressable revenues · growing coverage yr 1–3</div>
           </div>
           <div class="sum-stats">
             <div class="sum-stat">
@@ -523,8 +517,8 @@
             </div>
             <div class="sum-divider"></div>
             <div class="sum-stat">
-              <div class="sum-val" id="sumAvg">—</div>
-              <div class="sum-val-lbl">average<br>per year</div>
+              <div class="sum-val" id="sumTotalRev">—</div>
+              <div class="sum-val-lbl">est. total<br>addressable revenues</div>
             </div>
           </div>
         </div>
@@ -562,7 +556,7 @@
     </div>
     <div class="ftr-mid">
       <strong>Tomáš Pavlík · Owner UZ CZ 39118</strong>
-      hello@storypatch.org · www.storypatch.org
+      <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="127a777e7e7d5261667d606b627366717a3c7d6075">[email&#160;protected]</a> · www.storypatch.org
     </div>
     <div class="ftr-right">
       <div class="ftr-badge">CZ 39118 U1</div>
@@ -572,12 +566,16 @@
 
 </div><!-- /page -->
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
   function fmt(n) {
-    if (!isFinite(n) || isNaN(n) || n === 0) return '—';
-    if (n >= 1e6) return '€\u00a0' + (n / 1e6).toFixed(2) + '\u00a0M';
-    if (n >= 1e3) return '€\u00a0' + Math.round(n).toLocaleString('de-DE');
-    return '€\u00a0' + n.toFixed(0);
+    if (!isFinite(n) || isNaN(n) || n === 0) return '\u2014';
+    if (n >= 1e6) return '\u20ac\u00a0' + (n / 1e6).toFixed(2) + '\u00a0M';
+    if (n >= 1e3) return '\u20ac\u00a0' + Math.round(n).toLocaleString('de-DE');
+    return '\u20ac\u00a0' + n.toFixed(0);
+  }
+
+  function fmtRange(lo, hi) {
+    return fmt(lo) + ' \u2013 ' + fmt(hi);
   }
 
   function calc() {
@@ -586,75 +584,81 @@
     const bookP  = parseFloat(document.getElementById('bookPrice').value)    || 0;
     const carrP  = parseFloat(document.getElementById('carrierPrice').value) || 0;
     const cov    = parseFloat(document.getElementById('coverage').value)     || 0;
-    const disc1  = parseFloat(document.getElementById('disc1').value)        || 0;
-    const disc2  = parseFloat(document.getElementById('disc2').value)        || 0;
 
+    // Full market revenue potentials (before coverage)
     const bookRevAbs    = mkt * booksY * bookP;
     const carrierRevAbs = mkt * booksY * carrP;
-    const bookRevCov    = bookRevAbs * cov / 100;
+    const fullRevAbs    = bookRevAbs + carrierRevAbs;
 
-    document.getElementById('bookRev').textContent       = bookRevAbs > 0 ? fmt(bookRevAbs) : '—';
-    document.getElementById('bookRevSub').textContent    = bookRevAbs > 0 ? 'full market · before coverage' : 'fill in fields above';
-    document.getElementById('carrierRev').textContent    = carrierRevAbs > 0 ? fmt(carrierRevAbs) : '—';
-    document.getElementById('carrierRevSub').textContent = carrierRevAbs > 0 ? 'full market · before coverage' : 'fill in fields above';
-    document.getElementById('totalRev').textContent      = bookRevCov > 0 ? fmt(bookRevCov) : '—';
+    // Total addressable revenues at user-entered coverage
+    const totalRevCov = mkt * booksY * (cov / 100) * (bookP + carrP);
 
-    const fixedFull = bookRevCov * 0.02;
-    document.getElementById('fixedFee').textContent = fixedFull > 0 ? fmt(fixedFull) : '—';
+    document.getElementById('bookRev').textContent       = bookRevAbs > 0 ? fmt(bookRevAbs) : '\u2014';
+    document.getElementById('bookRevSub').textContent    = bookRevAbs > 0 ? 'full market \u00b7 before coverage' : 'fill in fields above';
+    document.getElementById('carrierRev').textContent    = carrierRevAbs > 0 ? fmt(carrierRevAbs) : '\u2014';
+    document.getElementById('carrierRevSub').textContent = carrierRevAbs > 0 ? 'full market \u00b7 before coverage' : 'fill in fields above';
+    document.getElementById('totalRev').textContent      = totalRevCov > 0 ? fmt(totalRevCov) : '\u2014';
 
-    const f1 = fixedFull * (1 - disc1 / 100);
-    const f2 = fixedFull * (1 - disc2 / 100);
-    document.getElementById('fee1').textContent = fixedFull > 0 ? fmt(f1) : '—';
-    document.getElementById('fee2').textContent = fixedFull > 0 ? fmt(f2) : '—';
+    // Variable fee at user-entered coverage (card display)
+    const varFeeAtCov = totalRevCov * 0.03;
+    document.getElementById('varFee').textContent = varFeeAtCov > 0 ? fmt(varFeeAtCov) : '\u2014';
 
-    const sheetsAnnual = mkt * (cov / 100) * booksY;
-    const varFeeAnn    = sheetsAnnual * 0.05;
-    document.getElementById('varFee').textContent = varFeeAnn > 0 ? fmt(varFeeAnn) : '—';
-
-    // Year-by-year table
-    const years = [
-      { label: 'Year 1', fix: f1,        disc: disc1 },
-      { label: 'Year 2', fix: f2,        disc: disc2 },
-      { label: 'Year 3', fix: fixedFull, disc: 0 },
-      { label: 'Year 4', fix: fixedFull, disc: 0 },
-      { label: 'Year 5', fix: fixedFull, disc: 0 },
+    // Year-by-year table: fixed fee range 1000-4000, coverage ramp 5/15/20/20/20%
+    const yearData = [
+      { label: 'Year 1', covPct: 5   },
+      { label: 'Year 2', covPct: 15  },
+      { label: 'Year 3', covPct: cov },
+      { label: 'Year 4', covPct: cov },
+      { label: 'Year 5', covPct: cov },
     ];
 
     const tbody = document.getElementById('breakdownBody');
-    if (fixedFull === 0 && varFeeAnn === 0) {
-      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--warm-gray);padding:16px;font-size:0.9em;">Fill in the fields above to see the breakdown</td></tr>';
-    } else {
-      let rows = '';
-      let cumFix = 0, cumVar = 0, cumTotal = 0;
-      years.forEach(y => {
-        const total = y.fix + varFeeAnn;
-        cumFix   += y.fix;
-        cumVar   += varFeeAnn;
-        cumTotal += total;
-        const tag = y.disc > 0 ? `<span class="disc-tag">\u2212${y.disc}%</span>` : '';
-        rows += `<tr>
-          <td>${y.label}${tag}</td>
-          <td>${fmt(y.fix)}</td>
-          <td>${fmt(varFeeAnn)}</td>
-          <td class="val-copper">${fmt(total)}</td>
-        </tr>`;
-      });
-      rows += `<tr class="total-row">
-        <td>5-Year Total</td>
-        <td>${fmt(cumFix)}</td>
-        <td>${fmt(cumVar)}</td>
-        <td class="val-copper">${fmt(cumTotal)}</td>
-      </tr>`;
-      tbody.innerHTML = rows;
+    if (fullRevAbs === 0) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--warm-gray);padding:16px;font-size:0.9em;">Fill in the fields above to see the breakdown</td></tr>';
+      document.getElementById('sum5yr').textContent = '\u2014';
+      document.getElementById('sumTotalRev').textContent = '\u2014';
+      return;
     }
 
-    const total5   = f1 + varFeeAnn + f2 + varFeeAnn + (fixedFull + varFeeAnn) * 3;
-    const avgPerYr = total5 / 5;
-    document.getElementById('sum5yr').textContent = total5 > 0 ? fmt(total5) : '—';
-    document.getElementById('sumAvg').textContent = avgPerYr > 0 ? fmt(avgPerYr) : '—';
+    let rows = '';
+    let cumVar = 0;
+    let cumTotalRevenues = 0;
+    yearData.forEach(y => {
+      const annualRev = fullRevAbs * (y.covPct / 100);
+      const varFee    = annualRev * 0.03;
+      const fixLow    = 1000;
+      const fixHigh   = 4000;
+      const totLow    = fixLow  + varFee;
+      const totHigh   = fixHigh + varFee;
+      cumVar           += varFee;
+      cumTotalRevenues += annualRev;
+      const covLabel = y.covPct > 0 ? y.covPct + '%' : '\u2014';
+      rows += `<tr>
+        <td>${y.label}</td>
+        <td style="color:var(--warm-gray);font-size:0.9em;">${fmtRange(fixLow, fixHigh)}</td>
+        <td style="text-align:center;font-weight:700;color:var(--slate);">${covLabel}</td>
+        <td>${fmt(varFee)}</td>
+        <td class="val-copper">${fmtRange(totLow, totHigh)}</td>
+      </tr>`;
+    });
+    const cumFixLow  = 5 * 1000;
+    const cumFixHigh = 5 * 4000;
+    const cumTotLow  = cumFixLow  + cumVar;
+    const cumTotHigh = cumFixHigh + cumVar;
+    rows += `<tr class="total-row">
+      <td>5-Year Total</td>
+      <td style="font-size:0.9em;">${fmtRange(cumFixLow, cumFixHigh)}</td>
+      <td></td>
+      <td>${fmt(cumVar)}</td>
+      <td class="val-copper">${fmtRange(cumTotLow, cumTotHigh)}</td>
+    </tr>`;
+    tbody.innerHTML = rows;
+
+    document.getElementById('sum5yr').textContent = fmtRange(cumTotLow, cumTotHigh);
+    document.getElementById('sumTotalRev').textContent = fmt(cumTotalRevenues);
   }
 
-  calc();
+  function updateCountry() { calc(); }
 </script>
 </body>
 </html>
