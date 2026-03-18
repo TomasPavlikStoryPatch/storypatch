@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>StoryPatch — Grupo SM</title>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,600;0,800;1,300;1,800&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#1B2D40;--ink-dark:#111e2b;--ink-mid:#253d56;--parchment:#F5EDE4;--parchment-border:#E0D5C6;--copper:#D4782F;--copper-light:#F5EDE4;--copper-bright:#bf6a25;--slate:#5C7A96;--slate-light:#d0dce8;--peel-light:#E8C9A0;--peel-dark:#BF8B56;--white:#ffffff;--warm-gray:#9A8A80;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Raleway',sans-serif;background:var(--white);color:var(--ink);width:210mm;min-height:297mm;margin:0 auto;font-size:10px;font-weight:400;display:flex;flex-direction:column;}
+  .hdr{background:var(--ink-dark);padding:18px 28px 16px;position:relative;overflow:hidden;}
+  .hdr::before{content:'';position:absolute;top:-40px;right:-40px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(212,120,47,.15) 0%,transparent 70%);}
+  .hdr::after{content:'';position:absolute;bottom:-30px;left:60px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.04) 0%,transparent 70%);}
+  .hdr-row{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;}
+  .hdr-left{flex:1;position:relative;z-index:1;}.hdr-right{text-align:right;flex-shrink:0;position:relative;z-index:1;}
+  .logo-wrap{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+  .logo-icon{width:36px;height:36px;background:var(--white);border-radius:7px;border:1.5px solid var(--peel-light);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:7px 8px;position:relative;flex-shrink:0;}
+  .logo-icon::after{content:'';position:absolute;bottom:4px;right:4px;width:8px;height:8px;background:var(--peel-dark);clip-path:polygon(100% 0,100% 100%,0 100%);}
+  .logo-bar{height:3px;border-radius:2px;margin-bottom:3px;}.logo-bar:last-child{margin-bottom:0;}
+  .lb1{width:100%;background:var(--copper);}.lb2{width:85%;background:var(--slate);}.lb3{width:65%;background:var(--slate);}
+  .logo-text{display:flex;flex-direction:column;}
+  .logo-wordmark{font-size:18px;font-weight:300;color:var(--white);line-height:1;letter-spacing:-0.3px;}
+  .logo-wordmark span{font-weight:800;color:var(--copper);}
+  .logo-tagline{font-size:7px;font-weight:300;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-top:2px;}
+  .per-tag{font-size:8px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--copper);margin-bottom:6px;}
+  .hdr-headline{font-size:17px;font-weight:800;color:var(--white);line-height:1.2;max-width:410px;}
+  .hdr-headline span{color:var(--copper);font-style:italic;font-weight:300;}
+  .hdr-sub{margin-top:5px;font-size:9px;font-weight:300;color:rgba(255,255,255,.42);max-width:390px;line-height:1.4;}
+  .uz-badge{display:inline-block;background:var(--copper);color:var(--white);font-size:8.5px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:3px 9px;border-radius:2px;margin-bottom:5px;}
+  .hdr-meta{font-size:9.5px;color:rgba(255,255,255,.35);font-weight:300;line-height:1.7;}
+  .hdr-meta strong{color:rgba(255,255,255,.6);font-weight:600;}
+  .strip{height:3px;background:linear-gradient(90deg,var(--copper) 0%,var(--slate) 50%,var(--parchment) 100%);}
+  .main{padding:8px 20px 6px;display:grid;grid-template-columns:1fr 1fr;gap:7px;flex:1;}
+  .full{grid-column:1/-1;}
+  .lbl{font-size:8.5px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--copper);margin-bottom:3px;}
+  .ttl{font-size:13px;font-weight:800;color:var(--ink);margin-bottom:4px;line-height:1.2;}
+  .divider{height:1px;background:var(--parchment-border);margin:3px 0 5px;}
+  .concept{grid-column:1/-1;display:grid;grid-template-columns:1fr 28px 1fr;background:var(--parchment);border-radius:7px;border:1.5px solid var(--parchment-border);overflow:hidden;}
+  .cs{padding:9px 12px;}.cs.r{background:var(--ink-dark);}
+  .ctag{display:inline-block;font-size:8px;font-weight:600;letter-spacing:1.8px;text-transform:uppercase;padding:2px 7px;border-radius:20px;margin-bottom:4px;}
+  .ctag.pr{background:var(--slate-light);color:var(--ink);}.ctag.so{background:rgba(255,255,255,.1);color:rgba(255,255,255,.6);}
+  .cttl{font-size:11px;font-weight:800;margin-bottom:3px;line-height:1.25;color:var(--ink);}.cs.r .cttl{color:var(--white);}
+  .cbdy{font-size:9.5px;line-height:1.4;color:#5a4a40;font-weight:300;}.cs.r .cbdy{color:rgba(255,255,255,.5);}
+  .carr{display:flex;align-items:center;justify-content:center;background:var(--ink-mid);font-size:16px;color:var(--copper);}
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:3px;}
+  .st{background:var(--parchment);border-radius:5px;padding:7px 8px;border-left:3px solid var(--parchment-border);}.st.hl{border-left-color:var(--copper);}
+  .stn{font-size:8px;font-weight:700;letter-spacing:1px;color:var(--copper);margin-bottom:1px;}
+  .stt{font-size:9.5px;font-weight:700;color:var(--ink);margin-bottom:2px;line-height:1.25;}
+  .stb{font-size:9px;line-height:1.35;color:var(--warm-gray);font-weight:300;}
+  .bencard{background:var(--white);border:1.5px solid var(--parchment-border);border-radius:7px;padding:9px 11px;}
+  .brow{display:flex;gap:7px;align-items:flex-start;padding:3px 0;border-bottom:1px solid var(--parchment);}.brow:last-child{border-bottom:none;}
+  .bico{width:17px;height:17px;background:var(--copper-light);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10.5px;flex-shrink:0;margin-top:1px;}
+  .btxt{font-size:9.5px;line-height:1.35;color:#5a4a40;font-weight:300;}
+  .btxt strong{color:var(--ink);font-weight:700;font-size:10px;display:block;margin-bottom:1px;}
+  .mktcard{background:var(--parchment);border-radius:7px;padding:9px 11px;border:1.5px solid var(--parchment-border);}
+  .mkt-section-lbl{font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--slate);padding:4px 0 2px;margin-top:3px;}
+  .mrow{display:flex;justify-content:space-between;align-items:center;padding:2.5px 0;border-bottom:1px solid var(--parchment-border);}.mrow:last-child{border-bottom:none;}
+  .mlbl{font-size:9.5px;color:#5a4a40;font-weight:300;display:flex;align-items:center;gap:5px;}.mflag{font-size:13px;}
+  .mright{text-align:right;}.mval{font-size:14px;font-weight:800;color:var(--ink-dark);}.msub{font-size:8.5px;color:#bbb;font-weight:300;line-height:1.35;}
+  .inclcard{background:var(--ink-dark);border-radius:7px;padding:9px 12px;grid-column:1/-1;}
+  .inclcard .lbl{color:var(--peel-light);}.inclcard .ttl{color:var(--white);margin-bottom:6px;}
+  .incl-cols{display:grid;grid-template-columns:1fr 1fr;gap:0 16px;}
+  .irow{display:flex;gap:7px;align-items:flex-start;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.1);}.irow:last-child{border-bottom:none;}
+  .iico{width:17px;height:17px;background:rgba(255,255,255,.1);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10.5px;flex-shrink:0;margin-top:1px;}
+  .itxt{font-size:9px;line-height:1.35;color:rgba(255,255,255,.5);font-weight:300;}
+  .itxt strong{color:var(--white);font-weight:700;font-size:9.5px;display:block;margin-bottom:1px;}
+  .hlbox{grid-column:1/-1;background:var(--copper-light);border:1.5px solid var(--peel-light);border-radius:7px;padding:8px 12px;display:flex;gap:10px;align-items:flex-start;}
+  .hlico{font-size:17px;flex-shrink:0;line-height:1;margin-top:1px;}
+  .hllbl{font-size:7px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--copper-bright);margin-bottom:2px;}
+  .hlttl{font-size:10px;font-weight:600;color:var(--ink);line-height:1.35;}
+  .msbox{grid-column:1/-1;background:linear-gradient(135deg,var(--ink-dark) 0%,var(--ink-mid) 100%);border-radius:7px;padding:9px 14px;display:flex;justify-content:space-between;align-items:center;gap:14px;}
+  .msbox-left{flex:1;}.msbox-lbl{font-size:8px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:3px;}
+  .msbox-ttl{font-size:11px;font-weight:800;color:var(--white);line-height:1.2;}.msbox-ttl em{color:var(--copper);font-style:italic;font-weight:300;}
+  .msbox-sub{font-size:9px;color:rgba(255,255,255,.5);font-weight:300;margin-top:3px;line-height:1.35;}
+  .msbox-right{flex-shrink:0;text-align:right;}.msbox-stat{font-size:22px;font-weight:800;color:var(--copper);line-height:1;}
+  .msbox-statlbl{font-size:8px;color:rgba(255,255,255,.4);font-weight:300;line-height:1.4;}
+  .ftr{background:var(--parchment);border-top:1px solid var(--parchment-border);padding:5px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:auto;}
+  .fl{font-size:9px;color:var(--warm-gray);font-weight:300;line-height:1.6;}.fl strong{color:var(--ink);font-weight:700;display:block;margin-bottom:1px;}
+  .fr{text-align:right;flex-shrink:0;}.fbadge{font-size:9.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--copper);margin-bottom:2px;}
+  .fdet{font-size:8.5px;color:#bbb;font-weight:300;line-height:1.5;}
+  .fcontact{display:flex;gap:12px;align-items:center;margin-top:3px;}.fcontact a{font-size:9px;font-weight:600;color:var(--copper);text-decoration:none;letter-spacing:0.3px;}
+  .fsep{font-size:9px;color:var(--parchment-border);}
+  .flogo{display:flex;align-items:center;gap:7px;}
+  .flogo-icon{width:22px;height:22px;background:var(--white);border-radius:4px;border:1px solid var(--parchment-border);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:4px 5px;position:relative;flex-shrink:0;}
+  .flogo-icon::after{content:'';position:absolute;bottom:2px;right:2px;width:5px;height:5px;background:var(--peel-dark);clip-path:polygon(100% 0,100% 100%,0 100%);}
+  .fbar{height:2px;border-radius:1px;margin-bottom:2px;}.fbar:last-child{margin-bottom:0;}
+  .fb1{width:100%;background:var(--copper);}.fb2{width:85%;background:var(--slate);}.fb3{width:65%;background:var(--slate);}
+  .fwm{font-size:11px;font-weight:300;color:var(--ink);}.fwm span{font-weight:800;color:var(--copper);}
+  .src-note{font-size:8px;color:#bbb;font-weight:300;line-height:1.35;margin-top:3px;}
+</style></head>
+<body>
+<div class="hdr"><div class="hdr-row">
+  <div class="hdr-left">
+    <div class="logo-wrap">
+      <div class="logo-icon"><div class="logo-bar lb1"></div><div class="logo-bar lb2"></div><div class="logo-bar lb3"></div></div>
+      <div class="logo-text"><div class="logo-wordmark">Story<span>Patch</span></div><div class="logo-tagline">One Book · Every Language</div></div>
+    </div>
+    <div class="per-tag">Licensing Offer · Grupo SM · Spain · Latin America · 21 countries</div>
+    <div class="hdr-headline">Print once.<br><span>Every language. Zero inventory risk.</span></div>
+    <div class="hdr-sub">Grupo SM (Madrid) operates in 21 countries across Spain and Latin America — including Mexico, Colombia, Chile, Argentina, Brazil and the USA. One StoryPatch licence with SM covers Spain's co-official languages plus 500M+ Spanish speakers across the Americas.</div>
+  </div>
+  <div class="hdr-right">
+    <div class="uz-badge">Utility Model CZ 39118</div>
+    <div class="hdr-meta">Number: <strong>CZ 39118 U1</strong><br>Registered: 06.01.2026<br>Industrial Property Office, Czech Republic<br><strong style="color:var(--copper);">Patent pending</strong></div>
+  </div>
+</div></div>
+<div class="strip"></div>
+<div class="main">
+  <div class="concept full">
+    <div class="cs"><div class="ctag pr">The current problem</div><div class="cttl">SM publishes Spain's leading 0–3 range — yet Catalan (7.5M), Basque (750k), Galician (2.4M), Arabic (800k) and Romanian speakers in Spain are entirely unserved, as are SM's 20 Latin American markets.</div><div class="cbdy">Grupo SM is one of Spain's largest educational and children's book publishers, with a strong 0–3 board book catalogue and operations in 21 countries. Spain has four co-official languages — Castilian, Catalan, Basque and Galician — plus 800k Arabic and 700k Romanian speakers. SM's Latin American network (Mexico, Colombia, Chile, Argentina, Brazil, USA) multiplies the opportunity: indigenous languages, immigrant communities and Spanish-Portuguese bilingual demand all unserved at the 0–3 level.</div></div>
+    <div class="carr">→</div>
+    <div class="cs r"><div class="ctag so">Solution · UZ CZ 39118</div><div class="cttl">Removable text carriers: one print run, every language served</div><div class="cbdy">Pre-printed translation carriers placed over SM 0–3 titles. One Castilian base; carrier sets for Catalan, Basque, Galician, Arabic and Romanian produced for Spain — the same logic deployed across SM's 20 Latin American offices for Nahuatl, Quechua, Guaraní and Portuguese.</div></div>
+  </div>
+  <div class="full">
+    <div style="margin-bottom:3px;"><span style="font-size:8.5px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--copper);">How it works</span><span style="font-size:8.5px;font-weight:300;color:var(--warm-gray);letter-spacing:1px;"> &nbsp;·&nbsp; </span><span style="font-size:12px;font-weight:800;color:var(--ink);">From original to multilingual range in four steps</span></div>
+    <div class="steps"><div class="st"><div class="stn">STEP 01</div><div class="stt">One SM print run</div><div class="stb">Any SM board book printed once in Castilian — the base for all co-official and minority languages.</div></div><div class="st hl"><div class="stn">STEP 02</div><div class="stt">Language carriers</div><div class="stb">Carrier sets for CA, EU, GL, AR, RO… produced centrally — fraction of a reprint.</div></div><div class="st hl"><div class="stn">STEP 03</div><div class="stt">Escuela infantil channel</div><div class="stb">Every escuela infantil, biblioteca and Casa del Libro receives the right set on demand.</div></div><div class="st"><div class="stn">STEP 04</div><div class="stt">SM 21-country network</div><div class="stb">SM Mexico, Colombia, Chile, Argentina deploy indigenous and bilingual carrier sets via existing offices.</div></div></div>
+  </div>
+  <div class="bencard"><div class="lbl">Strategic value for Grupo SM</div><div class="ttl">Why StoryPatch fits Grupo SM</div><div class="divider"></div><div class="brow"><div class="bico">🌍</div><div class="btxt"><strong>21 countries — one licence covers Spain + all of Latin America</strong>SM's network spans Mexico, Colombia, Chile, Argentina, Brazil and the USA — one StoryPatch licence unlocks the entire Spanish-speaking world.</div></div><div class="brow"><div class="bico">🇪🇸</div><div class="btxt"><strong>Spain's 4 co-official languages — an organic domestic opportunity</strong>Catalan (7.5M), Basque (750k) and Galician (2.4M) speakers are legally protected communities with institutional procurement budgets — all unserved by any SM title.</div></div><div class="brow"><div class="bico">🇲🇽</div><div class="btxt"><strong>SM Mexico — 68 indigenous languages, Nahuatl, Maya, Zapotec</strong>Mexico's INALI mandates indigenous language education — SM Mexico's school network is the fastest distribution channel to 620k+ multilingual children 0–3.</div></div><div class="brow"><div class="bico">📦</div><div class="btxt"><strong>Zero inventory risk across all languages and 21 territories</strong>No market-specific print runs — carrier exchange makes every unit redistributable across SM's entire international network.</div></div></div>
+  <div class="mktcard">
+    <div class="lbl">Language communities in Spain</div>
+    <div class="ttl">Spain home communities + SM 21-country group reach</div>
+    <div class="divider"></div>
+    <div class="mkt-section-lbl">🇪🇸 España · Mercado doméstico</div>
+    <div class="mrow"><div class="mlbl"><span class="mflag">🏴</span>Catalan-speaking households (ES — co-official)</div><div class="mright"><div class="mval">~90k</div><div class="msub">Children 0–3 · ~7.5M Catalan speakers · INE 2022</div></div></div><div class="mrow"><div class="mlbl"><span class="mflag">🏴</span>Galician-speaking households (ES — co-official)</div><div class="mright"><div class="mval">~28k</div><div class="msub">Children 0–3 · ~2.4M Galician speakers · INE 2022</div></div></div><div class="mrow"><div class="mlbl"><span class="mflag">🏴</span>Basque-speaking households (ES — co-official)</div><div class="mright"><div class="mval">~9k</div><div class="msub">Children 0–3 · ~750k Basque speakers · INE 2022</div></div></div><div class="mrow"><div class="mlbl"><span class="mflag">🇲🇦</span>Arabic-speaking households (ES — Moroccan community)</div><div class="mright"><div class="mval">~24k</div><div class="msub">Children 0–3 · ~800k Arabic speakers · INE 2022</div></div></div><div class="mrow"><div class="mlbl"><span class="mflag">🌍</span>Romanian, Chinese, Ukrainian, other</div><div class="mright"><div class="mval">~209k</div><div class="msub">Children 0–3 · remaining non-Castilian HH · INE 2022</div></div></div>
+    <div class="mkt-section-lbl">🌍 Grupo SM · Mercados internacionales</div>
+    <div class="mrow"><div class="mlbl"><span class="mflag">🇲🇽</span>SM Mexico — 68 indigenous languages</div><div class="mright"><div class="mval">~620k</div><div class="msub">Children 0–3 in indigenous/minority language households</div></div></div><div class="mrow"><div class="mlbl"><span class="mflag">🇨🇴</span>SM Colombia — Wayuu, Nasa, Emberá indigenous</div><div class="mright"><div class="mval">~200k</div><div class="msub">Children 0–3 in indigenous/minority language households</div></div></div><div class="mrow"><div class="mlbl"><span class="mflag">🇦🇷</span>SM Argentina — Guaraní, Quechua, Italian-descent</div><div class="mright"><div class="mval">~260k</div><div class="msub">Children 0–3 in minority language households</div></div></div><div class="mrow"><div class="mlbl"><span class="mflag">🇧🇷</span>SM Brazil — Portuguese-Spanish bilingual, 305 indigenous</div><div class="mright"><div class="mval">~1.2M</div><div class="msub">Children 0–3 in heritage/indigenous language households</div></div></div><div class="mrow"><div class="mlbl"><span class="mflag">🇺🇸</span>SM USA — 58M Spanish speakers, bilingual demand</div><div class="mright"><div class="mval">~2.3M</div><div class="msub">Children 0–3 with non-English home language</div></div></div>
+    <div class="src-note">Sources: INE Spain 2022 · INALI Mexico · SM group annual report · own estimates</div>
+  </div>
+  <div class="msbox full">
+    <div class="msbox-left">
+      <div class="msbox-lbl">Core argument · Grupo SM</div>
+      <div class="msbox-ttl">SM operates in 21 countries — one StoryPatch licence covers Spain's co-official languages and unlocks the entire Latin American indigenous and bilingual market simultaneously.<br><em>LOE mandates co-official language support in 33,000+ Spanish escuelas infantiles; INALI and SEP fund indigenous language materials across SM's Latin American network.</em></div>
+      <div class="msbox-sub">One SM licence. One stock. 21 countries and 500M+ Spanish speakers served.</div>
+    </div>
+    <div class="msbox-right"><div class="msbox-stat">21</div><div class="msbox-statlbl">countries in SM's
+publishing network
+across 3 continents</div></div>
+  </div>
+  <div class="inclcard full"><div class="lbl">Inclusion &amp; Accessibility</div><div class="ttl">The same system — two additional segments</div>
+    <div class="incl-cols"><div><div class="irow"><div class="iico">🏫</div><div class="itxt"><strong>33,000+ Spanish escuelas infantiles as direct institutional buyers</strong>LOE mandates co-official language support — SM's dominant market position makes Kita procurement immediate.</div></div><div class="irow"><div class="iico">🌿</div><div class="itxt"><strong>Mexico, Colombia, Argentina — indigenous language mandates</strong>INALI, MEN and INAI fund indigenous 0–3 materials — SM's existing school network is the distribution channel.</div></div></div><div><div class="irow"><div class="iico">⬛</div><div class="itxt"><strong>Braille carriers for visually impaired parents</strong>Transparent Braille film overlays SM pages without damage.</div></div><div class="irow"><div class="iico">🎁</div><div class="itxt"><strong>Premium co-official language gift market in Spain</strong>ES + Catalan, ES + Basque gift sets are natural premium products in Spain's educated regional parent demographic.</div></div></div></div>
+  </div>
+  <div class="hlbox full"><div class="hlico">📊</div><div><div class="hllbl">Group reach · Grupo SM</div><div class="hlttl">Grupo SM operates in 21 countries across Spain and Latin America. Spain has four co-official languages and 800k+ Arabic speakers — and SM's Latin American network reaches 620k+ indigenous language children in Mexico alone. A single StoryPatch licence converts SM's entire 0–3 catalogue into a multilingual range across three continents.</div></div></div>
+</div>
+<div class="ftr">
+  <div class="flogo"><div class="flogo-icon"><div class="fbar fb1"></div><div class="fbar fb2"></div><div class="fbar fb3"></div></div><div class="fwm">Story<span>Patch</span></div></div>
+  <div class="fl"><strong>Tomáš Pavlík · Owner UZ CZ 39118</strong><div class="fcontact"><a href="https://www.storypatch.org">www.storypatch.org</a><span class="fsep">·</span><a href="mailto:hello@storypatch.org">hello@storypatch.org</a></div></div>
+  <div class="fr"><div class="fbadge">CZ 39118 U1</div><div class="fdet">Registered: 06.01.2026 · Patent pending</div></div>
+</div>
+</body></html>

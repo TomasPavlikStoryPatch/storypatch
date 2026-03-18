@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>StoryPatch — Hachette Children's Group UK</title>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,600;0,800;1,300;1,800&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#1B2D40;--ink-dark:#111e2b;--ink-mid:#253d56;--parchment:#F5EDE4;--parchment-border:#E0D5C6;--copper:#D4782F;--copper-light:#F5EDE4;--copper-bright:#bf6a25;--slate:#5C7A96;--slate-light:#d0dce8;--peel-light:#E8C9A0;--peel-dark:#BF8B56;--white:#ffffff;--warm-gray:#9A8A80;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Raleway',sans-serif;background:var(--white);color:var(--ink);width:210mm;min-height:297mm;margin:0 auto;font-size:10px;font-weight:400;display:flex;flex-direction:column;}
+  .hdr{background:var(--ink-dark);padding:18px 28px 16px;position:relative;overflow:hidden;}
+  .hdr::before{content:'';position:absolute;top:-40px;right:-40px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(212,120,47,.15) 0%,transparent 70%);}
+  .hdr::after{content:'';position:absolute;bottom:-30px;left:60px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.04) 0%,transparent 70%);}
+  .hdr-row{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;}
+  .hdr-left{flex:1;position:relative;z-index:1;}.hdr-right{text-align:right;flex-shrink:0;position:relative;z-index:1;}
+  .logo-wrap{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+  .logo-icon{width:36px;height:36px;background:var(--white);border-radius:7px;border:1.5px solid var(--peel-light);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:7px 8px;position:relative;flex-shrink:0;}
+  .logo-icon::after{content:'';position:absolute;bottom:4px;right:4px;width:8px;height:8px;background:var(--peel-dark);clip-path:polygon(100% 0,100% 100%,0 100%);}
+  .logo-bar{height:3px;border-radius:2px;margin-bottom:3px;}.logo-bar:last-child{margin-bottom:0;}
+  .lb1{width:100%;background:var(--copper);}.lb2{width:85%;background:var(--slate);}.lb3{width:65%;background:var(--slate);}
+  .logo-text{display:flex;flex-direction:column;}
+  .logo-wordmark{font-size:18px;font-weight:300;color:var(--white);line-height:1;letter-spacing:-0.3px;}
+  .logo-wordmark span{font-weight:800;color:var(--copper);}
+  .logo-tagline{font-size:7px;font-weight:300;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-top:2px;}
+  .per-tag{font-size:8px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--copper);margin-bottom:6px;}
+  .hdr-headline{font-size:17px;font-weight:800;color:var(--white);line-height:1.2;max-width:410px;}
+  .hdr-headline span{color:var(--copper);font-style:italic;font-weight:300;}
+  .hdr-sub{margin-top:5px;font-size:9px;font-weight:300;color:rgba(255,255,255,.42);max-width:390px;line-height:1.4;}
+  .uz-badge{display:inline-block;background:var(--copper);color:var(--white);font-size:8.5px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:3px 9px;border-radius:2px;margin-bottom:5px;}
+  .hdr-meta{font-size:9.5px;color:rgba(255,255,255,.35);font-weight:300;line-height:1.7;}
+  .hdr-meta strong{color:rgba(255,255,255,.6);font-weight:600;}
+  .strip{height:3px;background:linear-gradient(90deg,var(--copper) 0%,var(--slate) 50%,var(--parchment) 100%);}
+  .main{padding:8px 20px 6px;display:grid;grid-template-columns:1fr 1fr;gap:7px;flex:1;}
+  .full{grid-column:1/-1;}
+  .lbl{font-size:8.5px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--copper);margin-bottom:3px;}
+  .ttl{font-size:13px;font-weight:800;color:var(--ink);margin-bottom:4px;line-height:1.2;}
+  .divider{height:1px;background:var(--parchment-border);margin:3px 0 5px;}
+  .concept{grid-column:1/-1;display:grid;grid-template-columns:1fr 28px 1fr;background:var(--parchment);border-radius:7px;border:1.5px solid var(--parchment-border);overflow:hidden;}
+  .cs{padding:9px 12px;}.cs.r{background:var(--ink-dark);}
+  .ctag{display:inline-block;font-size:8px;font-weight:600;letter-spacing:1.8px;text-transform:uppercase;padding:2px 7px;border-radius:20px;margin-bottom:4px;}
+  .ctag.pr{background:var(--slate-light);color:var(--ink);}.ctag.so{background:rgba(255,255,255,.1);color:rgba(255,255,255,.6);}
+  .cttl{font-size:11px;font-weight:800;margin-bottom:3px;line-height:1.25;color:var(--ink);}.cs.r .cttl{color:var(--white);}
+  .cbdy{font-size:9.5px;line-height:1.4;color:#5a4a40;font-weight:300;}.cs.r .cbdy{color:rgba(255,255,255,.5);}
+  .carr{display:flex;align-items:center;justify-content:center;background:var(--ink-mid);font-size:16px;color:var(--copper);}
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:3px;}
+  .st{background:var(--parchment);border-radius:5px;padding:7px 8px;border-left:3px solid var(--parchment-border);}.st.hl{border-left-color:var(--copper);}
+  .stn{font-size:8px;font-weight:700;letter-spacing:1px;color:var(--copper);margin-bottom:1px;}
+  .stt{font-size:9.5px;font-weight:700;color:var(--ink);margin-bottom:2px;line-height:1.25;}
+  .stb{font-size:9px;line-height:1.35;color:var(--warm-gray);font-weight:300;}
+  .bencard{background:var(--white);border:1.5px solid var(--parchment-border);border-radius:7px;padding:9px 11px;}
+  .brow{display:flex;gap:7px;align-items:flex-start;padding:3px 0;border-bottom:1px solid var(--parchment);}.brow:last-child{border-bottom:none;}
+  .bico{width:17px;height:17px;background:var(--copper-light);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10.5px;flex-shrink:0;margin-top:1px;}
+  .btxt{font-size:9.5px;line-height:1.35;color:#5a4a40;font-weight:300;}
+  .btxt strong{color:var(--ink);font-weight:700;font-size:10px;display:block;margin-bottom:1px;}
+  .mktcard{background:var(--parchment);border-radius:7px;padding:9px 11px;border:1.5px solid var(--parchment-border);}
+  .mkt-section-lbl{font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--slate);padding:4px 0 2px;margin-top:3px;}
+  .mrow{display:flex;justify-content:space-between;align-items:center;padding:2.5px 0;border-bottom:1px solid var(--parchment-border);}.mrow:last-child{border-bottom:none;}
+  .mlbl{font-size:9.5px;color:#5a4a40;font-weight:300;display:flex;align-items:center;gap:5px;}.mflag{font-size:13px;}
+  .mright{text-align:right;}.mval{font-size:14px;font-weight:800;color:var(--ink-dark);}.msub{font-size:8.5px;color:#bbb;font-weight:300;line-height:1.35;}
+  .inclcard{background:var(--ink-dark);border-radius:7px;padding:9px 12px;grid-column:1/-1;}
+  .inclcard .lbl{color:var(--peel-light);}.inclcard .ttl{color:var(--white);margin-bottom:6px;}
+  .incl-cols{display:grid;grid-template-columns:1fr 1fr;gap:0 16px;}
+  .irow{display:flex;gap:7px;align-items:flex-start;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.1);}.irow:last-child{border-bottom:none;}
+  .iico{width:17px;height:17px;background:rgba(255,255,255,.1);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10.5px;flex-shrink:0;margin-top:1px;}
+  .itxt{font-size:9px;line-height:1.35;color:rgba(255,255,255,.5);font-weight:300;}
+  .itxt strong{color:var(--white);font-weight:700;font-size:9.5px;display:block;margin-bottom:1px;}
+  .hlbox{grid-column:1/-1;background:var(--copper-light);border:1.5px solid var(--peel-light);border-radius:7px;padding:8px 12px;display:flex;gap:10px;align-items:flex-start;}
+  .hlico{font-size:17px;flex-shrink:0;line-height:1;margin-top:1px;}
+  .hllbl{font-size:7px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--copper-bright);margin-bottom:2px;}
+  .hlttl{font-size:10px;font-weight:600;color:var(--ink);line-height:1.35;}
+  .msbox{grid-column:1/-1;background:linear-gradient(135deg,var(--ink-dark) 0%,var(--ink-mid) 100%);border-radius:7px;padding:9px 14px;display:flex;justify-content:space-between;align-items:center;gap:14px;}
+  .msbox-left{flex:1;}.msbox-lbl{font-size:8px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:3px;}
+  .msbox-ttl{font-size:11px;font-weight:800;color:var(--white);line-height:1.2;}.msbox-ttl em{color:var(--copper);font-style:italic;font-weight:300;}
+  .msbox-sub{font-size:9px;color:rgba(255,255,255,.5);font-weight:300;margin-top:3px;line-height:1.35;}
+  .msbox-right{flex-shrink:0;text-align:right;}.msbox-stat{font-size:22px;font-weight:800;color:var(--copper);line-height:1;}
+  .msbox-statlbl{font-size:8px;color:rgba(255,255,255,.4);font-weight:300;line-height:1.4;}
+  .ftr{background:var(--parchment);border-top:1px solid var(--parchment-border);padding:5px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:auto;}
+  .fl{font-size:9px;color:var(--warm-gray);font-weight:300;line-height:1.6;}.fl strong{color:var(--ink);font-weight:700;display:block;margin-bottom:1px;}
+  .fr{text-align:right;flex-shrink:0;}.fbadge{font-size:9.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--copper);margin-bottom:2px;}
+  .fdet{font-size:8.5px;color:#bbb;font-weight:300;line-height:1.5;}
+  .fcontact{display:flex;gap:12px;align-items:center;margin-top:3px;}.fcontact a{font-size:9px;font-weight:600;color:var(--copper);text-decoration:none;letter-spacing:0.3px;}
+  .fsep{font-size:9px;color:var(--parchment-border);}
+  .flogo{display:flex;align-items:center;gap:7px;}
+  .flogo-icon{width:22px;height:22px;background:var(--white);border-radius:4px;border:1px solid var(--parchment-border);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:4px 5px;position:relative;flex-shrink:0;}
+  .flogo-icon::after{content:'';position:absolute;bottom:2px;right:2px;width:5px;height:5px;background:var(--peel-dark);clip-path:polygon(100% 0,100% 100%,0 100%);}
+  .fbar{height:2px;border-radius:1px;margin-bottom:2px;}.fbar:last-child{margin-bottom:0;}
+  .fb1{width:100%;background:var(--copper);}.fb2{width:85%;background:var(--slate);}.fb3{width:65%;background:var(--slate);}
+  .fwm{font-size:11px;font-weight:300;color:var(--ink);}.fwm span{font-weight:800;color:var(--copper);}
+  .src-note{font-size:8px;color:#bbb;font-weight:300;line-height:1.35;margin-top:3px;}
+</style></head>
+<body>
+<div class="hdr"><div class="hdr-row">
+  <div class="hdr-left">
+    <div class="logo-wrap">
+      <div class="logo-icon"><div class="logo-bar lb1"></div><div class="logo-bar lb2"></div><div class="logo-bar lb3"></div></div>
+      <div class="logo-text"><div class="logo-wordmark">Story<span>Patch</span></div><div class="logo-tagline">One Book · Every Language</div></div>
+    </div>
+    <div class="per-tag">Licensing Offer · Hachette Children's Group UK · Hodder · Orchard</div>
+    <div class="hdr-headline">Print once.<br><span>Every language. Zero inventory risk.</span></div>
+    <div class="hdr-sub">Hachette Children's Group (part of Hachette Livre / Lagardère) operates in the UK with Hodder Children's, Orchard and Wayland. The Hachette Livre group spans France, Australia, Canada and beyond — one licence, multiple French and English-speaking markets.</div>
+  </div>
+  <div class="hdr-right">
+    <div class="uz-badge">Utility Model CZ 39118</div>
+    <div class="hdr-meta">Number: <strong>CZ 39118 U1</strong><br>Registered: 06.01.2026<br>Industrial Property Office, Czech Republic<br><strong style="color:var(--copper);">Patent pending</strong></div>
+  </div>
+</div></div>
+<div class="strip"></div>
+<div class="main">
+  <div class="concept full">
+    <div class="cs"><div class="ctag pr">The current problem</div><div class="cttl">Hachette Children's Group publishes across the UK and connects to Hachette's European and global network — yet its 0–3 range is entirely monolingual across all markets.</div><div class="cbdy">Hachette Children's Group UK publishes Hodder Children's, Orchard Books and Wayland. The parent group Hachette Livre is France's largest publisher, with operations in Australia, Canada and across the French-speaking world. Its entire 0–3 output is monolingual — one language per market. StoryPatch changes that with a single licence that cascades across the group.</div></div>
+    <div class="carr">→</div>
+    <div class="cs r"><div class="ctag so">Solution · UZ CZ 39118</div><div class="cttl">Removable text carriers: one print run, every language served</div><div class="cbdy">Pre-printed translation carriers placed over Hodder Children's or Orchard 0–3 titles. One English base edition; carrier sets for Welsh, Polish, Punjabi, Urdu and French produced centrally — deployable across Hachette's UK, French and international network with no inventory risk.</div></div>
+  </div>
+  <div class="full">
+    <div style="margin-bottom:3px;"><span style="font-size:8.5px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--copper);">How it works</span><span style="font-size:8.5px;font-weight:300;color:var(--warm-gray);letter-spacing:1px;"> &nbsp;·&nbsp; </span><span style="font-size:12px;font-weight:800;color:var(--ink);">From original to multilingual range in four steps</span></div>
+    <div class="steps"><div class="st"><div class="stn">STEP 01</div><div class="stt">One Hodder print run</div><div class="stb">Any Hodder Children's or Orchard board book printed once in English.</div></div><div class="st hl"><div class="stn">STEP 02</div><div class="stt">Language carriers</div><div class="stb">Carrier sets for CY, PL, PA, UR, FR, AR… produced centrally — fraction of a reprint.</div></div><div class="st hl"><div class="stn">STEP 03</div><div class="stt">UK & French channel</div><div class="stb">Every UK nursery and Hachette France network receives the right language set on demand.</div></div><div class="st"><div class="stn">STEP 04</div><div class="stt">Hachette group reach</div><div class="stb">Hachette Australia and Hachette Canada deploy the same carrier sets across their markets.</div></div></div>
+  </div>
+  <div class="bencard"><div class="lbl">Strategic value for Hachette Children's Group UK</div><div class="ttl">Why StoryPatch fits Hachette Children's Group UK</div><div class="divider"></div><div class="brow"><div class="bico">📚</div><div class="btxt"><strong>Hodder and Orchard 0–3 range — multilingual without redesign</strong>Any Hodder Children's or Orchard board book becomes a bilingual product across Welsh, Polish and Punjabi without reprint.</div></div><div class="brow"><div class="bico">🇫🇷</div><div class="btxt"><strong>Hachette Livre France — Arabic (3M), Berber, Portuguese communities in France</strong>Carrier sets for Arabic, Berber and Portuguese serve France's 380k multilingual children 0–3 — via existing Hachette France distribution.</div></div><div class="brow"><div class="bico">🌍</div><div class="btxt"><strong>Hachette Australia and Canada — shared carrier production across territories</strong>One carrier production run serves UK, France, Australia and Canada — the group's four main English and French-speaking markets.</div></div><div class="brow"><div class="bico">📦</div><div class="btxt"><strong>Zero inventory risk across all languages and territories</strong>No market-specific print runs — carrier exchange makes every unit redistributable within the Hachette group.</div></div></div>
+  <div class="mktcard">
+    <div class="lbl">Language communities in United Kingdom</div>
+    <div class="ttl">UK home communities + Hachette group international reach</div>
+    <div class="divider"></div>
+    <div class="mkt-section-lbl">🇬🇧 UK · Home market</div>
+    <div class="mrow"><div class="mlbl"><span class="mflag">🏴󠁧󠁢󠁷󠁬󠁳󠁿</span>Welsh (co-official)</div><div class="mright"><div class="mval">~18k</div><div class="msub">Children 0–3 · ~900k Welsh speakers · ONS 2021</div></div></div><div class="mrow"><div class="mlbl"><span class="mflag">🇵🇱</span>Polish</div><div class="mright"><div class="mval">~35k</div><div class="msub">Children 0–3 · ~900k Polish speakers · ONS 2021</div></div></div><div class="mrow"><div class="mlbl"><span class="mflag">🇮🇳</span>Punjabi</div><div class="mright"><div class="mval">~20k</div><div class="msub">Children 0–3 · ~500k Punjabi speakers · ONS 2021</div></div></div><div class="mrow"><div class="mlbl"><span class="mflag">🇵🇰</span>Urdu</div><div class="mright"><div class="mval">~16k</div><div class="msub">Children 0–3 · ~400k Urdu speakers · ONS 2021</div></div></div><div class="mrow"><div class="mlbl"><span class="mflag">🌍</span>Bengali, Arabic, Somali, other</div><div class="mright"><div class="mval">~311k</div><div class="msub">Children 0–3 · remaining non-English HH · ONS 2021</div></div></div>
+    <div class="mkt-section-lbl">🌍 Hachette Children's Group UK group · International markets</div>
+    <div class="mrow"><div class="mlbl"><span class="mflag">🇫🇷</span>Hachette Livre France — Arabic, Berber, Portuguese</div><div class="mright"><div class="mval">~380k</div><div class="msub">Children 0–3 with non-French home language</div></div></div><div class="mrow"><div class="mlbl"><span class="mflag">🇦🇺</span>Hachette Australia — Mandarin, Arabic, Vietnamese</div><div class="mright"><div class="mval">~295k</div><div class="msub">Children 0–3 with non-English home language</div></div></div><div class="mrow"><div class="mlbl"><span class="mflag">🇨🇦</span>Hachette Canada — French, Punjabi, Arabic, Indigenous</div><div class="mright"><div class="mval">~260k</div><div class="msub">Children 0–3 with non-English/French home language</div></div></div>
+    <div class="src-note">Sources: ONS Census 2021 · Hachette Livre group annual report · own estimates</div>
+  </div>
+  <div class="msbox full">
+    <div class="msbox-left">
+      <div class="msbox-lbl">Core argument · Hachette Children's Group UK</div>
+      <div class="msbox-ttl">Hachette Livre is France's largest publisher and operates across the UK, France, Australia and Canada — one StoryPatch licence serves the entire group without a single additional print run.<br><em>EYFS (UK) and EYLF (Australia) both mandate language support from birth — Hachette's group network are direct institutional buyers.</em></div>
+      <div class="msbox-sub">One Hodder licence. One stock. The entire Hachette group territory served.</div>
+    </div>
+    <div class="msbox-right"><div class="msbox-stat">4</div><div class="msbox-statlbl">major Hachette
+group markets
+served from one run</div></div>
+  </div>
+  <div class="inclcard full"><div class="lbl">Inclusion &amp; Accessibility</div><div class="ttl">The same system — two additional segments</div>
+    <div class="incl-cols"><div><div class="irow"><div class="iico">🏴󠁧󠁢󠁷󠁬󠁳󠁿</div><div class="itxt"><strong>Welsh-medium early education — Mudiad Meithrin as direct buyer</strong>Welsh Government funds Cymraeg 0–3 materials — a Hodder Welsh carrier set is an immediate procurement opportunity.</div></div><div class="irow"><div class="iico">🇫🇷</div><div class="itxt"><strong>France: Arabic and Berber communities — 380k children 0–3</strong>Hachette France's distribution network serves Arabic and Berber communities directly — no additional logistics required.</div></div></div><div><div class="irow"><div class="iico">⬛</div><div class="itxt"><strong>Braille carriers for visually impaired parents</strong>Transparent Braille film overlays Hodder and Orchard pages without damage.</div></div><div class="irow"><div class="iico">🎁</div><div class="itxt"><strong>Premium gift sets across UK and French-speaking markets</strong>EN + Welsh, EN + Arabic, FR + Arabic gift sets serve both UK and French market demographics.</div></div></div></div>
+  </div>
+  <div class="hlbox full"><div class="hlico">📊</div><div><div class="hllbl">Group reach · Hachette Livre</div><div class="hlttl">Hachette Livre is France's largest publisher and operates dedicated children's divisions in the UK, France, Australia and Canada. A single StoryPatch licence with Hachette Children's Group UK converts the group's entire 0–3 output into multilingual ranges across four major markets — without a single new print run.</div></div></div>
+</div>
+<div class="ftr">
+  <div class="flogo"><div class="flogo-icon"><div class="fbar fb1"></div><div class="fbar fb2"></div><div class="fbar fb3"></div></div><div class="fwm">Story<span>Patch</span></div></div>
+  <div class="fl"><strong>Tomáš Pavlík · Owner UZ CZ 39118</strong><div class="fcontact"><a href="https://www.storypatch.org">www.storypatch.org</a><span class="fsep">·</span><a href="mailto:hello@storypatch.org">hello@storypatch.org</a></div></div>
+  <div class="fr"><div class="fbadge">CZ 39118 U1</div><div class="fdet">Registered: 06.01.2026 · Patent pending</div></div>
+</div>
+</body></html>
