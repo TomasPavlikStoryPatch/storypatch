@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>StoryPatch — Jerboa Books</title>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,600;0,800;1,300;1,800&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#1B2D40;--ink-dark:#111e2b;--ink-mid:#253d56;--parchment:#F5EDE4;--parchment-mid:#EDE3D8;--parchment-border:#E0D5C6;--copper:#D4782F;--copper-light:#F5EDE4;--copper-bright:#bf6a25;--slate:#5C7A96;--slate-light:#d0dce8;--peel-light:#E8C9A0;--peel-dark:#BF8B56;--white:#ffffff;--warm-gray:#9A8A80;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Raleway',sans-serif;background:var(--white);color:var(--ink);width:210mm;min-height:297mm;margin:0 auto;font-size:10px;font-weight:400;display:flex;flex-direction:column;}
+  .hdr{background:var(--ink-dark);padding:22px 28px 20px;position:relative;overflow:hidden;}
+  .hdr::before{content:'';position:absolute;top:-40px;right:-40px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(212,120,47,.18) 0%,transparent 70%);}
+  .hdr::after{content:'';position:absolute;bottom:-30px;left:80px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.04) 0%,transparent 70%);}
+  .hdr-row{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;}
+  .hdr-left{flex:1;position:relative;z-index:1;}
+  .hdr-right{flex-shrink:0;position:relative;z-index:1;text-align:right;}
+  .logo-wrap{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+  .logo-icon{width:42px;height:42px;background:var(--white);border-radius:8px;border:2px solid var(--peel-light);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:8px 9px;position:relative;flex-shrink:0;}
+  .logo-icon::after{content:'';position:absolute;bottom:5px;right:5px;width:9px;height:9px;background:var(--peel-dark);clip-path:polygon(100% 0,100% 100%,0 100%);}
+  .logo-bar{height:3.5px;border-radius:2px;margin-bottom:3.5px;}.logo-bar:last-child{margin-bottom:0;}
+  .lb1{width:100%;background:var(--copper);}.lb2{width:85%;background:var(--slate);}.lb3{width:65%;background:var(--slate);}
+  .logo-text{display:flex;flex-direction:column;}
+  .logo-wordmark{font-size:22px;font-weight:300;color:var(--white);line-height:1;letter-spacing:-0.3px;}
+  .logo-wordmark span{font-weight:800;color:var(--copper);}
+  .logo-tagline{font-size:8px;font-weight:300;letter-spacing:3.5px;text-transform:uppercase;color:rgba(255,255,255,.75);margin-top:3px;}
+  .hdr-headline{font-size:26px;font-weight:800;color:var(--white);line-height:1.15;max-width:420px;margin-bottom:8px;}
+  .hdr-headline span{color:var(--copper);font-style:italic;font-weight:300;}
+  .hdr-sub{font-size:10px;font-weight:300;color:rgba(255,255,255,.85);max-width:420px;line-height:1.5;}
+  .uz-badge{display:inline-block;background:var(--copper);color:var(--white);font-size:8.5px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:4px 10px;border-radius:3px;margin-bottom:6px;}
+  .hdr-meta{font-size:9px;color:rgba(255,255,255,.8);font-weight:300;line-height:1.8;}
+  .hdr-meta strong{color:rgba(255,255,255,.95);font-weight:600;}
+  .strip{height:4px;background:linear-gradient(90deg,var(--copper) 0%,var(--slate) 50%,var(--parchment) 100%);}
+  .main{padding:10px 22px 8px;display:grid;grid-template-columns:1fr 1fr;gap:8px;flex:1;}
+  .full{grid-column:1/-1;}
+  .lbl{font-size:8px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--copper);margin-bottom:3px;}
+  .ttl{font-size:13px;font-weight:800;color:var(--ink);margin-bottom:5px;line-height:1.2;}
+  .divider{height:1px;background:var(--parchment-border);margin:4px 0 6px;}
+  .concept{grid-column:1/-1;display:grid;grid-template-columns:1fr 26px 1fr;background:var(--parchment);border-radius:7px;border:1.5px solid var(--parchment-border);overflow:hidden;}
+  .cs{padding:10px 13px;}.cs.r{background:var(--ink-dark);}
+  .ctag{display:inline-block;font-size:7.5px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;padding:2px 7px;border-radius:20px;margin-bottom:4px;}
+  .ctag.pr{background:var(--slate-light);color:var(--ink);}.ctag.so{background:rgba(255,255,255,.1);color:rgba(255,255,255,.6);}
+  .cttl{font-size:11px;font-weight:800;margin-bottom:4px;line-height:1.3;color:var(--ink);}.cs.r .cttl{color:#ffffff;}
+  .cbdy{font-size:9.5px;line-height:1.45;color:#2a2a2a;font-weight:400;}.cs.r .cbdy{color:rgba(255,255,255,.9);}
+  .carr{display:flex;align-items:center;justify-content:center;background:var(--ink-mid);font-size:16px;color:var(--copper);}
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:3px;}
+  .st{background:var(--parchment);border-radius:5px;padding:8px 9px;border-left:3px solid var(--parchment-border);}
+  .st.hl{border-left-color:var(--copper);}
+  .stn{font-size:8px;font-weight:700;letter-spacing:1px;color:var(--copper);margin-bottom:2px;}
+  .stt{font-size:9.5px;font-weight:700;color:var(--ink);margin-bottom:3px;line-height:1.2;}
+  .stb{font-size:9px;line-height:1.35;color:var(--ink);font-weight:400;}
+  .bencard{background:var(--white);border:1.5px solid var(--parchment-border);border-radius:7px;padding:10px 12px;}
+  .brow{display:flex;gap:8px;align-items:flex-start;padding:3.5px 0;border-bottom:1px solid var(--parchment);}
+  .brow:last-child{border-bottom:none;}
+  .bico{width:18px;height:18px;background:var(--copper-light);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;margin-top:1px;}
+  .btxt{font-size:9.5px;line-height:1.4;color:#5a4a40;font-weight:300;}
+  .btxt strong{color:var(--ink);font-weight:700;font-size:10px;display:block;margin-bottom:1px;}
+  .ipbox{background:var(--parchment);border-radius:7px;padding:10px 12px;border:1.5px solid var(--parchment-border);}
+  .iprow{display:flex;gap:8px;align-items:flex-start;padding:3px 0;border-bottom:1px solid var(--parchment-border);}
+  .iprow:last-child{border-bottom:none;}
+  .iptext{font-size:9.5px;line-height:1.4;color:#5a4a40;font-weight:300;}
+  .iptext strong{color:var(--ink);font-weight:700;}
+  .whobox{grid-column:1/-1;background:linear-gradient(135deg,var(--ink-dark) 0%,var(--ink-mid) 100%);border-radius:7px;padding:10px 14px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+  .who-item{text-align:center;padding:6px 4px;}
+  .who-ico{font-size:18px;margin-bottom:4px;}
+  .who-lbl{font-size:9px;font-weight:700;color:var(--white);line-height:1.3;margin-bottom:2px;}
+  .who-sub{font-size:8px;color:rgba(255,255,255,.85);font-weight:300;line-height:1.3;}
+  .hlbox{grid-column:1/-1;background:var(--copper-light);border:1.5px solid var(--peel-light);border-radius:7px;padding:9px 13px;display:flex;gap:11px;align-items:flex-start;}
+  .hlico{font-size:18px;flex-shrink:0;line-height:1;margin-top:1px;}
+  .hllbl{font-size:7px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--copper-bright);margin-bottom:2px;}
+  .hlttl{font-size:10px;font-weight:600;color:var(--ink);line-height:1.4;}
+  .ftr{background:var(--parchment);border-top:1.5px solid var(--parchment-border);padding:6px 22px;display:flex;justify-content:space-between;align-items:center;gap:14px;margin-top:auto;}
+  .flogo{display:flex;align-items:center;gap:8px;}
+  .flogo-icon{width:24px;height:24px;background:var(--white);border-radius:4px;border:1px solid var(--parchment-border);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:4px 5px;position:relative;flex-shrink:0;}
+  .flogo-icon::after{content:'';position:absolute;bottom:2px;right:2px;width:5px;height:5px;background:var(--peel-dark);clip-path:polygon(100% 0,100% 100%,0 100%);}
+  .fbar{height:2px;border-radius:1px;margin-bottom:2px;}.fbar:last-child{margin-bottom:0;}
+  .fb1{width:100%;background:var(--copper);}.fb2{width:85%;background:var(--slate);}.fb3{width:65%;background:var(--slate);}
+  .fwm{font-size:12px;font-weight:300;color:var(--ink);}.fwm span{font-weight:800;color:var(--copper);}
+  .fmid{font-size:9px;color:var(--warm-gray);font-weight:300;line-height:1.6;text-align:center;}
+  .fmid strong{color:var(--ink);font-weight:700;display:block;font-size:9.5px;}
+  .fcontact{display:flex;gap:10px;align-items:center;margin-top:2px;}
+  .fcontact a{font-size:9px;font-weight:600;color:var(--copper);text-decoration:none;letter-spacing:0.3px;}
+  .fsep{color:var(--parchment-border);}
+  .fr{text-align:right;flex-shrink:0;}
+  .fbadge{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--copper);margin-bottom:1px;}
+  .fdet{font-size:8px;color:#bbb;font-weight:300;line-height:1.5;}
+
+  .mktcard{background:var(--parchment);border-radius:7px;padding:9px 11px;border:1.5px solid var(--parchment-border);}
+  .mkt-section-lbl{font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--slate);padding:4px 0 2px;margin-top:3px;}
+  .mrow{display:flex;justify-content:space-between;align-items:center;padding:2.5px 0;border-bottom:1px solid var(--parchment-border);}.mrow:last-child{border-bottom:none;}
+  .mlbl{font-size:9.5px;color:#5a4a40;font-weight:300;display:flex;align-items:center;gap:5px;}.mflag{font-size:13px;}
+  .mright{text-align:right;}.mval{font-size:14px;font-weight:800;color:var(--ink-dark);}.msub{font-size:8.5px;color:#bbb;font-weight:300;line-height:1.35;}
+  .msbox{grid-column:1/-1;background:linear-gradient(135deg,var(--ink-dark) 0%,var(--ink-mid) 100%);border-radius:7px;padding:9px 14px;display:flex;justify-content:space-between;align-items:center;gap:14px;}
+  .msbox-left{flex:1;}.msbox-lbl{font-size:8px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:3px;}
+  .msbox-ttl{font-size:11px;font-weight:800;color:var(--white);line-height:1.2;}.msbox-ttl em{color:var(--copper);font-style:italic;font-weight:300;}
+  .msbox-sub{font-size:9px;color:rgba(255,255,255,.85);font-weight:300;margin-top:3px;line-height:1.35;}
+  .msbox-right{flex-shrink:0;text-align:right;}.msbox-stat{font-size:22px;font-weight:800;color:var(--copper);line-height:1;}
+  .msbox-statlbl{font-size:8px;color:rgba(255,255,255,.75);font-weight:300;line-height:1.4;}
+  .inclcard{background:var(--ink-dark);border-radius:7px;padding:9px 12px;grid-column:1/-1;}
+  .inclcard .lbl{color:var(--peel-light);}.inclcard .ttl{color:var(--white);margin-bottom:6px;}
+  .incl-cols{display:grid;grid-template-columns:1fr 1fr;gap:0 16px;}
+  .irow{display:flex;gap:7px;align-items:flex-start;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.1);}.irow:last-child{border-bottom:none;}
+  .iico{width:17px;height:17px;background:rgba(255,255,255,.1);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10.5px;flex-shrink:0;margin-top:1px;}
+  .itxt{font-size:9px;line-height:1.35;color:rgba(255,255,255,.9);font-weight:300;}
+  .itxt strong{color:var(--white);font-weight:700;font-size:9.5px;display:block;margin-bottom:1px;}
+  .src-note{font-size:8px;color:#bbb;font-weight:300;line-height:1.35;margin-top:3px;}
+
+  .mkt-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:4px 0;}
+  .mgcell{background:var(--white);border:1px solid var(--parchment-border);border-radius:5px;padding:5px 7px;display:flex;align-items:center;gap:6px;}
+  .mgflag{font-size:14px;flex-shrink:0;}
+  .mglang{font-size:9px;font-weight:600;color:var(--ink);flex:1;line-height:1.2;}
+  .mgval{font-size:12px;font-weight:800;color:var(--copper);flex-shrink:0;}
+</style>
+</head><body>
+<div class="hdr"><div class="hdr-row">
+  <div class="hdr-left">
+    <div class="logo-wrap">
+      <div class="logo-icon"><div class="logo-bar lb1"></div><div class="logo-bar lb2"></div><div class="logo-bar lb3"></div></div>
+      <div class="logo-text"><div class="logo-wordmark">Story<span>Patch</span></div><div class="logo-tagline">One Book · Every Language</div></div>
+    </div>
+    <div class="hdr-headline">Jerboa Books<br><span>Every language. Zero inventory risk.</span></div>
+    <div class="hdr-sub">Jerboa Books is the UAE's leading English-language children's publisher, based in Dubai. Dubai is the world's most internationally diverse city — 200+ nationalities, 180+ languages spoken. A StoryPatch licence activates Arabic, Urdu, Hindi, Tagalog and more — making Jerboa the most multilingual publisher in the world's most multilingual city.</div>
+  </div>
+  <div class="hdr-right">
+    <div class="uz-badge">Utility Model CZ 39118</div>
+    <div class="hdr-meta">Registered: 06.01.2026<br>Industrial Property Office, Czech Republic<br><strong style="color:var(--copper);">PCT application filed</strong></div>
+  </div>
+</div></div>
+<div class="strip"></div>
+<div class="main">
+  <div class="concept full">
+    <div class="cs"><div class="ctag pr">The problem every publisher knows</div><div class="cttl">Multilingual publishing is commercially broken — separate print runs, separate inventory, separate risk per language</div><div class="cbdy">Publishing a board book in five languages means five print runs, five warehouses, five bets on demand. Get one market wrong and you're left with unsellable stock. The economics force publishers to serve only the largest language markets — leaving hundreds of millions of families without a book in their mother tongue.</div></div>
+    <div class="carr">→</div>
+    <div class="cs r"><div class="ctag so">The StoryPatch solution · UZ CZ 39118</div><div class="cttl">Removable text carriers placed over the original page — one base edition, any language on demand</div><div class="cbdy">StoryPatch carriers are pre-printed inserts — adhesive stickers, magnetic labels or Braille film — placed over the original text area. The book is printed once. The pre-printed carrier sheet ships with the book. The customer scans a QR code, prints their localised text and applies it. One base edition. Any language. Activated locally.</div></div>
+  </div>
+  <div class="full">
+    <div style="margin-bottom:4px;"><span style="font-size:8px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--copper);">How it works</span><span style="font-size:8px;font-weight:300;color:var(--warm-gray);letter-spacing:1px;"> &nbsp;·&nbsp; </span><span style="font-size:12px;font-weight:800;color:var(--ink);">From monolingual original to localised edition in four steps</span></div>
+    <div class="steps"><div class="st"><div class="stn">STEP 01</div><div class="stt">One print run</div><div class="stb">The book is printed once in the original language — as the universal base edition for all markets.</div></div><div class="st hl"><div class="stn">STEP 02</div><div class="stt">Pre-printed carrier sheet</div><div class="stb">A carrier sheet pre-printed with graphics and design ships with the book — ready to receive any language localisation.</div></div><div class="st hl"><div class="stn">STEP 03</div><div class="stt">QR code localisation</div><div class="stb">The customer buys the book + pre-printed carrier sheet, scans the QR code and prints their language version locally — instant localisation, zero logistics.</div></div><div class="st"><div class="stn">STEP 04</div><div class="stt">Apply &amp; done</div><div class="stb">The customer peels and places the pre-printed localised carriers into the book — full mother-tongue edition achieved in minutes.</div></div></div>
+  </div>
+  <div class="bencard"><div class="lbl">Strategic value for Jerboa Books</div><div class="ttl">Why StoryPatch fits Jerboa Books</div><div class="divider"></div><div class="brow"><div class="bico">📚</div><div class="btxt"><strong>Jerboa — Dubai's English children's publisher — becomes the world's most multilingual 0–3 brand</strong>Arabic, Urdu, Hindi and Tagalog carrier sets serve Dubai's four largest non-English communities.</div></div><div class="brow"><div class="bico">🌍</div><div class="btxt"><strong>Dubai: 200+ nationalities — no other city creates more multilingual demand per square kilometre</strong>StoryPatch makes Jerboa the only publisher that can serve every single Dubai nationality from one print run.</div></div><div class="brow"><div class="bico">🏫</div><div class="btxt"><strong>Dubai's 200+ international schools — every school's diverse family community is a direct carrier buyer</strong>Carriers for Arabic, Urdu, Hindi and Tagalog are immediate international school procurement products.</div></div><div class="brow"><div class="bico">📦</div><div class="btxt"><strong>Zero inventory risk — carrier sets activate existing Jerboa stock for any of 180+ Dubai languages</strong>One English print run covers the entire 200-nationality Dubai market via carrier exchange.</div></div></div>
+  <div class="mktcard"><div class="lbl">Language communities · Dubai / UAE</div><div class="ttl">Children age 0–3 years (estimated)</div><div class="divider"></div><div class="mkt-section-lbl">🇦🇪 Dubai · Top nationality communities</div><div class="mkt-grid"><div class="mgcell"><div class="mgflag">🇮🇳</div><div class="mglang">Indian Hindi / Urdu / Gujarati</div><div class="mgval">~180k</div></div><div class="mgcell"><div class="mgflag">🇵🇰</div><div class="mglang">Pakistani Urdu-speaking</div><div class="mgval">~65k</div></div><div class="mgcell"><div class="mgflag">🇵🇭</div><div class="mglang">Filipino Tagalog-speaking</div><div class="mgval">~45k</div></div><div class="mgcell"><div class="mgflag">🇸🇾</div><div class="mglang">Arabic-speaking</div><div class="mgval">~85k</div></div></div><div class="mkt-section-lbl">🇦🇪 Dubai · Western and other communities</div><div class="mkt-grid"><div class="mgcell"><div class="mgflag">🇬🇧</div><div class="mglang">British English-speaking</div><div class="mgval">~22k</div></div><div class="mgcell"><div class="mgflag">🇷🇺</div><div class="mglang">Russian-speaking</div><div class="mgval">~18k</div></div><div class="mgcell"><div class="mgflag">🇫🇷</div><div class="mglang">French-speaking</div><div class="mgval">~12k</div></div><div class="mgcell"><div class="mgflag">🌍</div><div class="mglang">100+ other nationalities</div><div class="mgval">~85k</div></div></div><div class="src-note">Sources: national census data · publisher annual reports · own estimates</div></div>
+  <div class="msbox full"><div class="msbox-left"><div class="msbox-lbl">Core argument · Jerboa Books</div><div class="msbox-ttl">Jerboa Books + StoryPatch creates the world's most multilingual board book range — every Dubai nationality served from one English print run.</div></div><div class="msbox-right"><div class="msbox-stat">200+</div><div class="msbox-statlbl">nationalities
+in Dubai — the world's
+most multilingual city</div></div></div>
+  <div class="inclcard full"><div class="lbl">Inclusion &amp; Accessibility</div><div class="ttl">The same system — two additional segments</div><div class="incl-cols"><div><div class="irow"><div class="iico">🏫</div><div class="itxt"><strong>Dubai International School System: 200+ international schools — the most diverse institutional buyer base in the world</strong>Carrier sets for any nationality's mother tongue are immediate international school library products.</div></div></div><div><div class="irow"><div class="iico">⬛</div><div class="itxt"><strong>Braille carrier film — accessible Jerboa board books for visually impaired parents in Dubai</strong>Transparent Braille overlay in English and Arabic — a natural Jerboa inclusion extension.</div></div></div></div></div>
+  <div class="hlbox full"><div class="hlico">📊</div><div><div class="hllbl">Group reach · Jerboa Books</div><div class="hlttl">Jerboa Books is the UAE's leading English-language children's publisher, operating in the world's most internationally diverse city. Dubai's 200+ nationalities and 180+ home languages represent the highest concentration of multilingual 0–3 demand on earth.</div></div></div>
+</div>
+<div class="ftr">
+  <div class="flogo"><div class="flogo-icon"><div class="fbar fb1"></div><div class="fbar fb2"></div><div class="fbar fb3"></div></div><div class="fwm">Story<span>Patch</span></div></div>
+  <div class="fmid"><strong>Tomáš Pavlík · Inventor &amp; Owner · UZ CZ 39118</strong><div class="fcontact"><a href="https://www.storypatch.org">www.storypatch.org</a><span class="fsep">·</span><span style="color:var(--copper);font-weight:600;font-size:9px;">hello@storypatch.org</span></div></div>
+  <di
