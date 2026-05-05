@@ -409,7 +409,7 @@
         <div class="calc-row">
           <div class="row-label"><strong>Standard book price</strong>Average retail price per title</div>
           <div class="row-value"><div class="inp-wrap">
-            <input class="inp" id="bookPrice" type="number" step="0.5" placeholder="e.g. 12" oninput="calc()">
+            <input class="inp" id="bookPrice" type="number" step="0.5" placeholder="e.g. 6" oninput="calc()">
             <span class="unit-sym">€</span>
           </div></div>
         </div>
@@ -417,7 +417,7 @@
         <div class="calc-row">
           <div class="row-label"><strong>Language carrier price</strong>Retail price of a language insert set</div>
           <div class="row-value"><div class="inp-wrap">
-            <input class="inp" id="carrierPrice" type="number" step="0.1" placeholder="e.g. 3" oninput="calc()">
+            <input class="inp" id="carrierPrice" type="number" step="0.1" placeholder="e.g. 1" oninput="calc()">
             <span class="unit-sym">€</span>
           </div></div>
         </div>
@@ -441,7 +441,7 @@
         <div class="calc-row highlight">
           <div class="row-label"><strong>Estimated market coverage</strong>Publisher's expected share of target segment</div>
           <div class="row-value"><div class="inp-wrap">
-            <input class="inp" id="coverage" type="number" step="1" placeholder="e.g. 20" oninput="calc()" style="width:70px">
+            <input class="inp" id="coverage" type="number" step="1" placeholder="e.g. 20" oninput="calc()" style="width:90px">
             <span class="unit-sym">%</span>
           </div></div>
         </div>
@@ -466,8 +466,8 @@
         <!-- Fixed fee — first position -->
         <div class="lic-card copper-top">
           <div class="lic-label">Fixed Annual Fee</div>
-          <div class="lic-title">€ 1,000 – € 4,000 · annually based on target country size</div>
-          <div class="fee-row"><span class="fee-lbl">Range</span><span class="fee-val copper">€ 1,000 – € 4,000 / yr</span></div>
+          <div class="lic-title">€ 500 – € 4,000 · annually based on target country size</div>
+          <div class="fee-row"><span class="fee-lbl">Range</span><span class="fee-val copper">€ 500 – € 4,000 / yr</span></div>
           <div class="fee-row"><span class="fee-lbl">Assessed</span><span class="fee-val" style="font-size:0.9em;">Annually · based on territory population</span></div>
           <div class="fee-row"><span class="fee-lbl">Payment</span><span class="fee-val" style="font-size:0.9em;">Due at contract start of each year</span></div>
         </div>
@@ -508,7 +508,7 @@
           <div class="sum-left">
             <div class="sum-lbl">5-year contract value · indicative estimate</div>
             <div class="sum-title">Total licence cost over full term —<br><em>fixed + variable combined</em></div>
-            <div class="sum-sub">Fixed fee € 1,000–€ 4,000 · variable at 3% of addressable revenues · growing coverage yr 1–3</div>
+            <div class="sum-sub">Fixed fee € 500–€ 4,000 · variable at 3% of addressable revenues · growing coverage yr 1–3</div>
           </div>
           <div class="sum-stats">
             <div class="sum-stat">
@@ -556,7 +556,7 @@
     </div>
     <div class="ftr-mid">
       <strong>Tomáš Pavlík · Owner UZ CZ 39118</strong>
-      <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="127a777e7e7d5261667d606b627366717a3c7d6075">[email&#160;protected]</a> · www.storypatch.org
+      tomas.pavlik@storypatch.org · www.storypatch.org
     </div>
     <div class="ftr-right">
       <div class="ftr-badge">CZ 39118 U1</div>
@@ -566,7 +566,7 @@
 
 </div><!-- /page -->
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
   function fmt(n) {
     if (!isFinite(n) || isNaN(n) || n === 0) return '\u2014';
     if (n >= 1e6) return '\u20ac\u00a0' + (n / 1e6).toFixed(2) + '\u00a0M';
@@ -605,11 +605,11 @@
 
     // Year-by-year table: fixed fee range 1000-4000, coverage ramp 5/15/20/20/20%
     const yearData = [
-      { label: 'Year 1', covPct: 5   },
-      { label: 'Year 2', covPct: 15  },
-      { label: 'Year 3', covPct: cov },
-      { label: 'Year 4', covPct: cov },
-      { label: 'Year 5', covPct: cov },
+      { label: 'Year 1', covPct: cov * 0.30 },
+      { label: 'Year 2', covPct: cov * 0.60 },
+      { label: 'Year 3', covPct: cov        },
+      { label: 'Year 4', covPct: cov        },
+      { label: 'Year 5', covPct: cov        },
     ];
 
     const tbody = document.getElementById('breakdownBody');
@@ -626,13 +626,13 @@
     yearData.forEach(y => {
       const annualRev = fullRevAbs * (y.covPct / 100);
       const varFee    = annualRev * 0.03;
-      const fixLow    = 1000;
+      const fixLow    = 500;
       const fixHigh   = 4000;
       const totLow    = fixLow  + varFee;
       const totHigh   = fixHigh + varFee;
       cumVar           += varFee;
       cumTotalRevenues += annualRev;
-      const covLabel = y.covPct > 0 ? y.covPct + '%' : '\u2014';
+      const covLabel = y.covPct > 0 ? y.covPct.toFixed(1) + '%' : '\u2014';
       rows += `<tr>
         <td>${y.label}</td>
         <td style="color:var(--warm-gray);font-size:0.9em;">${fmtRange(fixLow, fixHigh)}</td>
@@ -641,7 +641,7 @@
         <td class="val-copper">${fmtRange(totLow, totHigh)}</td>
       </tr>`;
     });
-    const cumFixLow  = 5 * 1000;
+    const cumFixLow  = 5 * 500;
     const cumFixHigh = 5 * 4000;
     const cumTotLow  = cumFixLow  + cumVar;
     const cumTotHigh = cumFixHigh + cumVar;
